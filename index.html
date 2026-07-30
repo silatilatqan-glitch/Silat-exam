@@ -1,0 +1,2202 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>مركز صلة الإتقان للتدريب — نظام الاختبارات</title>
+<!-- v23 — إصلاحات حرجة: dbSetMeta، مضاعفة الدرجة العظمى، الأرشفة، التمديد المباشر، الحفظ عند الإغلاق، ثبات حذف الدورات (2026-07-29) -->
+<!-- v24 — تمديد تلقائي بعد انتهاء الوقت، طلبات فتح التعديل بموافقة المدرب، الرجوع بين السيناريوهات، دمج الإجابات من قاعدة البيانات، تعقيم المعرفات المكررة، تنبيه الأسئلة المكررة، تأكيد الإرسال (2026-07-29) -->
+<!-- v25 — إصلاح مسار إعادة الدخول بعد الموافقة (كان يعيد الطالب لطلب جديد بلا نهاية)، إدارة رموز دخول الدورات من اللوحة (الدورات المضافة كانت بلا رمز = مستحيلة الدخول)، عزل سيناريوهات المحاولة الواحدة بنافذة وقتها (منع دمج إجابات محاولة قديمة)، استعادة شاشة انتظار التمديد بعد تحديث الصفحة، تعليم النتائج كمقروءة، تواريخ الإشعارات ميلادية، توريث ساعات الاختبار للسيناريو التالي، إصلاحات أخرى (2026-07-30) -->
+<!-- preconnect لتسريع تحميل المكتبات -->
+<link rel="preconnect" href="https://cdnjs.cloudflare.com"/>
+<link rel="preconnect" href="https://cdn.jsdelivr.net"/>
+<link rel="preconnect" href="https://www.gstatic.com"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.4/babel.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+<!-- XLSX تُحمَّل فقط عند الحاجة (لوحة المدرب) -->
+<script>
+window.loadXLSX=()=>new Promise(resolve=>{
+  if(window.XLSX){resolve();return;}
+  const s=document.createElement('script');
+  s.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+  s.onload=resolve;document.head.appendChild(s);
+});
+</script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Tahoma,system-ui,sans-serif;background:#f0f4f8;direction:rtl}
+input,textarea,select,button{font-family:inherit}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:#f1f1f1}
+::-webkit-scrollbar-thumb{background:#1a5f4a;border-radius:3px}
+@media print{.no-print{display:none!important}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script>
+// تهيئة Firebase قبل تشغيل Babel
+const _fbConfig={
+  apiKey:"AIzaSyDzY7iKfSJgHxeOw79ubj8yESgFcDFrv58",
+  authDomain:"silatalitqan-certs.firebaseapp.com",
+  projectId:"silatalitqan-certs",
+  storageBucket:"silatalitqan-certs.firebasestorage.app",
+  messagingSenderId:"201009758278",
+  appId:"1:201009758278:web:7b2ec02cb7ef5a4b958a47"
+};
+if(!firebase.apps.length)firebase.initializeApp(_fbConfig);
+window._fbDb=firebase.firestore();
+</script>
+<script type="text/babel">
+const {useState,useEffect,useRef,useCallback}=React;
+
+/* ═══════════════════════════════════════════════
+   ⚙️  إعدادات النظام
+═══════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════
+   🔑  ضع بيانات Supabase هنا بعد إنشاء المشروع
+══════════════════════════════════════════════════ */
+const SUPABASE_URL = "https://unhokrmdxdqejphaffgb.supabase.co";
+const SUPABASE_KEY = "sb_publishable_4xbMnEg7jGX8dgLxKUAzEA_vtpTCgMe";
+
+const _sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+/* ══════════════════════════════════════════════════
+   🗄️  وظائف قاعدة البيانات (Supabase)
+══════════════════════════════════════════════════ */
+async function dbLoad(studentId=null){
+  try{
+    let query=_sb.from("exam_subs").select("data").order("updated_at",{ascending:false});
+    // الطالب يحمّل بياناته فقط — المدرب يحمّل الكل
+    if(studentId){
+      query=_sb.from("exam_subs").select("data").contains("data",{studentId});
+    }
+    const{data,error}=await query;
+    if(error)throw error;
+    return(data||[]).map(r=>r.data);
+  }catch(e){
+    console.error("dbLoad:",e);
+    try{const r=localStorage.getItem("itqan_v3_fb");return r?JSON.parse(r):[];}catch{return[];}
+  }
+}
+
+async function dbUpsert(sub){
+  try{
+    await _sb.from("exam_subs").upsert({id:sub.id,data:sub,updated_at:new Date().toISOString()});
+  }catch(e){
+    console.error("dbUpsert:",e);
+    // fallback
+    try{const all=JSON.parse(localStorage.getItem("itqan_v3_fb")||"[]");const ns=all.filter(s=>s.id!==sub.id);ns.push(sub);localStorage.setItem("itqan_v3_fb",JSON.stringify(ns));}catch{}
+  }
+}
+
+async function dbDelete(ids){
+  try{await _sb.from("exam_subs").delete().in("id",ids);}
+  catch(e){console.error("dbDelete:",e);}
+}
+
+async function dbClearAll(){
+  try{await _sb.from("exam_subs").delete().neq("id","__x__");}
+  catch(e){console.error("dbClearAll:",e);}
+}
+
+async function dbGetMeta(key){
+  try{const{data}=await _sb.from("exam_meta").select("value").eq("key",key).single();return data?.value||null;}
+  catch{return null;}
+}
+
+async function dbSetMeta(key,value){
+  try{
+    const{error}=await _sb.from("exam_meta").upsert({key,value},{onConflict:"key"});
+    if(error)throw error;
+  }catch(e){
+    // احتياط: جرّب التحديث ثم الإدراج إذا لم يكن key مفتاحاً فريداً
+    try{
+      const{data}=await _sb.from("exam_meta").update({value}).eq("key",key).select();
+      if(!data||data.length===0)await _sb.from("exam_meta").insert({key,value});
+    }catch(e2){console.error("dbSetMeta:",e2);}
+  }
+}
+
+async function addNotification(type,data){
+  try{
+    const notifs=JSON.parse((await dbGetMeta("notifications"))||"[]");
+    notifs.unshift({type,data,time:new Date().toISOString(),read:false});
+    await dbSetMeta("notifications",JSON.stringify(notifs.slice(0,50)));
+  }catch(e){}
+}
+async function getNotifications(){
+  try{return JSON.parse((await dbGetMeta("notifications"))||"[]");}catch{return[];}
+}
+async function markNotifsRead(){
+  try{
+    const notifs=await getNotifications();
+    await dbSetMeta("notifications",JSON.stringify(notifs.map(n=>({...n,read:true}))));
+  }catch(e){}
+}
+
+/* وظائف إدارة الدورات */
+async function dbLoadCourses(){
+  try{
+    const{data,error}=await _sb.from("exam_courses").select("data").order("updated_at",{ascending:false});
+    if(error)throw error;
+    if(data&&data.length>0)return data.map(r=>r.data);
+    return null; // null = استخدم الدورات الافتراضية
+  }catch(e){console.error("dbLoadCourses:",e);return null;}
+}
+
+async function dbSaveCourse(course){
+  try{await _sb.from("exam_courses").upsert({id:course.id,data:course,updated_at:new Date().toISOString()});}
+  catch(e){console.error("dbSaveCourse:",e);}
+}
+
+async function dbDeleteCourse(id){
+  try{await _sb.from("exam_courses").delete().eq("id",id);}
+  catch(e){console.error("dbDeleteCourse:",e);}
+}
+
+/* 🧹 تعقيم الدورات المحملة من قاعدة البيانات:
+   المعرفات المكررة (سيناريو أو مهمة) تسبب اختفاء أزرار المهام وتلخبط الإجابات والتنقل */
+function sanitizeCourses(list){
+  try{
+    const seenCourse=new Set();
+    return (list||[]).filter(c=>{
+      if(!c||!c.id||seenCourse.has(c.id))return false;
+      seenCourse.add(c.id);return true;
+    }).map(c=>{
+      const seenSc=new Set();
+      const scenarios=(c.scenarios||[]).map(sc=>{
+        let scId=sc.id||uid2();
+        while(seenSc.has(scId))scId=scId+"_"+uid2();
+        seenSc.add(scId);
+        const seenT=new Set();
+        const tasks=(sc.tasks||[]).map(t=>{
+          let tid=t.id||uid2();
+          while(seenT.has(tid))tid=tid+"_"+uid2();
+          seenT.add(tid);
+          if(tid!==t.id)console.warn("⚠️ معرف مهمة مكرر أُصلح تلقائياً:",c.title,"/",sc.title);
+          return tid===t.id?t:{...t,id:tid};
+        });
+        return {...sc,id:scId,tasks};
+      });
+      return {...c,scenarios};
+    });
+  }catch(e){console.error("sanitizeCourses:",e);return list||[];}
+}
+
+/* ══════════════════════════════════════════════════
+   🔥  Firebase — إصدار الشهادات التلقائي
+══════════════════════════════════════════════════ */
+
+async function issueCertificate(sub,course){
+  try{
+    const certId="CERT-"+serial(sub.id);
+    const today=new Date().toISOString().split("T")[0];
+    const exp=new Date();
+    exp.setFullYear(exp.getFullYear()+(course.certValidityYears||3));
+    const expiry=exp.toISOString().split("T")[0];
+    // Firestore لا يرفض الكتابة عند انقطاع الشبكة بل يعيد المحاولة للأبد — مهلة 12 ثانية حتى لا يعلق الاعتماد
+    const write=window._fbDb.collection("certificates").doc(certId).set({
+      name:sub.studentName,
+      course:sub.courseTitle,
+      date:today,
+      expiry:expiry,
+      hours:course.hours||"—",
+      trainer:course.trainer||"مركز صلة الإتقان للتدريب",
+      studentId:sub.studentId,
+      studentOrderNum:sub.studentOrderNum||"",
+      phone:sub.studentPhone||"",
+      certId:certId,
+      issuedAt:new Date().toISOString()
+    });
+    await Promise.race([write,new Promise((_,rej)=>setTimeout(()=>rej(new Error("انتهت مهلة الاتصال بـ Firebase")),12000))]);
+    return certId;
+  }catch(e){console.error("issueCertificate:",e);return null;}
+}
+
+let TRAINER_CODE="HSE@2024"; // يُحمَّل من Supabase عند بدء التطبيق
+let COURSE_CODES={
+  osha30:"OSHA001",
+  hazwoper40:"HAWZOPER002",
+  chartered3:"CIEH003",
+  rigging:"LIFTING004",
+  iosh:"IOSH005"
+}; // تُحمَّل من Supabase
+const ORG="مركز صلة الإتقان للتدريب";
+const ORG_EN="Silat Al-Itqan Training Center";
+let EXAM_HOURS=24; // يُحدَّث من لوحة التحكم
+
+/* رموز دخول الدورات */
+
+/* ═══════════════════════════════════════════════
+   📚  الدورات والسيناريوهات
+═══════════════════════════════════════════════ */
+const COURSES=[
+  {
+    id:"osha30",title:"الأوشا الأمريكية 30 ساعة",icon:"🛡️",passMark:60,
+    trainer:"مدرب الأوشا المعتمد",hours:"30 ساعة",certValidityYears:3,
+    scenarios:[
+      {
+        id:"s_osha30_a",title:"السيناريو الأول — مصنع تصنيع صناعي",
+        role:"مشرف السلامة في الصناعة العامة",
+        roleDesc:"أنت Safety Supervisor في مصنع تصنيع صناعي خاضع لـ OSHA General Industry 29 CFR 1910.",
+        context:"مصنع AlMasna'a Industrial تلقّى زيارة تفتيشية مفاجئة من OSHA. وجد المفتش: ثلاث إصابات غير مسجّلة في OSHA 300 خلال 6 أشهر، تسرب هيدروليكي مُهمَل أسبوعين، عمال في Confined Space بدون PTW، غياب برنامج LOTO موثّق، وعامل دون حماية سمع في منطقة 95 dB. المفتش يُشير لاحتمال Willful Violation.",
+        tasks:[
+          {id:"t1",num:1,text:"ما الفرق بين Willful، Serious، وOther-than-Serious Violations؟ ما العقوبات القصوى لكل منها وفق OSHA 2024؟ كيف ستستجيب للمفتش بشأن الإصابات غير المسجّلة؟",marks:25,criteria:"التمييز الدقيق بين أنواع الانتهاكات مع العقوبات المالية الصحيحة (12) + استراتيجية الاستجابة (13)."},
+          {id:"t2",num:2,text:"صمّم برنامج Permit-Required Confined Space كاملاً وفق OSHA 29 CFR 1910.146. ما العناصر الإلزامية للتصريح؟ ما إجراءات الإنقاذ الطارئ؟",marks:25,criteria:"تعريف PRCS (5) + 10 من أصل 16 عنصر إلزامي (12) + إجراءات الإنقاذ (8)."},
+          {id:"t3",num:3,text:"وضّح خطوات تطبيق LOTO وفق OSHA 29 CFR 1910.147 بالتسلسل الصحيح. ما الفرق بين Lockout وTagout؟ متى يُسمح بـ Tagout فقط؟",marks:25,criteria:"الخطوات الست بالترتيب (12) + الفرق Lock/Tag (8) + حالات Tagout فقط (5)."},
+          {id:"t4",num:4,text:"وفق OSHA Hearing Conservation Program (29 CFR 1910.95)، ما Action Level وPEL؟ صمّم البرنامج الشامل الإلزامي مع مكوناته الثمانية.",marks:25,criteria:"AL=85dB وPEL=90dB TWA (8) + 8 مكونات البرنامج (12) + المراقبة الطبية (5)."}
+        ]
+      },
+      {
+        id:"s_osha30_b",title:"السيناريو الثاني — موقع بناء تجاري",
+        role:"مشرف الموقع والسلامة",
+        roleDesc:"أنت Site Safety Officer في مشروع بناء تجاري خاضع لـ OSHA Construction 29 CFR 1926.",
+        context:"مشروع بناء مركز تجاري، 85 عاملاً من مقاولين متعددين. رصدت في أول أسبوع: سقالة غير مثبّتة بشكل صحيح مع عمال دون حزام أمان على ارتفاع 15م، حفرة عمق 7 أقدام دون حماية Cave-in، كابل كهربائي مكشوف قرب منطقة المرور، وغياب HAZCOM محدّث بعد دخول مواد جديدة.",
+        tasks:[
+          {id:"t5",num:1,text:"ما صلاحيات Competent Person وفق OSHA 1926.451؟ ما قائمة فحص السقالة الإلزامية قبل كل وردية (10 عناصر على الأقل)؟ متى يجب إيقاف العمل فوراً؟",marks:25,criteria:"تعريف وصلاحيات Competent Person (8) + قائمة الفحص (10) + معايير الإيقاف الفوري (7)."},
+          {id:"t6",num:2,text:"وفق OSHA 1926 Subpart P، ما خيارات الحماية الأربعة للحفريات (Sloping/Benching/Shoring/Shielding)؟ أيها تختار لحفرة 7 أقدام ولماذا؟",marks:25,criteria:"الحد الأدنى للتطبيق 5 أقدام (3) + وصف كل خيار (14) + الاختيار المناسب مع المبرر (8)."},
+          {id:"t7",num:3,text:"وضّح إجراءات السلامة الكهربائية وفق OSHA 1926 Subpart K. ما مسافات الحماية الإلزامية من خطوط الكهرباء حسب الجهد؟ وما إجراء العزل الآمن في البناء؟",marks:25,criteria:"مسافات الأمان الصحيحة حسب الجهد (10) + إجراءات العزل (10) + PPE الكهربائي (5)."},
+          {id:"t8",num:4,text:"وفق OSHA HCS 2012 المبني على GHS، ما عناصر SDS الستة عشر؟ ما التزامات صاحب العمل في HAZCOM Training؟ ما حق Right-to-Know للعامل؟",marks:25,criteria:"15 من 16 عنصر SDS (15) + التزامات التدريب الثلاثة (7) + Right-to-Know (3)."}
+        ]
+      }
+    ]
+  },
+  {
+    id:"hazwoper40",title:"الأوشا هازووبر 40 ساعة",icon:"🧪",passMark:60,trainer:"مدرب HAZWOPER المعتمد",hours:"40 ساعة",certValidityYears:3,
+    scenarios:[
+      {
+        id:"s_haz_a",title:"السيناريو الأول — تسرب Toluene",
+        role:"قائد فريق الاستجابة للطوارئ الكيميائية",
+        roleDesc:"أنت Emergency Response Team Leader في منشأة صناعية معتمدة وفق HAZWOPER 29 CFR 1910.120.",
+        context:"الساعة 14:30 — انفجر خط أنابيب يحمل Toluene (~500 جالون) في وحدة الإنتاج الثالثة مع اشتعال جزئي. مصابان بحروق من الدرجة الثانية والثالثة. درجة الحرارة 42°م. الرياح 15 كم/ساعة نحو منطقة سكنية 800م. فريقك 12 شخصاً — 8 منهم حاملو HAZWOPER 40 ساعة.",
+        tasks:[
+          {id:"t9",num:1,text:"حدّد الإجراءات الأولية لـ ICS وفق NIMS. كيف تُحدد Hot/Warm/Cold Zones لهذا الحادث تحديداً؟ ما أدوات تنبؤ الانتشار الكيميائي (CAMEO/ALOHA) وكيف تستخدمها؟",marks:25,criteria:"هيكل ICS وتعيين الأدوار (8) + تحديد المناطق للـ Toluene (10) + أدوات التنبؤ (7)."},
+          {id:"t10",num:2,text:"ما مستوى PPE المطلوب للدخول لـ Hot Zone؟ برّر اختيارك من خصائص Toluene في SDS. ما إجراءات Entry Authorization الإلزامية وما نظام Buddy System؟",marks:25,criteria:"مستوى PPE الصحيح مع مبرر من SDS (10) + Entry Authorization (10) + Buddy System (5)."},
+          {id:"t11",num:3,text:"الحرارة 42° مع PPE مكثّف يُنشئ Heat Stress. ما مؤشرات Heat Stroke الحرجة الست؟ صمّم Work/Rest Ratio وفق NIOSH Guidelines لهذه الظروف.",marks:25,criteria:"أعراض Heat Stroke الست (6) + Work/Rest Ratio للظروف الحارة (12) + بروتوكول المراقبة الطبية (7)."},
+          {id:"t12",num:4,text:"صمّم محطة Decontamination الكاملة لهذا الحادث بمحطاتها المتسلسلة. ما الخطوات الإلزامية لـ Decon PPE والأفراد؟ كيف تتعامل مع النفايات وفق RCRA؟",marks:25,criteria:"تصميم Decon Station بمحطاتها (10) + تسلسل الخطوات (10) + التعامل مع النفايات وفق RCRA (5)."}
+        ]
+      },
+      {
+        id:"s_haz_b",title:"السيناريو الثاني — موقع نفايات خطرة EPA Superfund",
+        role:"مشرف الصحة والسلامة في موقع نفايات خطرة",
+        roleDesc:"أنت Site Safety Officer في موقع تنظيف نفايات خطرة مُدرج في قائمة EPA Superfund.",
+        context:"موقع صناعي مهجور 15 عاماً. تربة ومياه جوفية ملوّثة بـ PCBs وHeavy Metals وVOCs. 18 عاملاً في فريق التنظيف. أُفيد بوجود براميل مجهولة مدفونة. نشاط ميكروبي ينتج غازات قابلة للاشتعال. الموقع مجاور لمنطقة سكنية — مياهها الجوفية مصدر شرب.",
+        tasks:[
+          {id:"t13",num:1,text:"ما العناصر الإلزامية الثمانية لـ Site Safety and Health Plan (SSHP) وفق OSHA 1910.120(b)(4)؟ كيف تتعامل مع البراميل مجهولة المحتوى؟",marks:25,criteria:"8 عناصر SSHP الإلزامية (16) + بروتوكول Unknown Materials (5) + تسلسل المسؤوليات (4)."},
+          {id:"t14",num:2,text:"الغازات القابلة للاشتعال تُنشئ Explosive Atmosphere. ما حدود LEL وUEL؟ ما إجراءات Air Monitoring المستمر والأجهزة المناسبة؟ متى توقف العمليات فوراً؟",marks:25,criteria:"تعريف LEL/UEL وعتبات الإيقاف (10) + أجهزة الرصد لكل ملوّث (10) + بروتوكول الإيقاف (5)."},
+          {id:"t15",num:3,text:"ما Occupational Exposure Limits لـ PCBs وHeavy Metals وفق OSHA/NIOSH؟ صمّم برنامج Medical Surveillance الإلزامي للعمال بمكوناته.",marks:25,criteria:"OELs الصحيحة لـ PCBs وRep. Heavy Metal (8) + عناصر Medical Surveillance (12) + التوثيق الطبي (5)."},
+          {id:"t16",num:4,text:"مياه جوفية ملوّثة مجاورة لمنطقة سكنية. من الجهات الإلزامية للإخطار الفوري؟ ما قانون CERCLA وكيف يُطبَّق هنا؟ ما الالتزامات القانونية لصاحب المشروع؟",marks:25,criteria:"الجهات الإلزامية للإخطار (8) + CERCLA وتطبيقه (10) + الالتزامات القانونية (7)."}
+        ]
+      }
+    ]
+  },
+  {
+    id:"chartered3",title:"تشارترد المستوى الثالث",icon:"🎓",passMark:60,trainer:"مدرب تشارترد المعتمد",hours:"45 ساعة",certValidityYears:3,
+    scenarios:[
+      {
+        id:"s_ch_a",title:"السيناريو الأول — مصنع كيميائي",
+        role:"مشرف السلامة والصحة المهنية",
+        roleDesc:"أنت مشرف السلامة المعيّن حديثاً في شركة Gulf Chem Industries — مصنع متوسط الحجم يعمل في تصنيع المواد الكيميائية ويضم 280 عاملاً.",
+        context:"مصنع Gulf Chem يعمل 24 ساعة بثلاث ورديات. خلال جولتك الأولى لاحظت: عمال يتعاملون مع مواد خطرة دون قفازات، Emergency Showers مُعطّلة، غياب SDS في محطات العمل، براميل مواد سامة مجاورة لمواد قابلة للاشتعال. المدير يرفض أي توقف إنتاجي. آخر تدريب طوارئ قبل 18 شهراً. وقوع حادثة مشابهة قبل عامين.",
+        tasks:[
+          {id:"t17",num:1,text:"حدّد المخاطر الرئيسية مرتّبةً وفق Risk Matrix (Likelihood × Severity). استند إلى ISO 45001 وOSHA 29 CFR 1910.119. وضّح منهجيتك في الترتيب الكمي.",marks:25,criteria:"4+ مخاطر محددة (5) + معادلة L×S والترتيب الكمي (10) + ربط صحيح بالمعايير (10)."},
+          {id:"t18",num:2,text:"الإدارة ترفض التوقف عن الإنتاج. ابنِ حجتك لإقناعها مستخدماً الحجج القانونية (ILO C155، لوائح مكتب العمل السعودي) والاقتصادية (Cost of Accidents Iceberg) والأخلاقية.",marks:25,criteria:"الحجج القانونية مع نصوص محددة (10) + الحجج الاقتصادية (8) + الأخلاقية والمهنية (7)."},
+          {id:"t19",num:3,text:"ضَع Corrective Action Plan لثلاثة من أبرز المخاطر. يجب أن تتضمن كل إجراء: الإجراء التصحيحي، المسؤول، الإطار الزمني، ومعيار Close-Out Verification.",marks:25,criteria:"اكتمال الخطة لكل خطر 5×3 (15) + واقعية الإطار الزمني (5) + معيار التحقق (5)."},
+          {id:"t20",num:4,text:"حادثة مشابهة قبل عامين تُشير لضعف ثقافة السلامة. وفق نموذج Bradley Curve ومفهوم Just Culture، شخّص الوضع واقترح خطة تحسين تنظيمي شامل.",marks:25,criteria:"موضع الشركة في Bradley مع مبرر (5) + تحليل Just Culture (10) + خطة التحسين متعددة الأبعاد (10)."}
+        ]
+      },
+      {
+        id:"s_ch_b",title:"السيناريو الثاني — موقع بناء برج سكني",
+        role:"مستشار السلامة المتخصص",
+        roleDesc:"أنت مستشار سلامة مستقل مُكلَّف بتقييم موقع بناء برج سكني 40 طابقاً في وسط المدينة.",
+        context:"شركة AlBanna Contracting تنفذ برجاً سكنياً (30 شهراً — مضى 8). 420 موظفاً من 6 جنسيات. وجدت: عمال على ارتفاع 60م مع حماية سقوط غير مكتملة، رافعة يشغّلها عامل غير مرخص، غياب Rescue Plan محدّث، ثلاثة مقاولين من الباطن دون تنسيق. إحصاء: 3 حوادث سقوط في 3 أشهر.",
+        tasks:[
+          {id:"t21",num:1,text:"قيّم خطر السقوط من الارتفاع وفق Hierarchy of Controls مستنداً لـ OSHA 29 CFR 1926 Subpart M وBS 8411. حدّد الفجوات الحالية بدقة.",marks:25,criteria:"تطبيق الهرم بالترتيب الصحيح E→S→E→A→P (10) + الفجوات من السيناريو (10) + ربط المعايير (5)."},
+          {id:"t22",num:2,text:"مقاولون متعددون دون تنسيق يُنشئ Cumulative Risk. كيف تُصمم نظام إدارة مقاولين آمن وفق ISO 45001 Clause 8.1.4؟",marks:25,criteria:"فهم Cumulative Risk (8) + منظومة إدارة المقاولين (اختيار، تأهيل، إشراف، تقييم) (12) + ربط ISO 45001 (5)."},
+          {id:"t23",num:3,text:"ثلاثة حوادث سقوط في ثلاثة أشهر. أجرِ تحليل أسباب جذرية باستخدام 5 Whys أو Bow-Tie Analysis لحادثة متخيّلة. اقترح إجراءات وقاية.",marks:25,criteria:"اختيار الأداة مع مبرر (5) + التطبيق الصحيح (12) + الإجراءات الوقائية القابلة للتطبيق (8)."},
+          {id:"t24",num:4,text:"الرافعة يشغّلها عامل غير مؤهل. ما الإجراءات الفورية والاستراتيجية؟ ما المسؤوليات القانونية للشركة وفق اللوائح السعودية وASME B30.3؟",marks:25,criteria:"الإجراءات الفورية المتسلسلة (10) + ASME B30.3 (8) + المسؤوليات القانونية السعودية (7)."}
+        ]
+      }
+    ]
+  },
+  {
+    id:"rigging",title:"الرفع والتربيط",icon:"🪝",passMark:60,trainer:"مدرب الرفع المعتمد",hours:"24 ساعة",certValidityYears:3,
+    scenarios:[
+      {
+        id:"s_rig_a",title:"السيناريو الأول — منشأة بتروكيماوية",
+        role:"مشرف الرفع والتربيط المعتمد (ALS)",
+        roleDesc:"أنت Appointed Lifting Supervisor في منشأة بتروكيماوية وفق Saudi Aramco GI-6.015.",
+        context:"رفع مبادل حراري (Heat Exchanger) وزنه 32 طناً، أبعاده 8×3م، داخل وحدة إنتاج نشطة. الارتفاع 18م. الرافعة Liebherr LTM 1100 سعتها 100 طن. الـ Sling يُكمل 3 سنوات. الرياح 28 كم/ساعة. عضو الفريق الرئيسي غاب وأُحضر بديل غير متمرّن.",
+        tasks:[
+          {id:"t25",num:1,text:"وفق Saudi Aramco GI-6.015 وASME B30.5، ما المكونات الإلزامية لـ Lifting Plan؟ ما تصنيف هذا الرفع (Critical/Non-Critical) مع ذكر المبررات الثلاثة؟",marks:25,criteria:"تصنيف Critical مع 3 مبررات واضحة (10) + عناصر خطة الرفع 10+ (12) + توقيعات الاعتماد المطلوبة (3)."},
+          {id:"t26",num:2,text:"الـ Sling مُكمِل 3 سنوات والرياح 28 كم/ساعة. ما معايير استبعاد الرباط وفق ASME B30.9 (5 أسباب على الأقل)؟ ما حدود الرياح المسموح بها؟ ما قائمة Pre-lift Inspection الشاملة؟",marks:25,criteria:"5+ معايير استبعاد الرباط (10) + حدود الرياح وآلية القياس (8) + قائمة الفحص (7)."},
+          {id:"t27",num:3,text:"وفق ASME B30.3 وSaudi Aramco HSE-SAF-PRC-0001، ما متطلبات Rigger Certification؟ ما محتوى Pre-lift Toolbox Talk للعضو الجديد؟ ما إشارات اليد الإلزامية وفق ASME؟",marks:25,criteria:"متطلبات التأهيل (8) + محتوى Toolbox Talk (10) + إشارات اليد المعتمدة (7)."},
+          {id:"t28",num:4,text:"الرفع داخل وحدة إنتاج نشطة. ما التصاريح المطلوبة وفق نظام PTW السعودي (أرامكو)؟ كيف تُدير تعارض عمليات الرفع مع الإنتاج الجاري؟",marks:25,criteria:"أنواع التصاريح المطلوبة (8) + إجراءات نظام PTW (10) + إدارة تعارض العمليات (7)."}
+        ]
+      },
+      {
+        id:"s_rig_b",title:"السيناريو الثاني — رفع Tandem في موقع بناء جسر",
+        role:"مهندس سلامة الرفع المعتمد",
+        roleDesc:"أنت Lifting Engineer معتمد مكلّف بالإشراف على عملية Tandem Lift في موقع بناء جسر.",
+        context:"رفع قطعة خرسانية مسبقة الصب وزنها 55 طناً بـ Tandem Lift نظراً لمحدودية المساحة. الرافعة A سعتها 60 طناً والرافعة B سعتها 50 طناً. المسافة 45م. يجب تمرير القطعة فوق خط كهرباء 33 KV بعيداً 12م عن المسار. أحد مشغّلي الرافعة يُبلّغ عن خلل في نظام الفرامل.",
+        tasks:[
+          {id:"t29",num:1,text:"وفق ASME B30.5 وBS 7121-3، ما اشتراطات Tandem Lift الإلزامية؟ كيف توزّع الحمل 55 طناً مع مراعاة 75% من SWL لكل رافعة؟ من يقود العملية (Lead Crane)؟",marks:25,criteria:"اشتراطات Tandem الإلزامية (8) + حساب توزيع الحمل الصحيح (10) + صلاحيات Lead Crane (7)."},
+          {id:"t30",num:2,text:"وفق OSHA 1926.1408 وNFPA 70E، ما مسافات الحماية الإلزامية من خط 33 KV؟ ما إجراءات التنسيق مع شركة الكهرباء؟ كيف تُصمم مسار الرفع الآمن؟",marks:25,criteria:"مسافات الحماية الصحيحة لـ 33 KV (10) + إجراءات التنسيق مع الجهة الكهربائية (8) + تصميم المسار (7)."},
+          {id:"t31",num:3,text:"ما معيار ASME B30.5 بشأن أعطال الرافعة؟ هل يُسمح بالمتابعة مع خلل الفرامل؟ ما الإجراء التدريجي Step-by-Step للتعامل مع هذا الموقف؟",marks:25,criteria:"معيار ASME B30.5 بشأن الأعطال (8) + قرار الإيقاف المبرر (7) + الإجراء التدريجي الكامل (10)."},
+          {id:"t32",num:4,text:"بعد اكتمال الرفع، يُكتشف أن أحد الفريق تجاوز منطقة Under the Load. عالج هذا كـ Near Miss وفق ILO ولوائح العمل السعودية. ما الدروس المستفادة الإجرائية؟",marks:25,criteria:"قرار الإبلاغ الصحيح (5) + تطبيق Near Miss Investigation (12) + الدروس المنهجية (8)."}
+        ]
+      }
+    ]
+  },
+  {
+    id:"iosh",title:"آيوش الإدارة بأمان",icon:"📋",passMark:60,trainer:"مدرب IOSH المعتمد",hours:"24 ساعة",certValidityYears:3,
+    scenarios:[
+      {
+        id:"s_iosh_a",title:"السيناريو الأول — شركة خدمات لوجستية",
+        role:"مدير العمليات المسؤول عن السلامة",
+        roleDesc:"أنت مدير عمليات في شركة خدمات لوجستية متوسطة الحجم، مُلزَم بتطبيق IOSH Managing Safely.",
+        context:"FastTrack Logistics، 120 موظفاً. 8 إصابات في 6 أشهر (4 انزلاق وسقوط، 3 رفع يدوي، 1 فوركليفت). معدل الغياب ارتفع 35%. شكاوى ضغط العمل تتصاعد. الإدارة العليا تراها طبيعية. لا يوجد نظام Near Miss. آخر تقييم مخاطر قبل 4 سنوات.",
+        tasks:[
+          {id:"t33",num:1,text:"وفق IOSH Managing Safely، كيف تبني 'Business Case for Safety' لإقناع الإدارة؟ استخدم Cost of Accidents Iceberg مع تكاليف مباشرة وغير مباشرة.",marks:25,criteria:"نموذج Iceberg بمكوناته الكاملة (8) + حساب تكريبي لتكلفة 8 إصابات (8) + خطة تقديم الحجة للإدارة (9)."},
+          {id:"t34",num:2,text:"صمّم نظام إبلاغ Near Miss يُشجّع Positive Reporting Culture. ما العوائق النفسية الرئيسية للإبلاغ وكيف تتغلب عليها؟",marks:25,criteria:"مكونات نظام الإبلاغ الفعّال (10) + العوائق النفسية وحلولها (10) + ربط بمبادئ IOSH (5)."},
+          {id:"t35",num:3,text:"طبّق منهج IOSH الرباعي (Spot the Hazard → Assess the Risk → Fix the Problem → Measure Performance) على مخاطر الانزلاق والسقوط والرفع اليدوي بشكل مفصّل.",marks:25,criteria:"تطبيق المنهج الرباعي لكل خطر (12) + ضوابط SMART قابلة للقياس (8) + مؤشرات الأداء (5)."},
+          {id:"t36",num:4,text:"ارتفاع شكاوى الإجهاد وضغط العمل — مخاطر نفسية اجتماعية (Psychosocial Hazards). كيف يُصنّفها IOSH؟ ما دور المدير المباشر؟ كيف تُدمجها في نظام إدارة السلامة؟",marks:25,criteria:"تصنيف المخاطر النفسية الستة (12) + دور المدير المباشر (8) + آلية الدمج في النظام (5)."}
+        ]
+      },
+      {
+        id:"s_iosh_b",title:"السيناريو الثاني — شركة بناء وصيانة",
+        role:"مدير المشروع المسؤول عن السلامة",
+        roleDesc:"أنت مدير مشروع في شركة بناء وصيانة متوسطة، مُلزَم بتطبيق ثقافة السلامة الإيجابية.",
+        context:"AlBina Construction، 65 موظفاً من 3 جنسيات. المشرفون يُطبّقون السلامة كردود أفعال فقط. العمال يرفعون قيود السلامة لتسريع العمل. لا توجد Toolbox Talks منتظمة. بعض المشرفين يُعاقبون على الإبلاغ لحماية سجل الشركة.",
+        tasks:[
+          {id:"t37",num:1,text:"وفق نموذج Bradley Curve، حدّد موقع الشركة الحالي وصف الانتقال المطلوب. كيف يختلف نهج Compliance-Driven عن Value-Driven في السلامة؟",marks:25,criteria:"موضع الشركة مع مبرر واضح (8) + الانتقال المطلوب وخطواته (10) + الفرق بين النهجين (7)."},
+          {id:"t38",num:2,text:"3 جنسيات مع اختلاف ثقافي في الإدراك. كيف تُصمم برنامج توعية سلامة فعّال يراعي الاختلافات الثقافية؟ ما التحديات التواصلية وكيف تتغلب عليها؟",marks:25,criteria:"استراتيجيات التواصل متعدد اللغات/الثقافات (12) + تصميم البرنامج (8) + التحديات والحلول (5)."},
+          {id:"t39",num:3,text:"صمّم برنامج Toolbox Talk فعّال ومنتظم لفريق البناء. ما مواصفاته السبعة على الأقل؟ كيف تُقيّم فعاليته؟",marks:25,criteria:"7+ مواصفات Toolbox Talk الفعّال (14) + آلية التقييم والمتابعة (6) + الجدول الزمني (5)."},
+          {id:"t40",num:4,text:"رفع قيود السلامة لتسريع العمل — Production vs Safety Pressure. وفق IOSH، كيف تُنشئ ثقافة تجعل السلامة قيمة ذاتية؟ ما دور القيادة (Visible Leadership) في تشكيل هذه الثقافة؟",marks:25,criteria:"تعريف Value-Based Safety Culture (8) + دور Visible Leadership (9) + خطوات التحول الثقافي (8)."}
+        ]
+      }
+    ]
+  }
+];
+
+/* ═══════════════════════════════════════════════
+   🛠️  وظائف مساعدة
+═══════════════════════════════════════════════ */
+const fmt=iso=>iso?new Date(iso).toLocaleDateString("ar-SA-u-ca-gregory-nu-latn",{year:"numeric",month:"long",day:"numeric"}):"—";
+const fmtFull=iso=>iso?new Date(iso).toLocaleString("ar-SA-u-ca-gregory-nu-latn",{year:"numeric",month:"short",day:"numeric",hour:"2-digit",minute:"2-digit"}):"—";
+const serial=id=>id.slice(-8).toUpperCase();
+const uid=()=>Math.random().toString(36).slice(2,10);
+const wordCount=txt=>txt?txt.trim().split(/\s+/).filter(Boolean).length:0;
+
+function getDeadline(sub){
+  if(!sub?.startTime)return null;
+  const hours=(sub.examHours||EXAM_HOURS)+(sub.extensionHours||0);
+  return new Date(new Date(sub.startTime).getTime()+hours*3600000);
+}
+function isExpired(sub){return sub?.startTime?getDeadline(sub)<new Date():false;}
+function timeLeft(sub){
+  const d=getDeadline(sub);if(!d)return null;
+  const diff=d-new Date();
+  if(diff<=0)return{h:0,m:0,s:0,expired:true};
+  return{h:Math.floor(diff/3600000),m:Math.floor((diff%3600000)/60000),s:Math.floor((diff%60000)/1000),expired:false};
+}
+
+/* ← وظائف البيانات مُعرَّفة أعلاه عبر Supabase */
+
+/* ═══════════════════════════════════════════════
+   ⏱️  عداد الوقت
+═══════════════════════════════════════════════ */
+function TimerBadge({sub}){
+  const[t,setT]=useState(()=>timeLeft(sub));
+  useEffect(()=>{const i=setInterval(()=>setT(timeLeft(sub)),1000);return()=>clearInterval(i);},[sub?.startTime,sub?.extensionHours]);
+  if(!t)return null;
+  const color=t.expired?"#dc2626":t.h<2?"#d97706":"#059669";
+  const txt=t.expired?"انتهى الوقت":`${String(t.h).padStart(2,"0")}:${String(t.m).padStart(2,"0")}:${String(t.s).padStart(2,"0")}`;
+  return <span style={{background:color,color:"white",borderRadius:8,padding:"4px 12px",fontSize:13,fontFamily:"monospace",fontWeight:600,letterSpacing:1}}>{txt}</span>;
+}
+
+/* ═══════════════════════════════════════════════
+   🏅  شهادة الاجتياز
+═══════════════════════════════════════════════ */
+function Certificate({sub,onBack,courses}){
+  const course=(courses||COURSES).find(c=>c.id===sub.courseId);
+  return(
+    <div dir="rtl" style={{fontFamily:"'Segoe UI',Tahoma,sans-serif",padding:"1rem",background:"#f0f4f8",minHeight:"100vh"}}>
+      <style>{`@media print{.no-print{display:none!important}}`}</style>
+      <div style={{maxWidth:800,margin:"0 auto"}}>
+        <div className="no-print" style={{display:"flex",gap:10,marginBottom:16}}>
+          <button onClick={onBack} style={{padding:"8px 18px",border:"0.5px solid #d1d5db",borderRadius:8,background:"white",cursor:"pointer",fontSize:14}}>← لوحة التحكم</button>
+          <button onClick={()=>window.print()} style={{padding:"8px 18px",border:"none",borderRadius:8,background:"#1a5f4a",color:"white",cursor:"pointer",fontSize:14}}>🖨 طباعة / حفظ PDF</button>
+        </div>
+        <div style={{background:"white",border:"4px double #1a5f4a",borderRadius:20,padding:"3.5rem",position:"relative",overflow:"hidden"}}>
+          <div style={{position:"absolute",top:-30,right:-30,width:160,height:160,borderRadius:"50%",background:"#e8f5f0",opacity:.5}}/>
+          <div style={{position:"absolute",bottom:-30,left:-30,width:160,height:160,borderRadius:"50%",background:"#e8f5f0",opacity:.5}}/>
+          <div style={{textAlign:"center",marginBottom:"2rem"}}>
+            <div style={{width:72,height:72,borderRadius:"50%",background:"#1a5f4a",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 12px",fontSize:32}}>🏅</div>
+            <div style={{fontSize:12,color:"#9ca3af",letterSpacing:3}}>{ORG_EN.toUpperCase()}</div>
+            <div style={{fontSize:21,fontWeight:700,color:"#1a5f4a",marginTop:4}}>{ORG}</div>
+            <div style={{width:60,height:2,background:"#f0a500",margin:"12px auto 0",borderRadius:2}}/>
+          </div>
+          <div style={{textAlign:"center",marginBottom:"1.5rem"}}>
+            <div style={{fontSize:13,color:"#9ca3af",marginBottom:6,letterSpacing:2}}>شهادة اجتياز</div>
+            <div style={{fontSize:15,color:"#374151"}}>يشهد <strong>{ORG}</strong> بأن</div>
+            <div style={{fontSize:30,fontWeight:700,color:"#111827",margin:"10px 0",letterSpacing:1}}>{sub.studentName}</div>
+            <div style={{fontSize:13,color:"#6b7280"}}>رقم الهوية: {sub.studentId}</div>
+          </div>
+          <div style={{textAlign:"center",marginBottom:"2rem"}}>
+            <div style={{fontSize:14,color:"#6b7280",marginBottom:10}}>قد أتم بنجاح اجتياز اختبار دورة</div>
+            <div style={{background:"#f0faf6",border:"1px solid #a7f3d0",borderRadius:14,padding:"1rem 2rem",display:"inline-block"}}>
+              <div style={{fontSize:28,marginBottom:4}}>{course?.icon}</div>
+              <div style={{fontSize:22,fontWeight:700,color:"#1a5f4a"}}>{sub.courseTitle}</div>
+              <div style={{fontSize:13,color:"#6b7280",marginTop:4}}>{sub.scenarioTitle}</div>
+            </div>
+          </div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:12,marginBottom:"2.5rem"}}>
+            {[["📅","تاريخ الإصدار",fmt(sub.reviewedAt)],["🎯","الدرجة المحققة",`${sub.totalScore||0}/${sub.maxScore||100}`],["🔖","رقم الشهادة",serial(sub.id)]].map(([ic,l,v],i)=>(
+              <div key={i} style={{background:"#f8fafc",borderRadius:10,padding:".9rem",textAlign:"center",border:"0.5px solid #e5e7eb"}}>
+                <div style={{fontSize:20,marginBottom:4}}>{ic}</div>
+                <div style={{fontSize:11,color:"#9ca3af",marginBottom:2}}>{l}</div>
+                <div style={{fontSize:14,fontWeight:600,color:"#111827"}}>{v}</div>
+              </div>
+            ))}
+          </div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:50,paddingTop:"1.5rem",borderTop:"0.5px solid #e5e7eb",marginBottom:"1rem"}}>
+            {["توقيع المدرب","توقيع مدير المركز"].map((s,i)=>(
+              <div key={i} style={{textAlign:"center"}}>
+                <div style={{height:44,borderBottom:"1.5px solid #374151",marginBottom:6}}/>
+                <div style={{fontSize:12,color:"#6b7280"}}>{s}</div>
+              </div>
+            ))}
+          </div>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+            <div style={{fontSize:11,color:"#9ca3af"}}>
+              التحقق: <a href={`https://verify.silatalitqan.com/cert/CERT-${serial(sub.id)}`} target="_blank" style={{color:"#1a5f4a"}}>verify.silatalitqan.com/cert/CERT-{serial(sub.id)}</a>
+            </div>
+            <div style={{background:"#1a5f4a",color:"white",borderRadius:6,padding:"4px 12px",fontSize:12,fontFamily:"monospace",letterSpacing:1}}>{serial(sub.id)}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════
+   📚  إدارة الدورات — بناء وتعديل
+═══════════════════════════════════════════════ */
+const uid2=()=>Math.random().toString(36).slice(2,8);
+
+function CourseBuilder({courses,onSave,onBack}){
+  const[view,setView]=useState("list"); // list | edit
+  const[editing,setEditing]=useState(null);
+  const[saving,setSaving]=useState(false);
+  const emptyTask=()=>({id:uid2(),num:1,text:"",marks:25,criteria:""});
+  const emptyScenario=()=>({id:uid2(),title:"",role:"",roleDesc:"",context:"",tasks:[emptyTask()]});
+  const emptyCourse=()=>({id:uid2(),title:"",icon:"📋",passMark:60,scenarios:[emptyScenario()]});
+
+  const startNew=()=>{setEditing({...JSON.parse(JSON.stringify(emptyCourse())),accessCode:""});setView("edit");};
+  const startEdit=c=>{setEditing({...JSON.parse(JSON.stringify(c)),accessCode:COURSE_CODES[c.id]||""});setView("edit");};
+
+  const updField=(path,val)=>setEditing(prev=>{
+    const d=JSON.parse(JSON.stringify(prev));
+    const keys=path.split(".");
+    let o=d;for(let i=0;i<keys.length-1;i++)o=o[keys[i]];
+    o[keys[keys.length-1]]=val;
+    return d;
+  });
+
+  const addScenario=()=>setEditing(prev=>{const d=JSON.parse(JSON.stringify(prev));d.scenarios.push(emptyScenario());return d;});
+  const removeScenario=idx=>setEditing(prev=>{const d=JSON.parse(JSON.stringify(prev));d.scenarios.splice(idx,1);return d;});
+  const addTask=sIdx=>setEditing(prev=>{const d=JSON.parse(JSON.stringify(prev));const t=emptyTask();t.num=d.scenarios[sIdx].tasks.length+1;d.scenarios[sIdx].tasks.push(t);return d;});
+  const removeTask=(sIdx,tIdx)=>setEditing(prev=>{const d=JSON.parse(JSON.stringify(prev));d.scenarios[sIdx].tasks.splice(tIdx,1);d.scenarios[sIdx].tasks.forEach((t,i)=>t.num=i+1);return d;});
+
+  const doSave=async()=>{
+    if(!editing.title.trim()){alert("يرجى إدخال اسم الدورة");return;}
+    const code=(editing.accessCode||"").trim().toUpperCase();
+    // بدون رمز دخول لا يستطيع أي متدرب فتح الدورة — إلزامي
+    if(!code&&!COURSE_CODES[editing.id]){alert("يرجى تحديد رمز دخول للدورة — بدونه لا يستطيع المتدربون الدخول إليها");return;}
+    setSaving(true);
+    if(code&&code!==COURSE_CODES[editing.id]){
+      COURSE_CODES[editing.id]=code;
+      await dbSetMeta("course_codes",JSON.stringify(COURSE_CODES));
+    }
+    const{accessCode,...courseData}=editing; // الرمز يُخزَّن في exam_meta وليس داخل بيانات الدورة
+    await dbSaveCourse(courseData);
+    const exists=courses.find(c=>c.id===courseData.id);
+    const updated=exists?courses.map(c=>c.id===courseData.id?courseData:c):[...courses,courseData];
+    onSave(updated);
+    setSaving(false);setView("list");
+  };
+
+  const doDelete=async(id)=>{
+    if(!confirm("هل أنت متأكد من حذف هذه الدورة؟"))return;
+    await dbDeleteCourse(id);
+    // سجّل الحذف حتى لا تعود الدورة الافتراضية بعد تحديث الصفحة
+    try{
+      const raw=await dbGetMeta("deleted_courses");
+      const arr=raw?JSON.parse(raw):[];
+      if(!arr.includes(id)){arr.push(id);await dbSetMeta("deleted_courses",JSON.stringify(arr));}
+    }catch(e){}
+    // احذف رمز الدخول المرتبط بها
+    try{
+      if(COURSE_CODES[id]){delete COURSE_CODES[id];await dbSetMeta("course_codes",JSON.stringify(COURSE_CODES));}
+    }catch(e){}
+    onSave(courses.filter(c=>c.id!==id));
+  };
+
+  const inp={width:"100%",padding:"9px 12px",border:"0.5px solid #e5e7eb",borderRadius:8,fontSize:14,boxSizing:"border-box",fontFamily:"inherit"};
+  const ta={...inp,minHeight:80,resize:"vertical"};
+
+  if(view==="list") return(
+    <div dir="rtl" style={{maxWidth:860,margin:"0 auto",padding:"0 0 2rem"}}>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
+        <div>
+          <div style={{fontSize:17,fontWeight:700}}>إدارة الدورات والأسئلة</div>
+          <div style={{fontSize:12,color:"#9ca3af"}}>{courses.length} دورة — يمكنك التعديل والإضافة والحذف</div>
+        </div>
+        <div style={{display:"flex",gap:8}}>
+          <button onClick={onBack} style={{padding:"8px 16px",border:"0.5px solid #e5e7eb",borderRadius:8,background:"white",cursor:"pointer",fontSize:13}}>← رجوع</button>
+          <button onClick={startNew} style={{padding:"8px 16px",border:"none",borderRadius:8,background:"#1a5f4a",color:"white",cursor:"pointer",fontSize:13,fontWeight:600}}>+ إضافة دورة جديدة</button>
+        </div>
+      </div>
+      {courses.map((c,i)=>(
+        <div key={c.id} style={{background:"white",border:"0.5px solid #e5e7eb",borderRadius:12,padding:"1rem 1.25rem",marginBottom:10,display:"flex",alignItems:"center",gap:12}}>
+          <div style={{fontSize:28}}>{c.icon}</div>
+          <div style={{flex:1}}>
+            <div style={{fontSize:15,fontWeight:600}}>{c.title}</div>
+            <div style={{fontSize:12,color:"#9ca3af",marginTop:2}}>
+              {c.scenarios.length} سيناريو · {c.scenarios.reduce((a,s)=>a+s.tasks.length,0)} مهمة · نجاح {c.passMark}%
+              {COURSE_CODES[c.id]
+                ?<span style={{color:"#1a5f4a",fontWeight:600}}> · 🔑 {COURSE_CODES[c.id]}</span>
+                :<span style={{color:"#dc2626",fontWeight:600}}> · ⚠️ بلا رمز دخول — عدّل الدورة وحدد رمزاً</span>}
+            </div>
+          </div>
+          <div style={{display:"flex",gap:8}}>
+            <button onClick={()=>startEdit(c)} style={{padding:"6px 14px",border:"0.5px solid #e5e7eb",borderRadius:8,background:"white",cursor:"pointer",fontSize:13,fontWeight:500}}>✏️ تعديل</button>
+            <button onClick={()=>doDelete(c.id)} style={{padding:"6px 14px",border:"0.5px solid #fecaca",borderRadius:8,background:"#fef2f2",color:"#dc2626",cursor:"pointer",fontSize:13}}>🗑 حذف</button>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+
+  // Edit view
+  return(
+    <div dir="rtl" style={{maxWidth:860,margin:"0 auto",padding:"0 0 4rem"}}>
+      <div style={{display:"flex",gap:10,alignItems:"center",marginBottom:16,position:"sticky",top:0,background:"#f0f4f8",padding:"10px 0",zIndex:10}}>
+        <button onClick={()=>setView("list")} style={{padding:"7px 14px",border:"0.5px solid #e5e7eb",borderRadius:8,background:"white",cursor:"pointer",fontSize:13}}>← رجوع</button>
+        <div style={{flex:1,fontSize:16,fontWeight:700}}>{editing.id&&courses.find(c=>c.id===editing.id)?"تعديل دورة":"إضافة دورة جديدة"}</div>
+        <button onClick={doSave} disabled={saving} style={{padding:"8px 20px",border:"none",borderRadius:8,background:"#1a5f4a",color:"white",cursor:"pointer",fontSize:14,fontWeight:600}}>{saving?"⏳ جارٍ الحفظ...":"✅ حفظ الدورة"}</button>
+      </div>
+
+      {/* معلومات الدورة */}
+      <div style={{background:"white",border:"0.5px solid #e5e7eb",borderRadius:12,padding:"1.25rem",marginBottom:14}}>
+        <div style={{fontSize:14,fontWeight:600,color:"#1a5f4a",marginBottom:12}}>معلومات الدورة</div>
+        <div style={{display:"grid",gridTemplateColumns:"2fr 1fr 1fr",gap:10,marginBottom:10}}>
+          <div>
+            <label style={{fontSize:12,color:"#6b7280",display:"block",marginBottom:4}}>اسم الدورة *</label>
+            <input style={inp} value={editing.title} onChange={e=>updField("title",e.target.value)} placeholder="مثال: الأوشا المتقدمة"/>
+          </div>
+          <div>
+            <label style={{fontSize:12,color:"#6b7280",display:"block",marginBottom:4}}>الأيقونة</label>
+            <input style={inp} value={editing.icon} onChange={e=>updField("icon",e.target.value)} placeholder="🎓"/>
+          </div>
+          <div>
+            <label style={{fontSize:12,color:"#6b7280",display:"block",marginBottom:4}}>نسبة النجاح %</label>
+            <input style={inp} type="number" min="50" max="100" value={editing.passMark} onChange={e=>updField("passMark",parseInt(e.target.value)||60)}/>
+          </div>
+        </div>
+        <div style={{display:"grid",gridTemplateColumns:"2fr 1fr 1fr",gap:10,marginBottom:10}}>
+          <div>
+            <label style={{fontSize:12,color:"#6b7280",display:"block",marginBottom:4}}>اسم المدرب (يظهر في الشهادة)</label>
+            <input style={inp} value={editing.trainer||""} onChange={e=>updField("trainer",e.target.value)} placeholder="اسم المدرب المعتمد"/>
+          </div>
+          <div>
+            <label style={{fontSize:12,color:"#6b7280",display:"block",marginBottom:4}}>الساعات التدريبية</label>
+            <input style={inp} value={editing.hours||""} onChange={e=>updField("hours",e.target.value)} placeholder="30 ساعة"/>
+          </div>
+          <div>
+            <label style={{fontSize:12,color:"#6b7280",display:"block",marginBottom:4}}>صلاحية الشهادة (سنوات)</label>
+            <input style={inp} type="number" min="1" max="10" value={editing.certValidityYears||3} onChange={e=>updField("certValidityYears",parseInt(e.target.value)||3)}/>
+          </div>
+        </div>
+        <div style={{display:"grid",gridTemplateColumns:"2fr 2fr",gap:10}}>
+          <div>
+            <label style={{fontSize:12,color:"#6b7280",display:"block",marginBottom:4}}>🔑 رمز دخول الدورة <span style={{color:"#dc2626"}}>*</span></label>
+            <input style={{...inp,direction:"ltr",textAlign:"center",letterSpacing:2,fontWeight:700}} value={editing.accessCode||""} onChange={e=>updField("accessCode",e.target.value.toUpperCase())} placeholder="COURSE123"/>
+          </div>
+          <div style={{alignSelf:"end",fontSize:11,color:"#9ca3af",lineHeight:1.7,paddingBottom:6}}>
+            هذا الرمز يُعطى للمتدربين لدخول الاختبار — بدونه لا يمكن فتح الدورة. يُحفظ عند حفظ الدورة.
+          </div>
+        </div>
+      </div>
+
+      {/* السيناريوهات */}
+      {editing.scenarios.map((sc,sIdx)=>(
+        <div key={sc.id} style={{background:"white",border:"0.5px solid #e5e7eb",borderRadius:12,padding:"1.25rem",marginBottom:14}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
+            <div style={{fontSize:14,fontWeight:700,color:"#1a5f4a"}}>السيناريو {sIdx+1}</div>
+            {editing.scenarios.length>1&&<button onClick={()=>removeScenario(sIdx)} style={{padding:"4px 10px",border:"0.5px solid #fecaca",borderRadius:6,background:"#fef2f2",color:"#dc2626",cursor:"pointer",fontSize:12}}>حذف السيناريو</button>}
+          </div>
+
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:10}}>
+            <div>
+              <label style={{fontSize:12,color:"#6b7280",display:"block",marginBottom:4}}>عنوان السيناريو *</label>
+              <input style={inp} value={sc.title} onChange={e=>updField(`scenarios.${sIdx}.title`,e.target.value)} placeholder="السيناريو الأول — اسم الموقف"/>
+            </div>
+            <div>
+              <label style={{fontSize:12,color:"#6b7280",display:"block",marginBottom:4}}>الدور المهني</label>
+              <input style={inp} value={sc.role} onChange={e=>updField(`scenarios.${sIdx}.role`,e.target.value)} placeholder="مثال: مشرف السلامة"/>
+            </div>
+          </div>
+          <div style={{marginBottom:10}}>
+            <label style={{fontSize:12,color:"#6b7280",display:"block",marginBottom:4}}>وصف الدور</label>
+            <input style={inp} value={sc.roleDesc} onChange={e=>updField(`scenarios.${sIdx}.roleDesc`,e.target.value)} placeholder="أنت مشرف السلامة في شركة..."/>
+          </div>
+          <div style={{marginBottom:14}}>
+            <label style={{fontSize:12,color:"#6b7280",display:"block",marginBottom:4}}>نص السيناريو *</label>
+            <textarea style={{...ta,minHeight:120}} value={sc.context} onChange={e=>updField(`scenarios.${sIdx}.context`,e.target.value)} placeholder="اكتب السيناريو التفصيلي هنا — الموقف والتحديات والبيئة..."/>
+          </div>
+
+          {/* المهام */}
+          <div style={{background:"#f8fafc",borderRadius:8,padding:"12px",marginBottom:8}}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
+              <div style={{fontSize:13,fontWeight:600}}>المهام ({sc.tasks.length})</div>
+              <button onClick={()=>addTask(sIdx)} style={{padding:"5px 12px",border:"none",borderRadius:6,background:"#1a5f4a",color:"white",cursor:"pointer",fontSize:12,fontWeight:600}}>+ مهمة جديدة</button>
+            </div>
+            {sc.tasks.map((task,tIdx)=>{
+              const dupText=task.text&&task.text.trim()&&editing.scenarios.some((os,osi)=>os.tasks.some(o=>!(osi===sIdx&&o.id===task.id)&&o.text&&o.text.trim()===task.text.trim()));
+              return(
+              <div key={task.id} style={{background:"white",border:dupText?"1.5px solid #fca5a5":"0.5px solid #e5e7eb",borderRadius:8,padding:"12px",marginBottom:8}}>
+                {dupText&&<div style={{background:"#fef2f2",border:"0.5px solid #fecaca",color:"#dc2626",borderRadius:6,padding:"5px 10px",fontSize:12,fontWeight:600,marginBottom:8}}>⚠️ نص هذه المهمة مكرر مع مهمة أخرى في الدورة — احذف إحداهما ثم احفظ الدورة</div>}
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
+                  <div style={{fontSize:13,fontWeight:600,color:"#1a5f4a"}}>المهمة {task.num}</div>
+                  <div style={{display:"flex",alignItems:"center",gap:8}}>
+                    <label style={{fontSize:11,color:"#9ca3af"}}>الدرجة:</label>
+                    <input type="number" min="5" max="100" value={task.marks} onChange={e=>updField(`scenarios.${sIdx}.tasks.${tIdx}.marks`,parseInt(e.target.value)||25)} style={{width:60,padding:"4px 8px",border:"0.5px solid #e5e7eb",borderRadius:6,fontSize:13,textAlign:"center"}}/>
+                    {sc.tasks.length>1&&<button onClick={()=>removeTask(sIdx,tIdx)} style={{padding:"3px 8px",border:"0.5px solid #fecaca",borderRadius:6,background:"#fef2f2",color:"#dc2626",cursor:"pointer",fontSize:11}}>حذف</button>}
+                  </div>
+                </div>
+                <div style={{marginBottom:8}}>
+                  <label style={{fontSize:11,color:"#6b7280",display:"block",marginBottom:3}}>نص المهمة / السؤال *</label>
+                  <textarea style={{...ta,minHeight:70}} value={task.text} onChange={e=>updField(`scenarios.${sIdx}.tasks.${tIdx}.text`,e.target.value)} placeholder="اكتب نص المهمة التحليلية هنا..."/>
+                </div>
+                <div>
+                  <label style={{fontSize:11,color:"#6b7280",display:"block",marginBottom:3}}>معايير التصحيح (للمدرب فقط)</label>
+                  <textarea style={{...ta,minHeight:60}} value={task.criteria} onChange={e=>updField(`scenarios.${sIdx}.tasks.${tIdx}.criteria`,e.target.value)} placeholder="اكتب معايير التصحيح والدرجات التفصيلية هنا..."/>
+                </div>
+              </div>
+            );})}
+          </div>
+        </div>
+      ))}
+
+      <button onClick={addScenario} style={{width:"100%",padding:"10px",border:"1.5px dashed #1a5f4a",borderRadius:10,background:"#f0faf6",color:"#1a5f4a",cursor:"pointer",fontSize:14,fontWeight:600,marginBottom:14}}>+ إضافة سيناريو جديد</button>
+      <button onClick={doSave} disabled={saving} style={{width:"100%",padding:"12px",border:"none",borderRadius:10,background:"#1a5f4a",color:"white",cursor:"pointer",fontSize:15,fontWeight:700}}>{saving?"⏳ جارٍ الحفظ...":"✅ حفظ الدورة"}</button>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════
+   ✏️  تصحيح الاختبار
+═══════════════════════════════════════════════ */
+function GradingView({sub,onSave,onBack,courses}){
+  const course=(courses||COURSES).find(c=>c.id===sub.courseId);
+  // دعم متعدد السيناريوهات
+  const allScenarios=sub.isMultiScenario&&sub.completedScenarioIds
+    ?sub.completedScenarioIds.map(id=>course?.scenarios.find(s=>s.id===id)).filter(Boolean)
+    :[course?.scenarios.find(s=>s.id===sub.scenarioId)].filter(Boolean);
+  const allTasks=allScenarios.flatMap(sc=>sc?.tasks||[]);
+  const[scores,setScores]=useState(sub.scores||{});
+  // اجمع درجات المهام الحالية فقط — تجاهل درجات مهام حُذفت من الدورة بعد التقديم
+  const validTaskIds=new Set(allTasks.map(t=>t.id));
+  const total=allTasks.length>0
+    ?Object.entries(scores).reduce((a,[id,v])=>a+(validTaskIds.has(id)?(v||0):0),0)
+    :Object.values(scores).reduce((a,b)=>a+(b||0),0);
+  // الدرجة العظمى من المهام الفعلية أولاً — يصحّح تلقائياً السجلات القديمة المتأثرة بخطأ المضاعفة
+  const maxScore=allTasks.reduce((a,t)=>a+t.marks,0)||sub.maxScore||100;
+  const pct=Math.round((total/maxScore)*100);
+  const passing=pct>=(course?.passMark||60);
+  return(
+    <div dir="rtl" style={{fontFamily:"system-ui,sans-serif",padding:"1rem",maxWidth:900,margin:"0 auto",paddingBottom:"3rem"}}>
+      <div style={{display:"flex",gap:10,alignItems:"center",marginBottom:16,position:"sticky",top:0,background:"#f0f4f8",padding:"10px 0",zIndex:10}}>
+        <button onClick={onBack} style={{padding:"7px 14px",border:"0.5px solid #e5e7eb",borderRadius:8,background:"white",cursor:"pointer",fontSize:13}}>← رجوع</button>
+        <div style={{flex:1}}>
+          <div style={{fontSize:16,fontWeight:600}}>{sub.studentName} — تصحيح الاختبار</div>
+          <div style={{fontSize:12,color:"#6b7280"}}>{sub.courseTitle} | {sub.scenarioTitle}</div>
+          <div style={{fontSize:11,color:"#9ca3af",marginTop:2}}>
+            هوية: {sub.studentId} {sub.studentBirthdate&&`| م: ${sub.studentBirthdate}`} {sub.studentPhone&&`| جوال: ${sub.studentPhone}`} {sub.studentOrderNum&&`| طلب: ${sub.studentOrderNum}`}
+          </div>
+        </div>
+        <div style={{background:passing?"#d1fae5":"#fee2e2",borderRadius:12,padding:"8px 20px",textAlign:"center"}}>
+          <div style={{fontSize:20,fontWeight:700,color:passing?"#065f46":"#991b1b"}}>{pct}%</div>
+          <div style={{fontSize:11,color:passing?"#065f46":"#991b1b"}}>{total}/{maxScore}</div>
+        </div>
+      </div>
+      {allScenarios.map((sc,scIdx)=>(
+        <div key={sc?.id||scIdx}>
+          {allScenarios.length>1&&sc&&(
+            <div style={{background:"#1a5f4a",color:"white",padding:"8px 16px",borderRadius:10,fontSize:13,fontWeight:600,marginBottom:8,marginTop:scIdx>0?16:0}}>
+              📋 {sc.title}
+            </div>
+          )}
+          {(sc?.tasks||[]).map(task=>(
+            <div key={task.id} style={{background:"white",border:"0.5px solid #e5e7eb",borderRadius:12,padding:"1.25rem",marginBottom:12}}>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:10}}>
+                <div style={{fontSize:14,fontWeight:600,color:"#1a5f4a"}}>المهمة {task.num} ({task.marks} درجة)</div>
+                <div style={{display:"flex",alignItems:"center",gap:8}}>
+                  <span style={{fontSize:12,color:"#6b7280"}}>الدرجة:</span>
+                  <input type="number" min="0" max={task.marks} value={scores[task.id]??""} onChange={e=>setScores(s=>({...s,[task.id]:Math.min(task.marks,Math.max(0,parseInt(e.target.value)||0))}))} style={{width:65,padding:"5px 8px",border:"0.5px solid #e5e7eb",borderRadius:6,fontSize:15,textAlign:"center",fontWeight:600}}/>
+                  <span style={{fontSize:12,color:"#9ca3af"}}>/ {task.marks}</span>
+                </div>
+              </div>
+              <p style={{fontSize:13,color:"#374151",margin:"0 0 10px",lineHeight:1.7,background:"#f8fafc",padding:"8px 12px",borderRadius:8}}>{task.text}</p>
+              <div style={{background:"#fffbeb",border:"0.5px solid #fde68a",borderRadius:8,padding:"8px 12px",marginBottom:8}}>
+                <div style={{fontSize:11,color:"#92400e",fontWeight:600,marginBottom:4}}>📋 معايير التصحيح (للمدرب فقط)</div>
+                <div style={{fontSize:12,color:"#78350f",lineHeight:1.7}}>{task.criteria}</div>
+              </div>
+              <div style={{background:"#f8fafc",borderRadius:8,padding:"10px 12px"}}>
+                <div style={{fontSize:11,color:"#9ca3af",marginBottom:4}}>إجابة المتدرب:</div>
+                <div style={{fontSize:13,color:"#374151",lineHeight:1.9,whiteSpace:"pre-wrap",minHeight:60}}>{sub.answers?.[task.id]||<span style={{color:"#d1d5db",fontStyle:"italic"}}>لم يُجب</span>}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      ))}
+      <div style={{display:"flex",gap:10,marginTop:16,position:"sticky",bottom:0,background:"#f0f4f8",padding:"10px 0"}}>
+        <button onClick={()=>onSave(sub.id,scores,total,maxScore,"grading")} style={{flex:1,padding:"11px",border:"0.5px solid #e5e7eb",borderRadius:10,background:"white",cursor:"pointer",fontSize:14}}>💾 حفظ مؤقت</button>
+        <button onClick={()=>{
+          if(window.confirm(`⚠️ تأكيد الاعتماد\n\nالطالب: ${sub.studentName}\nالنتيجة: ${passing?"ناجح ✓":"راسب ✗"} — ${pct}%\n\nهل أنت متأكد؟`)){
+            onSave(sub.id,scores,total,maxScore,passing?"pass":"fail");
+          }
+        }} style={{flex:2,padding:"11px",border:"none",borderRadius:10,background:passing?"#059669":"#dc2626",color:"white",cursor:"pointer",fontSize:14,fontWeight:600}}>
+          {passing?"✓ اعتماد كـ ناجح":"✗ اعتماد كـ راسب"} — {pct}%
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════
+   📊  لوحة تحكم المدرب
+═══════════════════════════════════════════════ */
+/* 🔐 إعدادات الأمان */
+function SecuritySettings(){
+  const[newPass,setNewPass]=useState("");
+  const[saving,setSaving]=useState(false);
+  const[msg,setMsg]=useState("");
+  const[show,setShow]=useState(false);
+
+  const savePass=async()=>{
+    if(!newPass||newPass.length<6){setMsg("❌ كلمة المرور يجب أن تكون 6 أحرف على الأقل");return;}
+    setSaving(true);
+    await dbSetMeta("trainer_code",newPass);
+    TRAINER_CODE=newPass;
+    setMsg("✅ تم تغيير كلمة المرور بنجاح");
+    setNewPass("");setSaving(false);
+    setTimeout(()=>setMsg(""),3000);
+  };
+
+  return(
+    <div style={{background:"white",border:"0.5px solid #e5e7eb",borderRadius:12,marginBottom:14,overflow:"hidden"}}>
+      <button onClick={()=>setShow(!show)} style={{width:"100%",padding:"12px 16px",background:"none",border:"none",cursor:"pointer",display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+        <span style={{fontSize:13,fontWeight:600}}>🔐 إعدادات الأمان — تغيير كلمة مرور المدرب</span>
+        <span style={{fontSize:12,color:"#9ca3af"}}>{show?"▲":"▼"}</span>
+      </button>
+      {show&&(
+        <div style={{padding:"0 16px 16px",borderTop:"0.5px solid #f3f4f6"}}>
+          <div style={{fontSize:12,color:"#6b7280",marginBottom:10,marginTop:10}}>كلمة المرور الحالية محفوظة بأمان في Supabase</div>
+          <div style={{display:"flex",gap:8,alignItems:"center"}}>
+            <input type="password" value={newPass} onChange={e=>setNewPass(e.target.value)} placeholder="كلمة مرور جديدة (6+ أحرف)" style={{flex:1,padding:"9px 12px",border:"0.5px solid #e5e7eb",borderRadius:8,fontSize:14}}/>
+            <button onClick={savePass} disabled={saving} style={{padding:"9px 16px",border:"none",borderRadius:8,background:"#1a5f4a",color:"white",cursor:"pointer",fontSize:13,fontWeight:600,whiteSpace:"nowrap"}}>{saving?"⏳...":"✓ حفظ"}</button>
+          </div>
+          {msg&&<div style={{marginTop:8,fontSize:12,color:msg.includes("✅")?"#059669":"#dc2626"}}>{msg}</div>}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function Dashboard({subs,setSubs,courses,onGrade,onCert,onLogout,onRefresh,onManageCourses,onLoad}){
+  const[filter,setFilter]=useState("all");
+  const[selCourse,setSelCourse]=useState("all");
+  const[searchQ,setSearchQ]=useState("");
+  const[ext,setExt]=useState({});
+  const[showConfirm,setShowConfirm]=useState(false);
+  const[archiving,setArchiving]=useState(false);
+  const[lastArchive,setLastArchive]=useState(null);
+  const[refreshing,setRefreshing]=useState(false);
+  const[notifs,setNotifs]=useState([]);
+  const[showNotifs,setShowNotifs]=useState(false);
+  const[editSub,setEditSub]=useState(null);
+  const[editForm,setEditForm]=useState({});
+  const[examHours,setExamHours]=useState(24);
+  const[examHoursInput,setExamHoursInput]=useState("24");
+  const[savingHours,setSavingHours]=useState(false);
+
+  useEffect(()=>{
+    dbGetMeta("last_archive").then(v=>setLastArchive(v));
+    dbGetMeta("exam_hours").then(v=>{if(v){setExamHours(parseInt(v));setExamHoursInput(v);EXAM_HOURS=parseInt(v);}});
+    getNotifications().then(n=>setNotifs(n));
+    if(onLoad)onLoad();
+  },[]);
+
+  const saveExamHours=async()=>{
+    setSavingHours(true);
+    const h=parseInt(examHoursInput)||24;
+    await dbSetMeta("exam_hours",String(h));
+    setExamHours(h);EXAM_HOURS=h;
+    setSavingHours(false);
+  };
+
+  const HIDDEN_STATUSES=["reentry_pending","reentry_approved","reentry_used","reentry_rejected","reentry_consumed","scenario_completed"];
+  const filtered=subs.filter(s=>{
+    if(HIDDEN_STATUSES.includes(s.status))return false;
+    if(filter!=="all"&&s.status!==filter)return false;
+    if(selCourse!=="all"&&s.courseId!==selCourse)return false;
+    if(searchQ.trim()){
+      const q=searchQ.trim().toLowerCase();
+      return(s.studentName||"").toLowerCase().includes(q)||(s.studentId||"").includes(q)||(s.studentPhone||"").includes(q);
+    }
+    return true;
+  });
+  const counts={all:subs.filter(s=>!HIDDEN_STATUSES.includes(s.status)).length,inprog:subs.filter(s=>s.status==="in_progress").length,pending:subs.filter(s=>s.status==="submitted").length,grading:subs.filter(s=>s.status==="grading").length,pass:subs.filter(s=>s.status==="pass").length,fail:subs.filter(s=>s.status==="fail").length,reentry:subs.filter(s=>s.status==="reentry_pending").length};
+
+  /* مؤشر المساحة — Supabase 500MB مجاناً */
+  const dataSize=new Blob([JSON.stringify(subs)]).size;
+  const MAX=500*1024*1024;
+  const pct=Math.min(100,Math.round((dataSize/MAX)*100));
+  const usedKB=(dataSize/1024).toFixed(1);
+  const mColor=pct>=80?"#dc2626":pct>=60?"#d97706":"#059669";
+
+  const exportExcel=async(courseId,data)=>{
+    await window.loadXLSX(); // تحميل XLSX عند الحاجة فقط
+    const d=(data||subs).filter(s=>(courseId==="all"||s.courseId===courseId)&&!HIDDEN_STATUSES.includes(s.status));
+    if(!d.length){alert("لا توجد بيانات");return false;}
+    const month=new Date().toLocaleDateString("ar-SA-u-ca-gregory-nu-latn",{year:"numeric",month:"long"});
+    const rows=[[`أرشيف اختبارات ${month} — ${ORG}`],[],
+      ["الاسم","رقم الهوية","تاريخ الميلاد","رقم الجوال","رقم الطلب","الدورة","السيناريو","الدرجة","النسبة%","الحالة","تاريخ التقديم","تاريخ المراجعة"],
+      ...d.map(s=>[s.studentName,s.studentId,s.studentBirthdate||"",s.studentPhone||"",s.studentOrderNum||"",s.courseTitle,s.scenarioTitle||"",s.totalScore??"-",s.maxScore&&s.totalScore!==undefined?Math.round(((s.totalScore||0)/s.maxScore)*100)+"%":"-",s.status==="pass"?"ناجح":s.status==="fail"?"راسب":s.status==="grading"?"قيد التصحيح":s.status==="in_progress"?"جارٍ الاختبار":"انتظار",fmtFull(s.submittedAt),fmtFull(s.reviewedAt)])
+    ];
+    const ws=XLSX.utils.aoa_to_sheet(rows);
+    ws["!cols"]=[{wch:22},{wch:14},{wch:14},{wch:14},{wch:14},{wch:24},{wch:30},{wch:10},{wch:10},{wch:14},{wch:22},{wch:22}];
+    const wb=XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb,ws,"النتائج");
+    const stats=[["إحصائيات"],[],["الإجمالي",d.length],["ناجح",d.filter(s=>s.status==="pass").length],["راسب",d.filter(s=>s.status==="fail").length],["لم يُصحَّح",d.filter(s=>["submitted","grading"].includes(s.status)).length],["نسبة النجاح",d.filter(s=>["pass","fail"].includes(s.status)).length?Math.round(d.filter(s=>s.status==="pass").length/d.filter(s=>["pass","fail"].includes(s.status)).length*100)+"%":"—"]];
+    XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(stats),"إحصائيات");
+    try{
+      XLSX.writeFile(wb,`أرشيف_${new Date().getFullYear()}_${String(new Date().getMonth()+1).padStart(2,"0")}_صلة_الإتقان.xlsx`);
+    }catch(e){console.error("exportExcel:",e);alert("⚠️ تعذّر إنشاء ملف Excel — لم يتم مسح أي بيانات");return false;}
+    return true;
+  };
+
+  const doArchive=async()=>{
+    setArchiving(true);
+    const ok=await exportExcel("all",subs);
+    if(ok){
+      await dbClearAll();
+      setSubs([]);
+      const now=new Date().toISOString();
+      await dbSetMeta("last_archive",now);
+      setLastArchive(now);
+      setShowConfirm(false);
+    }
+    setArchiving(false);
+  };
+
+  const doExtend=async(subId,hours)=>{
+    if(!hours||!(hours>0))return; // منع القيم السالبة أو الصفرية
+    const updated=subs.find(s=>s.id===subId);
+    if(!updated)return;
+    const ns={...updated,extensionHours:(updated.extensionHours||0)+hours};
+    await dbUpsert(ns);
+    setSubs(prev=>prev.map(s=>s.id===subId?ns:s));
+  };
+
+  const doRefresh=async()=>{
+    setRefreshing(true);
+    await onRefresh();
+    setRefreshing(false);
+  };
+
+  const badge=s=>{
+    const m={in_progress:{bg:"#dbeafe",c:"#1e40af",l:"جارٍ الاختبار"},submitted:{bg:"#fef3c7",c:"#92400e",l:"انتظار التصحيح"},grading:{bg:"#ede9fe",c:"#5b21b6",l:"قيد التصحيح"},pass:{bg:"#d1fae5",c:"#065f46",l:"ناجح ✓"},fail:{bg:"#fee2e2",c:"#991b1b",l:"راسب ✗"},expired:{bg:"#f3f4f6",c:"#6b7280",l:"منتهي الوقت"}};
+    const x=m[s]||m.submitted;
+    return <span style={{background:x.bg,color:x.c,borderRadius:6,padding:"3px 10px",fontSize:12,fontWeight:600}}>{x.l}</span>;
+  };
+
+  return(
+    <div dir="rtl" style={{fontFamily:"system-ui,sans-serif",minHeight:"100vh",background:"#f0f4f8",padding:"1rem"}}>
+      {showConfirm&&(
+        <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.5)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:100}}>
+          <div style={{background:"white",borderRadius:16,padding:"2rem",maxWidth:440,width:"90%",textAlign:"center",direction:"rtl"}}>
+            <div style={{fontSize:44,marginBottom:12}}>📦</div>
+            <div style={{fontSize:18,fontWeight:600,marginBottom:8}}>تأكيد الأرشفة الشهرية</div>
+            <div style={{fontSize:14,color:"#6b7280",lineHeight:1.8,marginBottom:16}}>سيتم تنزيل Excel يحتوي على <strong>{subs.length} متدرب</strong> ثم مسح جميع البيانات من النظام لتحرير المساحة.<br/><span style={{color:"#dc2626",fontWeight:600}}>⚠️ تأكد من حفظ الملف قبل الإغلاق</span></div>
+            <div style={{display:"flex",gap:8}}>
+              <button onClick={()=>setShowConfirm(false)} style={{flex:1,padding:"11px",border:"0.5px solid #e5e7eb",borderRadius:10,background:"white",cursor:"pointer",fontSize:14}}>إلغاء</button>
+              <button onClick={doArchive} disabled={archiving} style={{flex:2,padding:"11px",border:"none",borderRadius:10,background:"#1a5f4a",color:"white",cursor:"pointer",fontSize:14,fontWeight:600}}>{archiving?"⏳ جارٍ التنزيل...":"✓ تنزيل ومسح البيانات"}</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* modal تعديل بيانات المتدرب */}
+      {editSub&&(
+        <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.5)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:100,padding:"1rem"}}>
+          <div style={{background:"white",borderRadius:16,padding:"2rem",maxWidth:500,width:"100%",direction:"rtl",maxHeight:"90vh",overflowY:"auto"}}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
+              <div style={{fontSize:17,fontWeight:700}}>تعديل بيانات المتدرب</div>
+              <button onClick={()=>setEditSub(null)} style={{background:"none",border:"none",fontSize:20,cursor:"pointer",color:"#9ca3af"}}>✕</button>
+            </div>
+            {[
+              ["studentName","الاسم بالإنجليزية","text","Mohammed Ali"],
+              ["studentId","رقم الهوية","text","1xxxxxxxxx"],
+              ["studentBirthdate","تاريخ الميلاد","date",""],
+              ["studentPhone","رقم الجوال","text","05xxxxxxxx"],
+              ["studentOrderNum","رقم الطلب","text","ORD-XXXXXXXX"],
+            ].map(([field,label,type,ph])=>(
+              <div key={field} style={{marginBottom:12}}>
+                <label style={{fontSize:13,color:"#374151",display:"block",marginBottom:4,fontWeight:500}}>{label}</label>
+                <input type={type} value={editForm[field]||""} onChange={e=>setEditForm(f=>({...f,[field]:e.target.value}))}
+                  placeholder={ph} style={{width:"100%",padding:"9px 12px",border:"0.5px solid #e5e7eb",borderRadius:8,fontSize:14,boxSizing:"border-box",direction:type==="date"?"ltr":field==="studentName"||field==="studentId"||field==="studentPhone"||field==="studentOrderNum"?"ltr":"rtl"}}/>
+              </div>
+            ))}
+            <div style={{marginBottom:12}}>
+              <label style={{fontSize:13,color:"#374151",display:"block",marginBottom:4,fontWeight:500}}>الدورة</label>
+              <select value={editForm.courseId||""} onChange={e=>{const c=courses.find(x=>x.id===e.target.value);setEditForm(f=>({...f,courseId:e.target.value,courseTitle:c?.title||f.courseTitle}));}} style={{width:"100%",padding:"9px 12px",border:"0.5px solid #e5e7eb",borderRadius:8,fontSize:14,background:"white"}}>
+                {courses.map(c=><option key={c.id} value={c.id}>{c.icon} {c.title}</option>)}
+              </select>
+            </div>
+            <div style={{marginBottom:16}}>
+              <label style={{fontSize:13,color:"#374151",display:"block",marginBottom:4,fontWeight:500}}>الحالة</label>
+              <select value={editForm.status||""} onChange={e=>setEditForm(f=>({...f,status:e.target.value}))} style={{width:"100%",padding:"9px 12px",border:"0.5px solid #e5e7eb",borderRadius:8,fontSize:14,background:"white"}}>
+                <option value="in_progress">جارٍ الاختبار</option>
+                <option value="submitted">انتظار التصحيح</option>
+                <option value="grading">قيد التصحيح</option>
+                <option value="pass">ناجح</option>
+                <option value="fail">راسب</option>
+              </select>
+            </div>
+            <div style={{background:"#fef2f2",border:"0.5px solid #fecaca",borderRadius:8,padding:"8px 12px",marginBottom:16,fontSize:12,color:"#991b1b"}}>
+              ⚠️ التعديل يُحدَّث مباشرةً في قاعدة البيانات — تأكد من البيانات قبل الحفظ
+            </div>
+            <div style={{display:"flex",gap:8}}>
+              <button onClick={()=>setEditSub(null)} style={{flex:1,padding:"10px",border:"0.5px solid #e5e7eb",borderRadius:8,background:"white",cursor:"pointer",fontSize:14}}>إلغاء</button>
+              <button onClick={async()=>{
+                const updated={...editSub,...editForm};
+                await dbUpsert(updated);
+                setSubs(prev=>prev.map(s=>s.id===updated.id?updated:s));
+                setEditSub(null);
+              }} style={{flex:2,padding:"10px",border:"none",borderRadius:8,background:"#1a5f4a",color:"white",cursor:"pointer",fontSize:14,fontWeight:600}}>💾 حفظ التعديلات</button>
+            </div>
+          </div>
+        </div>
+      )}
+      <div style={{maxWidth:1080,margin:"0 auto"}}>
+        {/* Header */}
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
+          <div>
+            <div style={{fontSize:20,fontWeight:700,color:"#111827"}}>{ORG}</div>
+            <div style={{fontSize:13,color:"#6b7280"}}>لوحة تحكم المدرب — الاختبارات التحليلية</div>
+          </div>
+          <div style={{display:"flex",gap:8}}>
+            {/* 🔔 جرس الإشعارات */}
+            <div style={{position:"relative"}}>
+              <button onClick={async()=>{setShowNotifs(!showNotifs);if(!showNotifs){await markNotifsRead();setNotifs(prev=>prev.map(n=>({...n,read:true})));}}} style={{padding:"7px 14px",border:"0.5px solid #e5e7eb",borderRadius:8,background:"white",cursor:"pointer",fontSize:13,position:"relative"}}>
+                🔔 {notifs.filter(n=>!n.read).length>0&&<span style={{position:"absolute",top:-4,right:-4,background:"#dc2626",color:"white",borderRadius:"50%",width:18,height:18,fontSize:10,display:"flex",alignItems:"center",justifyContent:"center",fontWeight:700}}>{notifs.filter(n=>!n.read).length}</span>}
+              </button>
+              {showNotifs&&(
+                <div style={{position:"absolute",left:0,top:"110%",width:320,background:"white",border:"0.5px solid #e5e7eb",borderRadius:12,boxShadow:"0 8px 24px rgba(0,0,0,0.12)",zIndex:50,maxHeight:400,overflowY:"auto",direction:"rtl"}}>
+                  <div style={{padding:"10px 14px",borderBottom:"0.5px solid #f3f4f6",fontSize:13,fontWeight:600}}>الإشعارات</div>
+                  {notifs.length===0&&<div style={{padding:"20px",textAlign:"center",color:"#9ca3af",fontSize:13}}>لا توجد إشعارات</div>}
+                  {notifs.map((n,i)=>(
+                    <div key={i} style={{padding:"10px 14px",borderBottom:"0.5px solid #f9fafb",background:n.read?"white":"#f0faf6"}}>
+                      <div style={{fontSize:12,fontWeight:600,color:"#1a5f4a"}}>
+                        {n.type==="new_submission"?"📝 اختبار جديد":n.type==="edit_request"?"✏️ طلب فتح تعديل":"🔄 طلب إعادة دخول"}
+                      </div>
+                      <div style={{fontSize:12,color:"#374151",marginTop:2}}>{n.data?.studentName} — {n.data?.courseTitle}</div>
+                      <div style={{fontSize:11,color:"#9ca3af",marginTop:2}}>{fmtFull(n.data?.time)}</div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            <button onClick={()=>setShowNotifs(false)||onManageCourses()} style={{padding:"7px 14px",border:"0.5px solid #e5e7eb",borderRadius:8,background:"white",cursor:"pointer",fontSize:13}}>📚 إدارة الدورات</button>
+            <button onClick={doRefresh} disabled={refreshing} style={{padding:"7px 14px",border:"0.5px solid #e5e7eb",borderRadius:8,background:"white",cursor:"pointer",fontSize:13}}>{refreshing?"⏳":"🔄"} تحديث</button>
+            <button onClick={()=>exportExcel("all")} style={{padding:"7px 14px",border:"0.5px solid #e5e7eb",borderRadius:8,background:"white",cursor:"pointer",fontSize:13}}>📊 Excel الكل</button>
+            <button onClick={onLogout} style={{padding:"7px 14px",border:"0.5px solid #e5e7eb",borderRadius:8,background:"white",cursor:"pointer",fontSize:13,color:"#6b7280"}}>خروج</button>
+          </div>
+        </div>
+
+        {/* مؤشر المساحة */}
+        <div style={{background:"white",border:`1px solid ${pct>=80?"#fecaca":"#e5e7eb"}`,borderRadius:12,padding:"1rem 1.25rem",marginBottom:14,display:"flex",alignItems:"center",gap:16,flexWrap:"wrap"}}>
+          <div style={{flex:1,minWidth:220}}>
+            <div style={{display:"flex",justifyContent:"space-between",marginBottom:6}}>
+              <span style={{fontSize:13,fontWeight:600,color:pct>=80?"#dc2626":"#374151"}}>{pct>=80?"⚠️ المساحة على وشك الامتلاء!":"☁️ Supabase — المساحة المستخدمة"}</span>
+              <span style={{fontSize:13,fontWeight:700,color:mColor}}>{pct}% ({usedKB} KB / 500 MB)</span>
+            </div>
+            <div style={{height:10,background:"#f3f4f6",borderRadius:5,overflow:"hidden"}}>
+              <div style={{height:"100%",width:`${pct}%`,background:mColor,borderRadius:5,transition:"width .5s"}}/>
+            </div>
+            <div style={{fontSize:11,color:"#9ca3af",marginTop:4}}>Supabase مجاني — يكفي لـ آلاف المتدربين ✅</div>
+          </div>
+          <div style={{display:"flex",flexDirection:"column",gap:6,alignItems:"flex-end"}}>
+            <button onClick={()=>subs.length>0?setShowConfirm(true):alert("لا توجد بيانات للأرشفة")} style={{padding:"8px 18px",border:"none",borderRadius:8,background:pct>=80?"#dc2626":"#1a5f4a",color:"white",cursor:"pointer",fontSize:13,fontWeight:600,whiteSpace:"nowrap"}}>📦 أرشفة الشهر وتحرير المساحة</button>
+            {lastArchive&&<div style={{fontSize:11,color:"#9ca3af"}}>آخر أرشفة: {fmt(lastArchive)}</div>}
+          </div>
+        </div>
+
+        {/* ⏱ التحكم في وقت الاختبار */}
+        <div style={{background:"white",border:"0.5px solid #e5e7eb",borderRadius:12,padding:"1rem 1.25rem",marginBottom:14,display:"flex",alignItems:"center",gap:16,flexWrap:"wrap"}}>
+          <div style={{flex:1}}>
+            <div style={{fontSize:13,fontWeight:600,marginBottom:6}}>⏱ وقت الاختبار الافتراضي</div>
+            <div style={{fontSize:11,color:"#9ca3af"}}>يُطبَّق على الاختبارات الجديدة — لا يؤثر على الاختبارات الجارية</div>
+          </div>
+          <div style={{display:"flex",alignItems:"center",gap:8}}>
+            <input type="number" min="1" max="72" value={examHoursInput} onChange={e=>setExamHoursInput(e.target.value)}
+              style={{width:70,padding:"8px 10px",border:"0.5px solid #e5e7eb",borderRadius:8,fontSize:16,textAlign:"center",fontWeight:700}}/>
+            <span style={{fontSize:13,color:"#6b7280"}}>ساعة</span>
+            <button onClick={saveExamHours} disabled={savingHours} style={{padding:"8px 16px",border:"none",borderRadius:8,background:"#1a5f4a",color:"white",cursor:"pointer",fontSize:13,fontWeight:600,whiteSpace:"nowrap"}}>
+              {savingHours?"⏳ جارٍ الحفظ...":"✓ تطبيق"}
+            </button>
+          </div>
+          <div style={{background:"#f0faf6",borderRadius:8,padding:"6px 14px",fontSize:12,color:"#065f46",fontWeight:600}}>
+            الوقت الحالي: {examHours} ساعة
+          </div>
+        </div>
+
+        {/* 🔐 إعدادات الأمان */}
+        <SecuritySettings/>
+
+        {/* 📊 إحصائيات شهرية لكل دورة */}
+        <div style={{background:"white",border:"0.5px solid #e5e7eb",borderRadius:12,marginBottom:14,overflow:"hidden"}}>
+          <div style={{padding:"10px 16px",borderBottom:"0.5px solid #f3f4f6",fontSize:13,fontWeight:600}}>📊 إحصائيات لكل دورة</div>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))",gap:0}}>
+            {courses.map(c=>{
+              const cSubs=subs.filter(s=>s.courseId===c.id&&!HIDDEN_STATUSES.includes(s.status));
+              const pass=cSubs.filter(s=>s.status==="pass").length;
+              const fail=cSubs.filter(s=>s.status==="fail").length;
+              const graded=pass+fail;
+              const pct=graded>0?Math.round(pass/graded*100):0;
+              return(
+                <div key={c.id} style={{padding:"12px 14px",borderLeft:"0.5px solid #f3f4f6"}}>
+                  <div style={{fontSize:12,fontWeight:600,color:"#374151",marginBottom:6}}>{c.icon} {c.title.substring(0,20)}</div>
+                  <div style={{display:"flex",gap:8,fontSize:11}}>
+                    <span style={{color:"#059669"}}>ناجح: {pass}</span>
+                    <span style={{color:"#dc2626"}}>راسب: {fail}</span>
+                    <span style={{color:"#d97706"}}>انتظار: {cSubs.filter(s=>["submitted","in_progress"].includes(s.status)).length}</span>
+                  </div>
+                  {graded>0&&<div style={{marginTop:6,height:6,background:"#f3f4f6",borderRadius:3,overflow:"hidden"}}>
+                    <div style={{height:"100%",width:pct+"%",background:"#059669",borderRadius:3}}/>
+                  </div>}
+                  {graded>0&&<div style={{fontSize:10,color:"#9ca3af",marginTop:2}}>نسبة النجاح: {pct}%</div>}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Stats */}
+        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(105px,1fr))",gap:8,marginBottom:14}}>
+          {[["الكل",counts.all,"#1a5f4a"],["جارٍ الاختبار",counts.inprog,"#1e40af"],["انتظار التصحيح",counts.pending,"#d97706"],["تصحيح",counts.grading,"#7c3aed"],["ناجح",counts.pass,"#059669"],["راسب",counts.fail,"#dc2626"],["إعادة دخول",counts.reentry,"#0369a1"]].map(([l,v,c],i)=>(
+            <div key={i} style={{background:"white",border:"0.5px solid #e5e7eb",borderRadius:10,padding:".8rem",textAlign:"center"}}>
+              <div style={{fontSize:11,color:"#9ca3af",marginBottom:2}}>{l}</div>
+              <div style={{fontSize:24,fontWeight:700,color:c}}>{v}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* 🔍 بحث + Filters */}
+        <div style={{display:"flex",gap:8,marginBottom:12,flexWrap:"wrap",alignItems:"center"}}>
+          <input value={searchQ} onChange={e=>setSearchQ(e.target.value)} placeholder="🔍 بحث بالاسم أو الهوية..." style={{padding:"6px 12px",borderRadius:8,border:"0.5px solid #e5e7eb",fontSize:12,minWidth:180}}/>
+          {[["all","الكل"],["in_progress","جارٍ"],["submitted","انتظار"],["grading","تصحيح"],["pass","ناجح"],["fail","راسب"]].map(([v,l])=>(
+            <button key={v} onClick={()=>setFilter(v)} style={{padding:"6px 14px",borderRadius:20,border:"0.5px solid",borderColor:filter===v?"#1a5f4a":"#e5e7eb",background:filter===v?"#1a5f4a":"white",color:filter===v?"white":"#374151",cursor:"pointer",fontSize:12,fontWeight:filter===v?600:400}}>{l}</button>
+          ))}
+          <select value={selCourse} onChange={e=>setSelCourse(e.target.value)} style={{padding:"6px 12px",borderRadius:8,border:"0.5px solid #e5e7eb",fontSize:12,background:"white",cursor:"pointer"}}>
+            <option value="all">جميع الدورات</option>
+            {courses.map(c=><option key={c.id} value={c.id}>{c.icon} {c.title}</option>)}
+          </select>
+          {selCourse!=="all"&&<button onClick={()=>exportExcel(selCourse)} style={{padding:"6px 14px",border:"none",borderRadius:8,background:"#1a5f4a",color:"white",cursor:"pointer",fontSize:12,fontWeight:600}}>📥 Excel هذه الدورة</button>}
+        </div>
+
+        {/* Table */}
+        {/* طلبات إعادة الدخول */}
+        {counts.reentry>0&&(
+          <div style={{background:"#eff6ff",border:"1px solid #bfdbfe",borderRadius:12,padding:"1rem 1.25rem",marginBottom:14}}>
+            <div style={{fontSize:14,fontWeight:600,color:"#1e40af",marginBottom:10}}>🔔 طلبات إعادة الدخول ({counts.reentry})</div>
+            {subs.filter(s=>s.status==="reentry_pending").map(req=>(
+              <div key={req.id} style={{background:"white",borderRadius:8,padding:"10px 14px",marginBottom:8,display:"flex",justifyContent:"space-between",alignItems:"center",gap:10,flexWrap:"wrap"}}>
+                <div>
+                  <div style={{fontWeight:600,fontSize:14}}>{req.studentName} <span style={{fontSize:12,color:"#9ca3af"}}>({req.studentId})</span></div>
+                  <div style={{fontSize:12,color:"#6b7280"}}>{req.courseTitle} | جوال: {req.studentPhone||"—"}</div>
+                  <div style={{fontSize:11,color:"#9ca3af"}}>{fmtFull(req.requestedAt)}</div>
+                </div>
+                <div style={{display:"flex",gap:8}}>
+                  <button onClick={async()=>{await dbUpsert({...req,status:"reentry_approved",approvedAt:new Date().toISOString()});const d=await dbLoad();setSubs(d);}} style={{padding:"6px 14px",border:"none",borderRadius:8,background:"#059669",color:"white",cursor:"pointer",fontSize:13,fontWeight:600}}>✓ موافقة</button>
+                  <button onClick={async()=>{await dbUpsert({...req,status:"reentry_rejected",rejectedAt:new Date().toISOString()});const d=await dbLoad();setSubs(d);}} style={{padding:"6px 14px",border:"none",borderRadius:8,background:"#dc2626",color:"white",cursor:"pointer",fontSize:13,fontWeight:600}}>✗ رفض</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* ✏️ طلبات فتح الاختبار للتعديل */}
+        {subs.filter(s=>s.editRequest?.status==="pending"&&s.status==="submitted").length>0&&(
+          <div style={{background:"#fffbeb",border:"1px solid #fde68a",borderRadius:12,padding:"1rem 1.25rem",marginBottom:14}}>
+            <div style={{fontSize:14,fontWeight:600,color:"#92400e",marginBottom:10}}>✏️ طلبات فتح الاختبار للتعديل ({subs.filter(s=>s.editRequest?.status==="pending"&&s.status==="submitted").length})</div>
+            {subs.filter(s=>s.editRequest?.status==="pending"&&s.status==="submitted").map(req=>(
+              <div key={req.id} style={{background:"white",borderRadius:8,padding:"10px 14px",marginBottom:8,display:"flex",justifyContent:"space-between",alignItems:"center",gap:10,flexWrap:"wrap"}}>
+                <div>
+                  <div style={{fontWeight:600,fontSize:14}}>{req.studentName} <span style={{fontSize:12,color:"#9ca3af"}}>({req.studentId})</span></div>
+                  <div style={{fontSize:12,color:"#6b7280"}}>{req.courseTitle} | جوال: {req.studentPhone||"—"}</div>
+                  <div style={{fontSize:11,color:"#9ca3af"}}>طُلب: {fmtFull(req.editRequest?.at)} · {isExpired(req)?"⚠️ وقته منتهٍ — مدّد له بعد الموافقة":"وقت الاختبار ما زال جارياً"}</div>
+                </div>
+                <div style={{display:"flex",gap:8}}>
+                  <button onClick={async()=>{const upd={...req,status:"in_progress",editRequest:{status:"approved",at:new Date().toISOString()}};await dbUpsert(upd);setSubs(prev=>prev.map(s=>s.id===upd.id?upd:s));}} style={{padding:"6px 14px",border:"none",borderRadius:8,background:"#059669",color:"white",cursor:"pointer",fontSize:13,fontWeight:600}}>✓ موافقة وفتح الاختبار</button>
+                  <button onClick={async()=>{const upd={...req,editRequest:{status:"rejected",at:new Date().toISOString()}};await dbUpsert(upd);setSubs(prev=>prev.map(s=>s.id===upd.id?upd:s));}} style={{padding:"6px 14px",border:"none",borderRadius:8,background:"#dc2626",color:"white",cursor:"pointer",fontSize:13,fontWeight:600}}>✗ رفض</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {filtered.length===0
+          ?<div style={{textAlign:"center",padding:"3rem",color:"#9ca3af",background:"white",borderRadius:12,border:"0.5px solid #e5e7eb"}}>لا توجد نتائج بعد</div>
+          :<div style={{background:"white",border:"0.5px solid #e5e7eb",borderRadius:12,overflow:"hidden"}}>
+            {filtered.map((sub,idx)=>{
+              const expired=isExpired(sub)&&sub.status==="in_progress";
+              return(
+                <div key={sub.id} style={{padding:"1rem 1.25rem",borderBottom:idx<filtered.length-1?"0.5px solid #f3f4f6":"none"}}>
+                  <div style={{display:"grid",gridTemplateColumns:"1.5fr 1.2fr 0.8fr auto",gap:10,alignItems:"center"}}>
+                    <div>
+                      <div style={{fontWeight:600,fontSize:15}}>{sub.studentName} <span style={{fontSize:12,color:"#9ca3af",fontWeight:400}}>({sub.studentId})</span></div>
+                      <div style={{fontSize:12,color:"#6b7280",marginTop:2}}>{sub.courseTitle}</div>
+                      <div style={{fontSize:11,color:"#9ca3af"}}>{sub.scenarioTitle}</div>
+                      {sub.studentBirthdate&&<div style={{fontSize:11,color:"#9ca3af"}}>م: {sub.studentBirthdate} {sub.studentPhone&&`| 📱 ${sub.studentPhone}`} {sub.studentOrderNum&&`| طلب: ${sub.studentOrderNum}`}</div>}
+                    </div>
+                    <div>
+                      <div style={{fontSize:12,color:"#6b7280",marginBottom:4}}>{sub.totalScore!==undefined&&sub.maxScore?`${sub.totalScore}/${sub.maxScore} (${Math.round((sub.totalScore/sub.maxScore)*100)}%)`:"لم يُصحَّح بعد"}</div>
+                      <div style={{display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>
+                        {badge(expired?"expired":sub.status)}
+                        {sub.status==="in_progress"&&<TimerBadge sub={sub}/>}
+                      </div>
+                      <div style={{fontSize:11,color:"#9ca3af",marginTop:2}}>{fmtFull(sub.submittedAt)}</div>
+                    </div>
+                    <div style={{textAlign:"center"}}>
+                      {sub.status==="in_progress"&&(
+                        <div style={{display:"flex",alignItems:"center",gap:4,justifyContent:"center",flexWrap:"wrap"}}>
+                          <input type="number" min="1" max="72" value={ext[sub.id]||""} onChange={e=>setExt(x=>({...x,[sub.id]:e.target.value}))} placeholder="ساعات" style={{width:55,padding:"4px 6px",border:"0.5px solid #e5e7eb",borderRadius:6,fontSize:12,textAlign:"center"}}/>
+                          <button onClick={()=>{if(ext[sub.id])doExtend(sub.id,parseInt(ext[sub.id]));}} style={{padding:"4px 10px",border:"none",borderRadius:6,background:"#f0a500",color:"white",cursor:"pointer",fontSize:11,fontWeight:600}}>تمديد</button>
+                        </div>
+                      )}
+                    </div>
+                    <div style={{display:"flex",gap:6,justifyContent:"flex-end"}}>
+                      {(sub.status==="submitted"||sub.status==="grading")&&<button onClick={()=>onGrade(sub)} style={{padding:"6px 14px",borderRadius:8,border:"none",background:"#7c3aed",color:"white",cursor:"pointer",fontSize:12,fontWeight:600}}>تصحيح</button>}
+                      {sub.status==="pass"&&<button onClick={()=>onCert(sub)} style={{padding:"6px 14px",borderRadius:8,border:"none",background:"#f0a500",color:"white",cursor:"pointer",fontSize:12,fontWeight:600}}>🏅 شهادة</button>}
+                      {sub.status==="fail"&&<button onClick={()=>onGrade(sub)} style={{padding:"6px 10px",borderRadius:8,border:"0.5px solid #e5e7eb",background:"white",cursor:"pointer",fontSize:12,color:"#6b7280"}}>مراجعة</button>}
+                      <button onClick={()=>{setEditSub(sub);setEditForm({studentName:sub.studentName,studentId:sub.studentId,studentBirthdate:sub.studentBirthdate||"",studentPhone:sub.studentPhone||"",studentOrderNum:sub.studentOrderNum||"",courseId:sub.courseId,courseTitle:sub.courseTitle,status:sub.status});}} style={{padding:"6px 10px",borderRadius:8,border:"0.5px solid #e5e7eb",background:"white",cursor:"pointer",fontSize:12,color:"#374151"}}>✏️</button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        }
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════
+   📝  واجهة الاختبار
+═══════════════════════════════════════════════ */
+function ExamView({sub,setSubs,subs,onSubmit,onNextScenario,courses,setActiveSub}){
+  const course=(courses||COURSES).find(c=>c.id===sub.courseId);
+  const scenario=course?.scenarios.find(s=>s.id===sub.scenarioId);
+  const[answers,setAnswers]=useState(sub.answers||{});
+  const[taskIdx,setTaskIdx]=useState(0);
+  const[expanded,setExpanded]=useState(true);
+  const[saved,setSaved]=useState(false);
+  const[justExpired,setJustExpired]=useState(false);
+  const[showNextScenario,setShowNextScenario]=useState(false);
+  const expired=isExpired(sub);
+
+  // هل يوجد سيناريو تالٍ؟
+  const currentScenarioIdx=course?.scenarios.findIndex(s=>s.id===sub.scenarioId)??0;
+  const nextScenario=course?.scenarios[currentScenarioIdx+1]||null;
+  const isLastScenario=!nextScenario;
+
+  // ── Polling — تحقق من التمديد كل 60 ثانية ──────────────
+  useEffect(()=>{
+    if(expired)return;
+    const poll=setInterval(async()=>{
+      try{
+        const fresh=await _sb.from("exam_subs").select("data").eq("id",sub.id).single();
+        if(fresh?.data?.data){
+          const updated=fresh.data.data;
+          // إذا تغيّر extensionHours أو startTime — حدّث الـ activeSub
+          if(updated.extensionHours!==sub.extensionHours||updated.startTime!==sub.startTime){
+            setSubs(prev=>prev.map(s=>s.id===sub.id?updated:s));
+            setActiveSub(updated);
+          }
+        }
+      }catch(e){}
+    },60*1000); // كل دقيقة
+    return()=>clearInterval(poll);
+  },[sub.id,sub.extensionHours,expired]);
+
+  // ⏲ تحديث دوري لحالة انتهاء الوقت — تظهر شاشة الانتهاء دون الحاجة لأي كتابة
+  const[,setTick]=useState(0);
+  useEffect(()=>{
+    const t=setInterval(()=>setTick(x=>x+1),15*1000);
+    return()=>clearInterval(t);
+  },[]);
+
+  // ⏰ بعد انتهاء الوقت: تحقق تلقائياً من التمديد كل 30 ثانية وأعد فتح الاختبار فوراً
+  useEffect(()=>{
+    if(!expired)return;
+    const poll=setInterval(async()=>{
+      try{
+        const{data}=await _sb.from("exam_subs").select("data").eq("id",sub.id).single();
+        if(data?.data&&!isExpired(data.data)){
+          clearInterval(poll);
+          setSubs(prev=>prev.map(s=>s.id===sub.id?data.data:s));
+          if(setActiveSub)setActiveSub(data.data);
+        }
+      }catch(e){}
+    },30*1000);
+    return()=>clearInterval(poll);
+  },[expired,sub.id]);
+
+  // Auto-save كل 3 دقائق بصمت — عبر refs حتى لا يُعاد ضبط المؤقت مع كل حرف
+  const answersRef=useRef(answers);
+  useEffect(()=>{answersRef.current=answers;},[answers]);
+  const subRef=useRef(sub);
+  useEffect(()=>{subRef.current=sub;},[sub]);
+  useEffect(()=>{
+    if(expired)return;
+    const interval=setInterval(async()=>{
+      const updated={...subRef.current,answers:answersRef.current,autoSavedAt:new Date().toISOString()};
+      await dbUpsert(updated);
+      setSubs(prev=>prev.map(s=>s.id===updated.id?updated:s));
+    },3*60*1000);
+    return()=>clearInterval(interval);
+  },[sub.id,expired]);
+
+  // حفظ عند إغلاق أو تحديث الصفحة
+  useEffect(()=>{
+    const handleUnload=()=>{
+      if(!expired&&answers&&Object.keys(answers).length>0){
+        const updated={...sub,answers,autoSavedAt:new Date().toISOString()};
+        // إرسال فعلي لقاعدة البيانات عند الإغلاق — fetch keepalive يستمر بعد إغلاق الصفحة
+        try{
+          fetch(`${SUPABASE_URL}/rest/v1/exam_subs?on_conflict=id`,{
+            method:"POST",keepalive:true,
+            headers:{"Content-Type":"application/json","apikey":SUPABASE_KEY,"Authorization":`Bearer ${SUPABASE_KEY}`,"Prefer":"resolution=merge-duplicates"},
+            body:JSON.stringify({id:updated.id,data:updated,updated_at:new Date().toISOString()})
+          }).catch(()=>{});
+        }catch(e){}
+        // حفظ احتياطي في localStorage
+        try{const all=JSON.parse(localStorage.getItem("itqan_v3_fb")||"[]");const ns=all.filter(s=>s.id!==updated.id);ns.push(updated);localStorage.setItem("itqan_v3_fb",JSON.stringify(ns));}catch{}
+      }
+    };
+    window.addEventListener("beforeunload",handleUnload);
+    return()=>window.removeEventListener("beforeunload",handleUnload);
+  },[answers,expired,sub]);
+
+  // تحذير عند محاولة إغلاق الصفحة
+  useEffect(()=>{
+    const handleBeforeUnload=(e)=>{
+      if(!expired){
+        e.preventDefault();
+        e.returnValue="إجاباتك محفوظة — هل تريد مغادرة صفحة الاختبار؟";
+        return e.returnValue;
+      }
+    };
+    window.addEventListener("beforeunload",handleBeforeUnload);
+    return()=>window.removeEventListener("beforeunload",handleBeforeUnload);
+  },[expired]);
+
+  // Auto-save عند انتهاء الوقت
+  useEffect(()=>{
+    if(!expired)return;
+    const autoSave=async()=>{
+      const updated={...sub,answers,autoSavedOnExpiry:true};
+      await dbUpsert(updated);
+      setJustExpired(true);
+    };
+    autoSave();
+  },[expired]);
+
+  if(!scenario)return <div style={{padding:"2rem",textAlign:"center",color:"#dc2626"}}>خطأ: السيناريو غير موجود</div>;
+
+  const task=scenario.tasks[taskIdx]||scenario.tasks[0];
+  if(!task)return <div style={{padding:"2rem",textAlign:"center",color:"#dc2626"}}>خطأ في تحميل المهمة</div>;
+  const allAnswered=scenario.tasks.every(t=>(answers[t.id]||"").trim().length>50);
+
+  const saveDraft=async()=>{
+    const updated={...sub,answers};
+    await dbUpsert(updated);
+    setSubs(prev=>prev.map(s=>s.id===sub.id?updated:s));
+    setSaved(true);setTimeout(()=>setSaved(false),2000);
+    return updated;
+  };
+
+  // ↩ الرجوع لسيناريو سابق مكتمل (ضمن نفس نافذة الوقت فقط — startTime يميّز المحاولة الحالية عن محاولات قديمة)
+  const sameAttempt=s=>s.studentId===sub.studentId&&s.courseId===sub.courseId&&s.startTime===sub.startTime&&s.status==="scenario_completed";
+  const hasPrevScenario=currentScenarioIdx>0&&subs.some(s=>s.id!==sub.id&&sameAttempt(s));
+  const goPrevScenario=async()=>{
+    const prevSc=[...(course?.scenarios||[])].slice(0,currentScenarioIdx).reverse().find(scn=>subs.some(s=>sameAttempt(s)&&s.scenarioId===scn.id));
+    if(!prevSc)return;
+    const target=subs.find(s=>sameAttempt(s)&&s.scenarioId===prevSc.id);
+    if(!target)return;
+    const savedCur={...sub,answers,status:"scenario_completed"};
+    const reopened={...target,status:"in_progress"};
+    await dbUpsert(savedCur);
+    await dbUpsert(reopened);
+    setSubs(prev=>prev.map(s=>s.id===savedCur.id?savedCur:s.id===reopened.id?reopened:s));
+    onNextScenario(reopened);
+  };
+
+  if(expired)return(
+    <div dir="rtl" style={{fontFamily:"system-ui,sans-serif",display:"flex",alignItems:"center",justifyContent:"center",minHeight:"100vh",background:"#f0f4f8"}}>
+      <div style={{background:"white",border:"0.5px solid #e5e7eb",borderRadius:16,padding:"2.5rem",maxWidth:460,textAlign:"center",boxShadow:"0 4px 20px rgba(0,0,0,0.06)"}}>
+        <div style={{fontSize:52,marginBottom:14}}>⏰</div>
+        <div style={{fontSize:20,fontWeight:700,marginBottom:8,color:"#d97706"}}>انتهى وقت الاختبار</div>
+        <div style={{background:"#d1fae5",border:"0.5px solid #a7f3d0",borderRadius:10,padding:"10px 14px",marginBottom:16,fontSize:13,color:"#065f46",fontWeight:600}}>
+          ✅ إجاباتك محفوظة بالكامل ولم تُحذف
+        </div>
+        <div style={{fontSize:14,color:"#6b7280",lineHeight:1.9,marginBottom:"1.5rem"}}>
+          تواصل مع المدرب لتمديد الوقت.<br/>
+          <strong>سيُفتح الاختبار تلقائياً فور التمديد</strong> — لا تغلق هذه الصفحة.<br/>
+          <span style={{fontSize:12,color:"#9ca3af"}}>(يتحقق تلقائياً كل 30 ثانية — وإجاباتك محفوظة)</span>
+        </div>
+        <div style={{background:"#f8fafc",borderRadius:10,padding:"1rem",marginBottom:"1.5rem",textAlign:"right",fontSize:13}}>
+          <div style={{marginBottom:4}}><b>الدورة:</b> {sub.courseTitle}</div>
+          <div style={{color:"#9ca3af",fontSize:12}}>رقم الاختبار: {serial(sub.id)}</div>
+        </div>
+      </div>
+    </div>
+  );
+
+  return(
+    <div dir="rtl" style={{fontFamily:"system-ui,sans-serif",minHeight:"100vh",background:"#f0f4f8"}}>
+
+      {/* نافذة الاختيار — إنهاء أم الانتقال للسيناريو التالي */}
+      {showNextScenario&&nextScenario&&(
+        <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.6)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:100,padding:"1rem"}}>
+          <div style={{background:"white",borderRadius:20,padding:"2.5rem",maxWidth:480,width:"100%",textAlign:"center",boxShadow:"0 20px 60px rgba(0,0,0,0.2)"}}>
+            <div style={{fontSize:48,marginBottom:14}}>🎯</div>
+            <div style={{fontSize:20,fontWeight:700,marginBottom:8}}>أتممت السيناريو الأول!</div>
+            <div style={{fontSize:14,color:"#6b7280",lineHeight:1.9,marginBottom:"1.5rem"}}>
+              يوجد سيناريو إضافي في هذه الدورة.<br/>
+              هل تريد الانتقال إليه أم إنهاء الاختبار الآن؟
+            </div>
+            <div style={{background:"#f0faf6",border:"0.5px solid #a7f3d0",borderRadius:12,padding:"1rem",marginBottom:"1.5rem",textAlign:"right"}}>
+              <div style={{fontSize:12,color:"#9ca3af",marginBottom:4}}>السيناريو التالي:</div>
+              <div style={{fontSize:15,fontWeight:600,color:"#1a5f4a"}}>{nextScenario.title}</div>
+              <div style={{fontSize:12,color:"#6b7280",marginTop:4}}>الدور: {nextScenario.role}</div>
+              <div style={{fontSize:12,color:"#9ca3af",marginTop:4}}>{nextScenario.tasks.length} مهام — {nextScenario.tasks.reduce((a,t)=>a+t.marks,0)} درجة</div>
+            </div>
+            <div style={{display:"flex",gap:10}}>
+              <button onClick={()=>{if(window.confirm("⚠️ تأكيد الإرسال النهائي\n\nبعد الإرسال لا يمكن التعديل إلا بموافقة المدرب.\nهل أنت متأكد من إرسال الاختبار للتصحيح؟"))onSubmit({...sub,answers});}} style={{flex:1,padding:"12px",border:"0.5px solid #e5e7eb",borderRadius:10,background:"white",cursor:"pointer",fontSize:14,color:"#6b7280",fontWeight:500}}>
+                إنهاء الاختبار الآن
+              </button>
+              <button onClick={async()=>{
+                // احفظ السيناريو الحالي بحالة "مكتمل" — لا يظهر كاختبار منفصل
+                const savedSub={...sub,answers,status:"scenario_completed"};
+                await dbUpsert(savedSub);
+                // إن وُجد سجل سابق لهذا السيناريو (سبق فتحه في هذه المحاولة نفسها) أعد فتحه بإجاباته بدل إنشاء سجل مكرر
+                const existing=subs.find(s=>s.id!==sub.id&&sameAttempt(s)&&s.scenarioId===nextScenario.id);
+                if(existing){
+                  const reopened={...existing,status:"in_progress"};
+                  await dbUpsert(reopened);
+                  setSubs(prev=>prev.map(s=>s.id===savedSub.id?savedSub:s.id===reopened.id?reopened:s));
+                  onNextScenario(reopened);
+                  return;
+                }
+                // أنشئ سجل السيناريو الجديد
+                const newSub={
+                  id:uid(),
+                  studentId:sub.studentId,studentName:sub.studentName,
+                  studentBirthdate:sub.studentBirthdate,studentOrderNum:sub.studentOrderNum,
+                  studentPhone:sub.studentPhone,
+                  courseId:sub.courseId,courseTitle:sub.courseTitle,
+                  scenarioId:nextScenario.id,scenarioTitle:nextScenario.title,
+                  answers:{},scores:{},totalScore:undefined,
+                  maxScore:nextScenario.tasks.reduce((a,t)=>a+t.marks,0),
+                  status:"in_progress",extensionHours:sub.extensionHours||0,
+                  startTime:sub.startTime,examHours:sub.examHours,
+                  submittedAt:null,reviewedAt:null,
+                  previousSubId:sub.id
+                };
+                await dbUpsert(newSub);
+                setSubs(prev=>[...prev.map(s=>s.id===savedSub.id?savedSub:s),newSub]);
+                onNextScenario(newSub);
+              }} style={{flex:2,padding:"12px",border:"none",borderRadius:10,background:"#1a5f4a",color:"white",cursor:"pointer",fontSize:14,fontWeight:700}}>
+                الانتقال للسيناريو التالي ←
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* Sticky header */}
+      <div style={{background:"#1a5f4a",padding:"1rem 1.5rem",display:"flex",justifyContent:"space-between",alignItems:"center",position:"sticky",top:0,zIndex:10}}>
+        <div>
+          <div style={{fontSize:11,color:"rgba(255,255,255,0.7)"}}>{sub.courseTitle}</div>
+          <div style={{fontSize:14,fontWeight:600,color:"white"}}>{sub.studentName}</div>
+          <div style={{fontSize:11,color:"rgba(255,255,255,0.7)",marginTop:2}}>{sub.scenarioTitle}</div>
+        </div>
+        <div style={{textAlign:"left",display:"flex",flexDirection:"column",alignItems:"flex-end",gap:6}}>
+          <TimerBadge sub={sub}/>
+          <div style={{fontSize:11,color:"rgba(255,255,255,0.7)"}}>مهمة {taskIdx+1}/{scenario.tasks.length}</div>
+        </div>
+      </div>
+
+      <div style={{maxWidth:880,margin:"0 auto",padding:"1rem"}}>
+        {/* Role */}
+        <div style={{background:"#fffbeb",border:"0.5px solid #fde68a",borderRadius:10,padding:"10px 14px",marginBottom:12}}>
+          <strong style={{fontSize:13,color:"#92400e"}}>دورك في هذا الاختبار: </strong>
+          <span style={{fontSize:13,color:"#78350f"}}>{scenario.roleDesc}</span>
+        </div>
+
+        {/* Scenario */}
+        <div style={{background:"white",border:"0.5px solid #e5e7eb",borderRadius:12,padding:"1.25rem",marginBottom:12}}>
+          <button onClick={()=>setExpanded(!expanded)} style={{display:"flex",justifyContent:"space-between",alignItems:"center",width:"100%",background:"none",border:"none",cursor:"pointer",padding:0}}>
+            <span style={{fontSize:14,fontWeight:600,color:"#1a5f4a"}}>📄 السيناريو — اقرأ بعناية</span>
+            <span style={{fontSize:12,color:"#9ca3af"}}>{expanded?"طي ▲":"توسيع ▼"}</span>
+          </button>
+          {expanded&&<div style={{fontSize:14,lineHeight:2,color:"#374151",marginTop:10,padding:"12px",background:"#f8fafc",borderRadius:8,borderRight:"3px solid #1a5f4a"}}>{scenario.context}</div>}
+        </div>
+
+        {/* Task tabs */}
+        <div style={{display:"flex",gap:6,marginBottom:12,flexWrap:"wrap",position:"sticky",top:74,zIndex:9,background:"#f0f4f8",padding:"6px 0"}}>
+          {scenario.tasks.map((t,i)=>{
+            const done=(answers[t.id]||"").trim().length>50;
+            return <button key={t.id} onClick={()=>{saveDraft();setTaskIdx(i);}} style={{padding:"7px 14px",borderRadius:8,border:"1.5px solid",borderColor:taskIdx===i?"#1a5f4a":"#e5e7eb",background:taskIdx===i?"#1a5f4a":done?"#f0faf6":"white",color:taskIdx===i?"white":done?"#065f46":"#6b7280",cursor:"pointer",fontSize:13,fontWeight:taskIdx===i?600:400}}>
+              مهمة {t.num} {done?"✓":""}
+            </button>;
+          })}
+        </div>
+
+        {/* Current task */}
+        <div style={{background:"white",border:"0.5px solid #e5e7eb",borderRadius:12,padding:"1.5rem",marginBottom:12}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
+            <div style={{fontSize:14,fontWeight:600,color:"#1a5f4a"}}>المهمة {task.num}</div>
+            <span style={{background:"#f0faf6",color:"#1a5f4a",borderRadius:8,padding:"4px 12px",fontSize:12,fontWeight:600}}>{task.marks} درجة</span>
+          </div>
+          <p style={{fontSize:15,lineHeight:1.9,color:"#374151",margin:"0 0 14px",padding:"12px 16px",background:"#f8fafc",borderRadius:8,borderRight:"3px solid #f0a500"}}>{task.text}</p>
+          <textarea value={answers[task.id]||""} onChange={e=>setAnswers(a=>({...a,[task.id]:e.target.value}))}
+            onPaste={e=>{e.preventDefault();}}
+            onContextMenu={e=>e.preventDefault()}
+            placeholder={`اكتب إجابتك التحليلية المفصّلة هنا...\nيُنصح بكتابة ${task.marks>=20?"300-500":"200-300"} كلمة على الأقل\nاستند إلى المعايير الدولية والسيناريو المعطى`}
+            maxLength={5000}
+            style={{width:"100%",minHeight:200,padding:"14px",border:"0.5px solid #e5e7eb",borderRadius:8,fontSize:14,lineHeight:1.9,resize:"vertical",boxSizing:"border-box",direction:"rtl",fontFamily:"inherit"}}/>
+          <div style={{marginTop:6}}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}>
+              <span style={{fontSize:12,color:"#9ca3af"}}>
+                كلمات: <strong style={{color:wordCount(answers[task.id]||"")>=100?"#059669":wordCount(answers[task.id]||"")>=50?"#d97706":"#dc2626"}}>{wordCount(answers[task.id]||"")}</strong>
+                <span style={{color:"#d1d5db"}}> (الحد الأدنى 50 حرفاً — يُنصح بـ100 كلمة فأكثر)</span>
+              </span>
+              <span style={{fontSize:11,color:((answers[task.id]||"").length>4500)?"#dc2626":"#d1d5db"}}>{(answers[task.id]||"").length}/5000</span>
+            </div>
+            <div style={{height:3,background:"#f3f4f6",borderRadius:2,overflow:"hidden"}}>
+              <div style={{height:"100%",width:Math.min(100,wordCount(answers[task.id]||"")/100*100)+"%",background:wordCount(answers[task.id]||"")>=100?"#059669":"#d97706",borderRadius:2,transition:"width .3s"}}/>
+            </div>
+          </div>
+        </div>
+
+        {/* Navigation */}
+        <div style={{display:"flex",gap:8,marginBottom:8}}>
+          <button onClick={saveDraft} style={{padding:"10px 18px",border:"0.5px solid #e5e7eb",borderRadius:10,background:saved?"#d1fae5":"white",cursor:"pointer",fontSize:14,color:saved?"#065f46":"#374151",fontWeight:saved?600:400,transition:"all .2s"}}>{saved?"✓ تم الحفظ":"💾 حفظ مؤقت"}</button>
+          {hasPrevScenario&&<button onClick={goPrevScenario} style={{padding:"10px 14px",border:"0.5px solid #c7d2fe",borderRadius:10,background:"#eef2ff",color:"#3730a3",cursor:"pointer",fontSize:13,fontWeight:600}}>↩ السيناريو السابق</button>}
+          {taskIdx>0&&<button onClick={()=>{saveDraft();setTaskIdx(taskIdx-1);}} style={{padding:"10px 18px",border:"0.5px solid #e5e7eb",borderRadius:10,background:"white",cursor:"pointer",fontSize:14}}>← السابق</button>}
+          {taskIdx<scenario.tasks.length-1
+            ?<button onClick={async()=>{await saveDraft();setTaskIdx(taskIdx+1);}} style={{flex:1,padding:"10px",border:"none",borderRadius:10,background:"#1a5f4a",color:"white",cursor:"pointer",fontSize:14,fontWeight:600}}>حفظ والانتقال للمهمة التالية →</button>
+            :isLastScenario
+              ?<button disabled={!allAnswered} onClick={()=>{if(window.confirm("⚠️ تأكيد الإرسال النهائي\n\nبعد الإرسال لا يمكن التعديل إلا بموافقة المدرب.\nهل أنت متأكد من إرسال الاختبار للتصحيح؟"))onSubmit({...sub,answers});}} style={{flex:1,padding:"10px",border:"none",borderRadius:10,background:allAnswered?"#d97706":"#d1d5db",color:"white",cursor:allAnswered?"pointer":"not-allowed",fontSize:14,fontWeight:600}}>إرسال الاختبار نهائياً ✓</button>
+              :<button disabled={!allAnswered} onClick={async()=>{await saveDraft();setShowNextScenario(true);}} style={{flex:1,padding:"10px",border:"none",borderRadius:10,background:allAnswered?"#1a5f4a":"#d1d5db",color:"white",cursor:allAnswered?"pointer":"not-allowed",fontSize:14,fontWeight:600}}>إنهاء هذا السيناريو →</button>
+          }
+        </div>
+        {!allAnswered&&<div style={{fontSize:12,color:"#9ca3af",textAlign:"center",padding:"4px"}}>يجب الإجابة على جميع المهام بـ 50+ حرف قبل الإرسال</div>}
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════
+   🚀  التطبيق الرئيسي
+═══════════════════════════════════════════════ */
+/* شاشة انتهاء الوقت مع polling تلقائي للتمديد */
+function ExpiredWaitScreen({sub,onResume,onHome}){
+  const[checking,setChecking]=useState(false);
+  const[msg,setMsg]=useState("");
+
+  // تحقق كل 30 ثانية هل مُدِّد الوقت
+  useEffect(()=>{
+    const poll=setInterval(async()=>{
+      try{
+        const{data}=await _sb.from("exam_subs").select("data").eq("id",sub.id).single();
+        if(data?.data){
+          const updated=data.data;
+          if(!isExpired(updated)){
+            clearInterval(poll);
+            setMsg("✅ تم التمديد! جارٍ فتح الاختبار...");
+            setTimeout(()=>onResume(updated),1500);
+          }
+        }
+      }catch(e){}
+    },30*1000);
+    return()=>clearInterval(poll);
+  },[]);
+
+  const checkNow=async()=>{
+    setChecking(true);setMsg("");
+    try{
+      const{data}=await _sb.from("exam_subs").select("data").eq("id",sub.id).single();
+      if(data?.data&&!isExpired(data.data)){
+        setMsg("✅ تم التمديد! جارٍ فتح الاختبار...");
+        setTimeout(()=>onResume(data.data),1500);
+      } else {
+        setMsg("⏳ لم يتم التمديد بعد — انتظر المدرب");
+      }
+    }catch(e){setMsg("تعذّر التحقق");}
+    setChecking(false);
+  };
+
+  return(
+    <div dir="rtl" style={{fontFamily:"system-ui,sans-serif",display:"flex",alignItems:"center",justifyContent:"center",minHeight:"100vh",background:"#f0f4f8",padding:"1rem"}}>
+      <div style={{background:"white",border:"0.5px solid #e5e7eb",borderRadius:16,padding:"2.5rem",maxWidth:460,width:"100%",textAlign:"center",boxShadow:"0 4px 20px rgba(0,0,0,0.06)"}}>
+        <div style={{fontSize:52,marginBottom:14}}>⏰</div>
+        <div style={{fontSize:20,fontWeight:700,marginBottom:8,color:"#d97706"}}>انتهى وقت الاختبار</div>
+        <div style={{background:"#d1fae5",border:"0.5px solid #a7f3d0",borderRadius:8,padding:"8px 14px",marginBottom:14,fontSize:13,color:"#065f46",fontWeight:600}}>
+          ✅ إجاباتك محفوظة بالكامل ولم تُحذف
+        </div>
+        <div style={{fontSize:14,color:"#6b7280",lineHeight:1.9,marginBottom:"1.5rem"}}>
+          تواصل مع المدرب لتمديد الوقت.<br/>
+          <strong>سيُفتح الاختبار تلقائياً بعد التمديد</strong> دون الحاجة لإعادة الدخول.
+        </div>
+        <div style={{background:"#f8fafc",border:"0.5px solid #e5e7eb",borderRadius:10,padding:"1rem",marginBottom:"1.5rem",textAlign:"right",fontSize:13}}>
+          <div style={{marginBottom:4}}><b>الاسم:</b> {sub.studentName}</div>
+          <div style={{marginBottom:4}}><b>الدورة:</b> {sub.courseTitle}</div>
+          <div style={{color:"#9ca3af",fontSize:12}}>رقم الاختبار: {serial(sub.id)}</div>
+        </div>
+        {msg&&<div style={{background:msg.includes("✅")?"#d1fae5":"#fef3c7",borderRadius:8,padding:"8px 14px",marginBottom:12,fontSize:13,fontWeight:600,color:msg.includes("✅")?"#065f46":"#92400e"}}>{msg}</div>}
+        <button onClick={checkNow} disabled={checking} style={{width:"100%",padding:"11px",background:"#1a5f4a",color:"white",border:"none",borderRadius:10,cursor:"pointer",fontSize:14,fontWeight:600,marginBottom:8}}>
+          {checking?"⏳ جارٍ التحقق...":"🔄 تحقق من التمديد الآن"}
+        </button>
+        <button onClick={onHome} style={{width:"100%",padding:"8px",background:"none",border:"none",color:"#9ca3af",fontSize:13,cursor:"pointer"}}>العودة للرئيسية</button>
+        <div style={{fontSize:11,color:"#d1d5db",marginTop:8}}>يتحقق تلقائياً كل 30 ثانية</div>
+      </div>
+    </div>
+  );
+}
+
+function App(){
+  const[subs,setSubs]=useState([]);
+  const[courses,setCourses]=useState(COURSES);
+  const[loading,setLoading]=useState(true);
+  const[screen,setScreen]=useState("home");
+  const[sId,setSId]=useState("");
+  const[sName,setSName]=useState("");
+  const[sBirthdate,setSBirthdate]=useState("");
+  const[sOrderNum,setSOrderNum]=useState("");
+  const[sPhone,setSPhone]=useState("");
+  const[reentryRequest,setReentryRequest]=useState(null);
+  const[activeSub,setActiveSub]=useState(null);
+  const[gradingSub,setGradingSub]=useState(null);
+  const[certSub,setCertSub]=useState(null);
+  const[trainerAuth,setTrainerAuth]=useState(false);
+  const[tPass,setTPass]=useState("");
+  const[err,setErr]=useState("");
+  const[selectedCourse,setSelectedCourse]=useState(null);
+  const[courseCode,setCourseCode]=useState("");
+  const[codeErr,setCodeErr]=useState("");
+
+  /* تحميل البيانات والدورات عند البداية */
+  useEffect(()=>{
+    (async()=>{
+      // ① تحميل وقت الاختبار أولاً — يطبق على الطالب والمدرب
+      const savedHours=await dbGetMeta("exam_hours");
+      if(savedHours){EXAM_HOURS=parseInt(savedHours);}
+
+      // ② تحميل كلمة مرور المدرب من Supabase
+      const savedTrainerCode=await dbGetMeta("trainer_code");
+      if(savedTrainerCode){TRAINER_CODE=savedTrainerCode;}
+
+      // ③ تحميل رموز الدورات من Supabase — دمج فوق الافتراضية حتى لا تُفقد رموز لم تُحفظ بعد
+      const savedCourseCodes=await dbGetMeta("course_codes");
+      if(savedCourseCodes){try{COURSE_CODES={...COURSE_CODES,...JSON.parse(savedCourseCodes)};}catch(e){}}
+
+      // ④ تحميل الدورات — مع احترام الدورات المحذوفة حتى لا تعود بعد التحديث
+      let deletedIds=[];
+      try{const raw=await dbGetMeta("deleted_courses");deletedIds=raw?JSON.parse(raw):[];}catch(e){}
+      const baseCourses=COURSES.filter(c=>!deletedIds.includes(c.id));
+      const loadedCourses=sanitizeCourses(await dbLoadCourses());
+      if(loadedCourses&&loadedCourses.length>0){
+        const merged=baseCourses.map(def=>{
+          const saved=loadedCourses.find(s=>s.id===def.id);
+          return saved||def;
+        });
+        const newOnes=loadedCourses.filter(s=>!COURSES.find(d=>d.id===s.id)&&!deletedIds.includes(s.id));
+        setCourses([...merged,...newOnes]);
+      }else{
+        setCourses(baseCourses);
+      }
+
+      /* ═══ استعادة جلسة الطالب تلقائياً عند تحديث الصفحة ═══ */
+      try{
+        const savedSession=sessionStorage.getItem("itqan_session");
+        if(savedSession){
+          const session=JSON.parse(savedSession);
+          if(session.subId&&session.studentId){
+            // أعد تحميل بيانات الطالب من Supabase
+            const myData=await dbLoad(session.studentId);
+            const currentSub=myData.find(s=>s.id===session.subId&&s.status==="in_progress");
+            if(currentSub){
+              // استعد الجلسة — إن كان الوقت جارياً افتح الاختبار، وإن انتهى افتح شاشة انتظار التمديد (تتحقق تلقائياً)
+              setSubs(myData);
+              setSId(session.studentId||"");
+              setSName(session.studentName||"");
+              setActiveSub(currentSub);
+              setLoading(false);
+              setScreen(isExpired(currentSub)?"expired-wait":"exam");
+              return;
+            }
+          }
+          // الجلسة منتهية أو غير صالحة — امسحها
+          sessionStorage.removeItem("itqan_session");
+        }
+      }catch(e){}
+
+      setLoading(false);
+    })();
+  },[]);
+
+  const inp={width:"100%",padding:"11px 14px",border:"0.5px solid #e5e7eb",borderRadius:8,fontSize:15,boxSizing:"border-box",outline:"none",fontFamily:"inherit"};
+  const base={direction:"rtl",fontFamily:"system-ui,sans-serif",minHeight:"100vh",background:"#f0f4f8"};
+
+  /* شاشة التحميل */
+  if(loading) return(
+    <div style={{...base,display:"flex",alignItems:"center",justifyContent:"center"}}>
+      <div style={{textAlign:"center"}}>
+        <div style={{fontSize:48,marginBottom:16}}>⏳</div>
+        <div style={{fontSize:16,color:"#1a5f4a",fontWeight:600}}>جارٍ تحميل البيانات...</div>
+        <div style={{fontSize:13,color:"#9ca3af",marginTop:8}}>يتصل بقاعدة البيانات</div>
+      </div>
+    </div>
+  );
+
+  const doLogin=async()=>{
+    if(!sId.trim()){setErr("يرجى إدخال رقم الهوية الوطنية");return;}
+    if(!/^[12]\d{9}$/.test(sId.trim())){setErr("رقم الهوية يجب أن يكون 10 أرقام ويبدأ بـ 1 أو 2");return;}
+    if(!sName.trim()){setErr("يرجى إدخال الاسم الثلاثي بالإنجليزية");return;}
+    if(!/^[a-zA-Z\s]+$/.test(sName.trim())){setErr("يجب كتابة الاسم بالإنجليزية فقط (Latin letters)");return;}
+    if(sName.trim().split(/\s+/).length<3){setErr("يرجى إدخال الاسم الثلاثي كاملاً بالإنجليزية");return;}
+    if(!sBirthdate){setErr("يرجى اختيار تاريخ الميلاد");return;}
+    if(!sPhone.trim()||!/^[0-9+]{9,15}$/.test(sPhone.trim())){setErr("يرجى إدخال رقم جوال صحيح");return;}
+    if(!sOrderNum.trim()){setErr("يرجى إدخال رقم الطلب الموجود في سلة");return;}
+    setErr("");
+    const myData=await dbLoad(sId.trim());
+    setSubs(myData);
+
+    // طلب إعادة دخول معلّق
+    const pending=myData.find(s=>s.studentId===sId.trim()&&s.status==="reentry_pending");
+    if(pending){setScreen("reentry-pending");return;}
+
+    // موافقة على إعادة الدخول
+    const approved=myData.find(s=>s.studentId===sId.trim()&&s.status==="reentry_approved");
+    if(approved){await dbUpsert({...approved,status:"reentry_used"});}
+
+    // تحقق هل يوجد نتيجة جديدة للطالب
+    const newResults=myData.filter(s=>s.studentId===sId.trim()&&["pass","fail"].includes(s.status)&&!s.resultSeen);
+    if(newResults.length>0){
+      // علّم النتائج كمقروءة حتى لا تُعاد الإحالة لهذه الصفحة في كل دخول قادم
+      const seenData=myData.map(s=>newResults.some(n=>n.id===s.id)?{...s,resultSeen:true}:s);
+      newResults.forEach(n=>{dbUpsert({...n,resultSeen:true});});
+      // أذهبه لصفحة نتائجه مع إشعار
+      setSubs(seenData);
+      setScreen("my-results");
+      return;
+    }
+
+    // دائماً اذهب لصفحة الدورات — الطالب يختار ما يريد
+    setScreen("courses");
+  };
+
+  const startExam=async(course,scenarioId)=>{
+    const sid=sId.trim();
+    // هل يوجد اختبار جارٍ في هذه الدورة؟
+    const activeInCourse=subs.find(s=>s.studentId===sid&&s.courseId===course.id&&s.status==="in_progress"&&!isExpired(s));
+    if(activeInCourse){setActiveSub(activeInCourse);setScreen("exam");return;}
+
+    // هل يوجد اختبار منتهي الوقت في هذه الدورة؟
+    const expiredInCourse=subs.find(s=>s.studentId===sid&&s.courseId===course.id&&s.status==="in_progress"&&isExpired(s));
+    if(expiredInCourse){setActiveSub(expiredInCourse);setScreen("expired-wait");return;}
+
+    // تحقق هل اختبر هذه الدورة من قبل وأنهاها
+    const prevInCourse=subs.find(s=>s.studentId===sid&&s.courseId===course.id&&["submitted","grading","pass","fail"].includes(s.status));
+    // 🔓 موافقة المدرب على إعادة الدخول تفتح محاولة جديدة واحدة — تُستهلك عند البدء الفعلي
+    const reentryPermit=subs.find(s=>s.studentId===sid&&s.courseId===course.id&&["reentry_approved","reentry_used"].includes(s.status));
+    if(prevInCourse&&!reentryPermit){
+      setReentryRequest(prevInCourse);
+      setScreen("reentry-request");
+      return;
+    }
+    if(prevInCourse&&reentryPermit){
+      const consumed={...reentryPermit,status:"reentry_consumed",consumedAt:new Date().toISOString()};
+      await dbUpsert(consumed);
+      setSubs(prev=>prev.map(s=>s.id===consumed.id?consumed:s));
+    }
+    // 🛟 محاولة جارية فقدت سجلها النشط (انقطاع أثناء التنقل بين السيناريوهات): أكملها بنفس نافذة الوقت بدل فتح نافذة جديدة
+    const completedInCourse=prevInCourse?[]:subs.filter(s=>s.studentId===sid&&s.courseId===course.id&&s.status==="scenario_completed");
+    const sameScenarioSaved=completedInCourse.find(s=>s.scenarioId===scenarioId);
+    if(sameScenarioSaved){
+      const reopened={...sameScenarioSaved,status:"in_progress"};
+      await dbUpsert(reopened);
+      sessionStorage.setItem("itqan_session",JSON.stringify({subId:reopened.id,studentId:sid,studentName:sName.trim()}));
+      setSubs(prev=>prev.map(s=>s.id===reopened.id?reopened:s));
+      setActiveSub(reopened);
+      setScreen(isExpired(reopened)?"expired-wait":"exam");
+      return;
+    }
+    const scenario=course.scenarios.find(s=>s.id===scenarioId);
+    // ورث نافذة الوقت من سيناريوهات المحاولة نفسها إن وُجدت
+    const windowRef=completedInCourse.length>0?completedInCourse[completedInCourse.length-1]:null;
+    const sub={id:uid(),studentId:sid,studentName:sName.trim(),studentBirthdate:sBirthdate,studentOrderNum:sOrderNum.trim(),studentPhone:sPhone.trim(),courseId:course.id,courseTitle:course.title,scenarioId,scenarioTitle:scenario.title,answers:{},scores:{},totalScore:undefined,maxScore:scenario.tasks.reduce((a,t)=>a+t.marks,0),status:"in_progress",extensionHours:windowRef?(windowRef.extensionHours||0):0,examHours:windowRef&&windowRef.examHours?windowRef.examHours:EXAM_HOURS,startTime:windowRef?windowRef.startTime:new Date().toISOString(),submittedAt:null,reviewedAt:null};
+    await dbUpsert(sub);
+    // احفظ الجلسة لاستعادتها عند تحديث الصفحة
+    sessionStorage.setItem("itqan_session",JSON.stringify({subId:sub.id,studentId:sid,studentName:sName.trim()}));
+    setSubs(prev=>[...prev,sub]);setActiveSub(sub);
+    setScreen(isExpired(sub)?"expired-wait":"exam");
+  };
+
+  const onSubmit=async updatedSub=>{
+    // جمع إجابات سيناريوهات المحاولة الحالية فقط (نفس نافذة الوقت startTime) — لا تُدمج بقايا محاولات قديمة
+    let pool=subs;
+    try{const fresh=await dbLoad(updatedSub.studentId);if(fresh&&fresh.length)pool=fresh;}catch(e){}
+    const byScenario={};
+    pool.filter(s=>
+      s.studentId===updatedSub.studentId&&
+      s.courseId===updatedSub.courseId&&
+      s.status==="scenario_completed"&&
+      s.startTime===updatedSub.startTime&&
+      s.id!==updatedSub.id&&
+      s.scenarioId!==updatedSub.scenarioId
+    ).forEach(s=>{byScenario[s.scenarioId]=s;}); // سجل واحد لكل سيناريو
+    const allScenarioSubs=Object.values(byScenario);
+
+    // دمج جميع الإجابات في سجل واحد — إجابات السيناريو الحالي لها الأولوية
+    const mergedAnswers={};
+    allScenarioSubs.forEach(s=>Object.assign(mergedAnswers,s.answers||{}));
+    Object.assign(mergedAnswers,updatedSub.answers||{});
+
+    // حساب مجموع الدرجات من جميع السيناريوهات
+    const course=(courses||COURSES).find(c=>c.id===updatedSub.courseId);
+    const totalMaxScore=allScenarioSubs.reduce((sum,s)=>sum+(s.maxScore||0),0)+(updatedSub.maxScore||0);
+    // قائمة بجميع سيناريوهات المحاولة — مرتّبة بترتيبها داخل الدورة
+    const idSet=new Set([...allScenarioSubs.map(s=>s.scenarioId),updatedSub.scenarioId]);
+    const courseOrder=(course?.scenarios||[]).map(s=>s.id).filter(id=>idSet.has(id));
+    const completedScenarioIds=[...courseOrder,...[...idSet].filter(id=>!courseOrder.includes(id))];
+    // عنوان يعكس كل السيناريوهات المقدّمة
+    const scTitles=completedScenarioIds.map(id=>course?.scenarios.find(x=>x.id===id)?.title).filter(Boolean);
+    const combinedTitle=scTitles.length>1?scTitles.map(t=>String(t).split("—")[0].trim()).join(" + "):updatedSub.scenarioTitle;
+
+    const final={
+      ...updatedSub,
+      answers:mergedAnswers,
+      maxScore:totalMaxScore||updatedSub.maxScore,
+      scenarioTitle:combinedTitle||updatedSub.scenarioTitle,
+      status:"submitted",
+      submittedAt:new Date().toISOString(),
+      completedScenarioIds, // قائمة بجميع السيناريوهات المكتملة
+      isMultiScenario:completedScenarioIds.length>1
+    };
+    await dbUpsert(final);
+    // 🔔 إشعار للمدرب بالاختبار الجديد
+    await addNotification("new_submission",{
+      studentName:updatedSub.studentName,
+      studentId:updatedSub.studentId,
+      courseTitle:updatedSub.courseTitle,
+      time:new Date().toISOString()
+    });
+    sessionStorage.removeItem("itqan_session");
+    setSubs(prev=>prev.map(s=>s.id===final.id?final:s));
+    setActiveSub(final);
+    setScreen("pending");
+  };
+
+  const onSaveGrade=async(subId,scores,total,maxScore,status)=>{
+    const updated={...subs.find(s=>s.id===subId),scores,totalScore:total,maxScore,status,reviewedAt:new Date().toISOString()};
+    // إصدار شهادة تلقائي عند النجاح
+    if(status==="pass"){
+      const course=(courses||COURSES).find(c=>c.id===updated.courseId);
+      const certId=await issueCertificate(updated,course||{});
+      if(certId){
+        updated.certId=certId;
+      } else {
+        // ⚠️ تنبيه المدرب بفشل إصدار الشهادة
+        alert("⚠️ تحذير: تم اعتماد الطالب كناجح لكن فشل إصدار الشهادة في Firebase.\nيرجى التحقق من الاتصال وإعادة المحاولة أو إصدار الشهادة يدوياً.");
+      }
+    }
+    await dbUpsert(updated);
+    setSubs(prev=>prev.map(s=>s.id===subId?updated:s));setGradingSub(null);setScreen("dashboard");
+  };
+
+  const onNextScenario=(newSub)=>{
+    // حدّث الجلسة للسيناريو الجديد
+    sessionStorage.setItem("itqan_session",JSON.stringify({subId:newSub.id,studentId:newSub.studentId,studentName:newSub.studentName}));
+    setActiveSub(newSub);
+    setScreen("exam");
+  };
+  const refreshSubs=async()=>{const d=await dbLoad();setSubs(d);};
+  const loadAllSubs=async()=>{const d=await dbLoad();setSubs(d);};
+
+  /* Screens */
+  if(screen==="certificate"&&certSub) return <Certificate sub={certSub} courses={courses} onBack={()=>setScreen("dashboard")}/>;
+  if(screen==="grading"&&gradingSub) return <GradingView sub={gradingSub} courses={courses} onSave={onSaveGrade} onBack={()=>{setGradingSub(null);setScreen("dashboard");}}/>;
+  if(screen==="manage-courses"&&trainerAuth) return <CourseBuilder courses={courses} onSave={updated=>{setCourses(updated);}} onBack={()=>setScreen("dashboard")}/>;
+  if(screen==="dashboard"&&trainerAuth) return <Dashboard subs={subs} setSubs={setSubs} courses={courses} onGrade={s=>{setGradingSub(s);setScreen("grading");}} onCert={s=>{setCertSub(s);setScreen("certificate");}} onLogout={()=>{setTrainerAuth(false);setScreen("home");setSubs([]);}} onRefresh={refreshSubs} onManageCourses={()=>setScreen("manage-courses")} onLoad={loadAllSubs}/>;
+  if(screen==="exam"&&activeSub) return <ExamView key={activeSub.id} sub={activeSub} setSubs={setSubs} subs={subs} courses={courses} onSubmit={onSubmit} onNextScenario={onNextScenario} setActiveSub={setActiveSub}/>;
+
+  /* شاشة انتهاء الوقت — الإجابات محفوظة */
+  if(screen==="expired-wait"&&activeSub) return(
+    <ExpiredWaitScreen sub={activeSub} onResume={(sub)=>{setActiveSub(sub);setScreen("exam");}} onHome={()=>{setScreen("home");setSId("");setSName("");setSBirthdate("");setSOrderNum("");setSPhone("");setActiveSub(null);}}/>
+  );
+
+  /* شاشة طلب إعادة الدخول */
+  if(screen==="reentry-request") return(
+    <div style={{...base,display:"flex",alignItems:"center",justifyContent:"center",padding:"1rem"}}>
+      <div style={{background:"white",border:"0.5px solid #e5e7eb",borderRadius:16,padding:"2.5rem",maxWidth:460,width:"100%",textAlign:"center",boxShadow:"0 4px 20px rgba(0,0,0,0.06)"}}>
+        <div style={{fontSize:52,marginBottom:14}}>🔄</div>
+        <div style={{fontSize:20,fontWeight:700,marginBottom:8}}>يوجد لديك اختبار سابق</div>
+        <div style={{background:"#f8fafc",border:"0.5px solid #e5e7eb",borderRadius:10,padding:"1rem",marginBottom:"1.5rem",textAlign:"right"}}>
+          <div style={{fontSize:14,marginBottom:4}}><b>الدورة:</b> {reentryRequest?.courseTitle}</div>
+          <div style={{fontSize:14,marginBottom:4}}><b>الحالة:</b> {reentryRequest?.status==="pass"?"ناجح ✓":reentryRequest?.status==="fail"?"راسب ✗":"مُرسَل للمدرب"}</div>
+          <div style={{fontSize:12,color:"#9ca3af"}}>تاريخ التقديم: {fmtFull(reentryRequest?.submittedAt)}</div>
+        </div>
+        <div style={{fontSize:14,color:"#6b7280",marginBottom:"1.5rem",lineHeight:1.8}}>لإعادة الاختبار يجب الحصول على موافقة المدرب أولاً.</div>
+        <button onClick={async()=>{
+          const req={id:uid(),studentId:sId.trim(),studentName:sName.trim(),studentPhone:sPhone.trim(),studentBirthdate:sBirthdate,studentOrderNum:sOrderNum.trim(),courseId:reentryRequest?.courseId,courseTitle:reentryRequest?.courseTitle,status:"reentry_pending",requestedAt:new Date().toISOString(),previousSubId:reentryRequest?.id};
+          await dbUpsert(req);
+          // 🔔 إشعار للمدرب بطلب إعادة الدخول
+          await addNotification("reentry_request",{
+            studentName:sName.trim(),studentId:sId.trim(),
+            courseTitle:reentryRequest?.courseTitle,time:new Date().toISOString()
+          });
+          setScreen("reentry-pending");
+        }} style={{width:"100%",padding:"11px",background:"#1a5f4a",color:"white",border:"none",borderRadius:10,cursor:"pointer",fontSize:15,fontWeight:600,marginBottom:8}}>إرسال طلب إعادة الدخول للمدرب</button>
+        <button onClick={()=>{setScreen("home");setSId("");setSName("");setSBirthdate("");setSOrderNum("");setSPhone("");}} style={{width:"100%",padding:"8px",background:"none",border:"none",color:"#6b7280",fontSize:13,cursor:"pointer"}}>إلغاء</button>
+      </div>
+    </div>
+  );
+
+  /* شاشة انتظار موافقة المدرب */
+  if(screen==="reentry-pending") return(
+    <div style={{...base,display:"flex",alignItems:"center",justifyContent:"center",padding:"1rem"}}>
+      <div style={{background:"white",border:"0.5px solid #e5e7eb",borderRadius:16,padding:"2.5rem",maxWidth:460,width:"100%",textAlign:"center",boxShadow:"0 4px 20px rgba(0,0,0,0.06)"}}>
+        <div style={{fontSize:52,marginBottom:14}}>⏳</div>
+        <div style={{fontSize:20,fontWeight:700,marginBottom:8}}>طلبك قيد المراجعة</div>
+        <div style={{fontSize:14,color:"#6b7280",lineHeight:1.9,marginBottom:"1.5rem"}}>
+          تم إرسال طلب إعادة الدخول للمدرب.<br/>
+          سيتم إشعارك عند الموافقة — ادخل من جديد للتحقق.
+        </div>
+        <button onClick={()=>{setScreen("home");setSId("");setSName("");setSBirthdate("");setSOrderNum("");setSPhone("");}} style={{width:"100%",padding:"11px",background:"#1a5f4a",color:"white",border:"none",borderRadius:10,cursor:"pointer",fontSize:15,fontWeight:600}}>العودة للرئيسية</button>
+      </div>
+    </div>
+  );
+
+  /* Trainer login */
+  if(screen==="trainer-login") return(
+    <div style={{...base,display:"flex",alignItems:"center",justifyContent:"center",padding:"1rem"}}>
+      <div style={{background:"white",border:"0.5px solid #e5e7eb",borderRadius:16,padding:"2rem",width:360,maxWidth:"100%",boxShadow:"0 4px 20px rgba(0,0,0,0.06)"}}>
+        <div style={{textAlign:"center",marginBottom:"1.5rem"}}>
+          <div style={{fontSize:36,marginBottom:8}}>🔐</div>
+          <div style={{fontSize:18,fontWeight:700}}>دخول المدرب</div>
+          <div style={{fontSize:12,color:"#9ca3af",marginTop:4}}>{ORG}</div>
+        </div>
+        <input value={tPass} onChange={e=>setTPass(e.target.value)} onKeyDown={e=>e.key==="Enter"&&(tPass===TRAINER_CODE?(setTrainerAuth(true),setScreen("dashboard"),setErr("")):(setErr("كلمة المرور خاطئة")))} type="password" placeholder="كلمة مرور المدرب" style={{...inp,textAlign:"center",letterSpacing:4,marginBottom:10}}/>
+        {err&&<div style={{color:"#dc2626",fontSize:13,marginBottom:8,textAlign:"center"}}>{err}</div>}
+        <button onClick={()=>tPass===TRAINER_CODE?(setTrainerAuth(true),setScreen("dashboard"),setErr("")):(setErr("كلمة المرور خاطئة"))} style={{width:"100%",padding:"11px",background:"#1a5f4a",color:"white",border:"none",borderRadius:8,fontSize:15,cursor:"pointer",fontWeight:600,marginBottom:8}}>دخول</button>
+        <button onClick={()=>{setScreen("home");setErr("");}} style={{width:"100%",padding:"8px",background:"none",border:"none",color:"#6b7280",fontSize:13,cursor:"pointer"}}>← رجوع</button>
+      </div>
+    </div>
+  );
+
+  /* Pending */
+  if(screen==="pending") return(
+    <div style={{...base,display:"flex",alignItems:"center",justifyContent:"center",padding:"1rem"}}>
+      <div style={{background:"white",border:"0.5px solid #e5e7eb",borderRadius:16,padding:"2.5rem",maxWidth:480,width:"100%",textAlign:"center",boxShadow:"0 4px 20px rgba(0,0,0,0.06)"}}>
+        <div style={{fontSize:56,marginBottom:16}}>✅</div>
+        <div style={{fontSize:22,fontWeight:700,marginBottom:8}}>تم إرسال الاختبار بنجاح</div>
+        <div style={{fontSize:14,color:"#6b7280",lineHeight:1.9,marginBottom:"1.5rem"}}>سيراجع المدرب إجاباتك التحليلية ويُعلن النتيجة قريباً.<br/>لن تظهر لك الدرجة مباشرةً — يُرجى انتظار إشعار المدرب.</div>
+        <div style={{background:"#f0faf6",border:"0.5px solid #a7f3d0",borderRadius:10,padding:"1rem",marginBottom:"1.5rem",textAlign:"right"}}>
+          <div style={{fontSize:14,marginBottom:4}}><b>الاسم:</b> {activeSub?.studentName}</div>
+          <div style={{fontSize:14,marginBottom:4}}><b>رقم الهوية:</b> {activeSub?.studentId}</div>
+          <div style={{fontSize:14,marginBottom:4}}><b>تاريخ الميلاد:</b> {activeSub?.studentBirthdate}</div>
+          <div style={{fontSize:14,marginBottom:4}}><b>رقم الجوال:</b> {activeSub?.studentPhone}</div>
+          <div style={{fontSize:14,marginBottom:4}}><b>رقم الطلب:</b> {activeSub?.studentOrderNum}</div>
+          <div style={{fontSize:14,marginBottom:4}}><b>الدورة:</b> {activeSub?.courseTitle}</div>
+          <div style={{fontSize:14,marginBottom:4}}><b>السيناريو:</b> {activeSub?.scenarioTitle}</div>
+          <div style={{fontSize:12,color:"#9ca3af",marginTop:6}}>رقم الاختبار: {activeSub&&serial(activeSub.id)}</div>
+        </div>
+        {activeSub?.status==="submitted"&&!activeSub?.editRequest&&(
+          <button onClick={async()=>{
+            const upd={...activeSub,editRequest:{status:"pending",at:new Date().toISOString()}};
+            await dbUpsert(upd);
+            await addNotification("edit_request",{studentName:upd.studentName,studentId:upd.studentId,courseTitle:upd.courseTitle,time:new Date().toISOString()});
+            setSubs(prev=>prev.map(s=>s.id===upd.id?upd:s));
+            setActiveSub(upd);
+          }} style={{width:"100%",padding:"10px",background:"white",border:"1px solid #d97706",color:"#b45309",borderRadius:10,cursor:"pointer",fontSize:14,fontWeight:600,marginBottom:8}}>✏️ طلب فتح الاختبار للتعديل (بموافقة المدرب)</button>
+        )}
+        {activeSub?.editRequest?.status==="pending"&&<div style={{background:"#fef3c7",borderRadius:8,padding:"8px 12px",marginBottom:8,fontSize:13,color:"#92400e",fontWeight:600}}>⏳ طلب التعديل مُرسل — بانتظار موافقة المدرب. ادخل لاحقاً من جديد وستجد الاختبار مفتوحاً إذا وافق.</div>}
+        <button onClick={()=>{setScreen("home");setSId("");setSName("");setSBirthdate("");setSOrderNum("");setSPhone("");setActiveSub(null);}} style={{width:"100%",padding:"11px",background:"#1a5f4a",color:"white",border:"none",borderRadius:10,cursor:"pointer",fontSize:15,fontWeight:600}}>العودة للرئيسية</button>
+      </div>
+    </div>
+  );
+
+  /* Course code entry */
+  const verifyCourseCode=()=>{
+    const expected=COURSE_CODES[selectedCourse?.id];
+    if(!expected){setCodeErr("لم يُحدَّد رمز دخول لهذه الدورة بعد — يحدده المدرب من «إدارة الدورات» ثم أعد المحاولة");return;}
+    if(courseCode&&courseCode===expected){setCodeErr("");setScreen("scenario-select");}
+    else setCodeErr("رمز الدخول غير صحيح");
+  };
+  if(screen==="course-code"&&selectedCourse) return(
+    <div style={{...base,display:"flex",alignItems:"center",justifyContent:"center",padding:"1rem"}}>
+      <div style={{background:"white",border:"0.5px solid #e5e7eb",borderRadius:16,padding:"2rem",width:400,maxWidth:"100%",boxShadow:"0 4px 20px rgba(0,0,0,0.06)"}}>
+        <div style={{textAlign:"center",marginBottom:"1.5rem"}}>
+          <div style={{fontSize:40,marginBottom:8}}>{selectedCourse.icon}</div>
+          <div style={{fontSize:17,fontWeight:700}}>{selectedCourse.title}</div>
+          <div style={{fontSize:13,color:"#6b7280",marginTop:4}}>أدخل رمز الدخول للمتابعة</div>
+        </div>
+        <input value={courseCode} onChange={e=>setCourseCode(e.target.value.toUpperCase())} onKeyDown={e=>e.key==="Enter"&&verifyCourseCode()}
+          placeholder="أدخل الرمز هنا..." style={{...inp,textAlign:"center",letterSpacing:3,fontWeight:700,fontSize:17,marginBottom:10,background:"#f8fafc"}}/>
+        {codeErr&&<div style={{color:"#dc2626",fontSize:13,marginBottom:10,textAlign:"center"}}>{codeErr}</div>}
+        <button onClick={verifyCourseCode} style={{width:"100%",padding:"11px",background:"#1a5f4a",color:"white",border:"none",borderRadius:8,fontSize:15,cursor:"pointer",fontWeight:600,marginBottom:8}}>تحقق من الرمز ←</button>
+        <button onClick={()=>{setScreen("courses");setCourseCode("");setCodeErr("");}} style={{width:"100%",padding:"8px",background:"none",border:"none",color:"#6b7280",fontSize:13,cursor:"pointer"}}>← تغيير الدورة</button>
+      </div>
+    </div>
+  );
+
+  /* Scenario select */
+  if(screen==="scenario-select"&&selectedCourse) return(
+    <div style={{...base,padding:"1rem"}}>
+      <div style={{maxWidth:800,margin:"0 auto"}}>
+        <div style={{marginBottom:16}}>
+          <button onClick={()=>{setScreen("courses");setCourseCode("");}} style={{padding:"7px 14px",border:"0.5px solid #e5e7eb",borderRadius:8,background:"white",cursor:"pointer",fontSize:13,marginBottom:10}}>← تغيير الدورة</button>
+          <div style={{fontSize:18,fontWeight:700}}>{selectedCourse.icon} {selectedCourse.title}</div>
+          <div style={{fontSize:13,color:"#6b7280",marginTop:2}}>مرحباً {sName} — اختر السيناريو الذي تريد اختباره</div>
+        </div>
+        {selectedCourse.scenarios.map(sc=>(
+          <div key={sc.id} style={{background:"white",border:"0.5px solid #e5e7eb",borderRadius:14,padding:"1.5rem",marginBottom:12,boxShadow:"0 2px 8px rgba(0,0,0,0.04)"}}>
+            <div style={{fontSize:16,fontWeight:700,marginBottom:6,color:"#111827"}}>{sc.title}</div>
+            <div style={{background:"#fffbeb",border:"0.5px solid #fde68a",borderRadius:8,padding:"8px 12px",marginBottom:10,fontSize:13,color:"#92400e"}}>
+              <strong>دورك:</strong> {sc.role}
+            </div>
+            <div style={{fontSize:13,color:"#374151",lineHeight:1.8,marginBottom:14,padding:"10px 12px",background:"#f8fafc",borderRadius:8,borderRight:"3px solid #1a5f4a"}}>{sc.context.substring(0,220)}...</div>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+              <div style={{display:"flex",gap:12}}>
+                <span style={{fontSize:12,color:"#9ca3af"}}>📝 {sc.tasks.length} مهام تحليلية</span>
+                <span style={{fontSize:12,color:"#9ca3af"}}>🎯 {sc.tasks.reduce((a,t)=>a+t.marks,0)} درجة</span>
+                <span style={{fontSize:12,color:"#9ca3af"}}>⏱ {EXAM_HOURS} ساعة</span>
+              </div>
+              {(()=>{
+                const active=subs.find(s=>s.studentId===sId&&s.scenarioId===sc.id&&s.status==="in_progress"&&!isExpired(s));
+                const expired=subs.find(s=>s.studentId===sId&&s.courseId===selectedCourse.id&&s.status==="in_progress"&&isExpired(s));
+                return active
+                  ?<button onClick={()=>{setActiveSub(active);setScreen("exam");}} style={{padding:"9px 22px",border:"none",borderRadius:8,background:"#d97706",color:"white",cursor:"pointer",fontSize:14,fontWeight:700}}>← إكمال الاختبار</button>
+                  :expired
+                  ?<button onClick={()=>{setActiveSub(expired);setScreen("expired-wait");}} style={{padding:"9px 22px",border:"none",borderRadius:8,background:"#dc2626",color:"white",cursor:"pointer",fontSize:14,fontWeight:700}}>⏰ انتهى الوقت — طلب تمديد</button>
+                  :<button onClick={()=>startExam(selectedCourse,sc.id)} style={{padding:"9px 22px",border:"none",borderRadius:8,background:"#1a5f4a",color:"white",cursor:"pointer",fontSize:14,fontWeight:700}}>بدء هذا السيناريو ←</button>;
+              })()}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  /* Courses */
+  /* صفحة نتائج الطالب السابقة */
+  if(screen==="my-results") return(
+    <div style={{...base,padding:"1rem"}}>
+      <div style={{maxWidth:800,margin:"0 auto"}}>
+        <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:20}}>
+          <button onClick={()=>setScreen("courses")} style={{padding:"7px 14px",border:"0.5px solid #e5e7eb",borderRadius:8,background:"white",cursor:"pointer",fontSize:13}}>← رجوع</button>
+          <div>
+            <div style={{fontSize:18,fontWeight:700}}>نتائجي السابقة</div>
+            <div style={{fontSize:13,color:"#6b7280"}}>{sName}</div>
+          </div>
+        </div>
+        {subs.filter(s=>s.studentId===sId&&["submitted","grading","pass","fail"].includes(s.status)).length===0
+          ?<div style={{background:"white",borderRadius:12,padding:"3rem",textAlign:"center",color:"#9ca3af"}}>لا توجد اختبارات سابقة</div>
+          :subs.filter(s=>s.studentId===sId&&["submitted","grading","pass","fail"].includes(s.status)).map(s=>(
+            <div key={s.id} style={{background:"white",border:"0.5px solid #e5e7eb",borderRadius:12,padding:"1.25rem",marginBottom:10}}>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+                <div>
+                  <div style={{fontWeight:600,fontSize:15}}>{s.courseTitle}</div>
+                  <div style={{fontSize:12,color:"#6b7280",marginTop:2}}>{s.scenarioTitle}</div>
+                  <div style={{fontSize:11,color:"#9ca3af",marginTop:2}}>{fmtFull(s.submittedAt)}</div>
+                </div>
+                <div style={{textAlign:"center"}}>
+                  {s.status==="pass"&&<div style={{background:"#d1fae5",color:"#065f46",borderRadius:10,padding:"6px 14px",fontWeight:700,fontSize:14}}>ناجح ✓<br/><span style={{fontSize:12}}>{s.totalScore}/{s.maxScore}</span></div>}
+                  {s.status==="fail"&&<div style={{background:"#fee2e2",color:"#991b1b",borderRadius:10,padding:"6px 14px",fontWeight:700,fontSize:14}}>راسب ✗<br/><span style={{fontSize:12}}>{s.totalScore}/{s.maxScore}</span></div>}
+                  {["submitted","grading"].includes(s.status)&&<div style={{background:"#fef3c7",color:"#92400e",borderRadius:10,padding:"6px 14px",fontWeight:600,fontSize:13}}>⏳ انتظار النتيجة</div>}
+                </div>
+              </div>
+              {s.status==="pass"&&s.certId&&<div style={{marginTop:8,fontSize:12,color:"#1a5f4a",background:"#f0faf6",borderRadius:6,padding:"6px 10px"}}>🏅 رقم الشهادة: <strong>{s.certId}</strong></div>}
+              {s.status==="submitted"&&!s.editRequest&&<button onClick={async()=>{
+                const upd={...s,editRequest:{status:"pending",at:new Date().toISOString()}};
+                await dbUpsert(upd);
+                await addNotification("edit_request",{studentName:upd.studentName,studentId:upd.studentId,courseTitle:upd.courseTitle,time:new Date().toISOString()});
+                setSubs(prev=>prev.map(x=>x.id===upd.id?upd:x));
+              }} style={{marginTop:8,width:"100%",padding:"8px",background:"white",border:"1px solid #d97706",color:"#b45309",borderRadius:8,cursor:"pointer",fontSize:13,fontWeight:600}}>✏️ طلب فتح الاختبار للتعديل</button>}
+              {s.status==="submitted"&&s.editRequest?.status==="pending"&&<div style={{marginTop:8,fontSize:12,color:"#92400e",background:"#fef3c7",borderRadius:6,padding:"6px 10px",textAlign:"center",fontWeight:600}}>⏳ طلب التعديل بانتظار موافقة المدرب</div>}
+              {s.status==="submitted"&&s.editRequest?.status==="rejected"&&<div style={{marginTop:8,fontSize:12,color:"#991b1b",background:"#fee2e2",borderRadius:6,padding:"6px 10px",textAlign:"center"}}>✗ تم رفض طلب التعديل — الاختبار مُرسَل للتصحيح</div>}
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  );
+
+  if(screen==="courses") return(
+    <div style={{...base,padding:"1rem"}}>
+      <div style={{maxWidth:800,margin:"0 auto"}}>
+        <div style={{marginBottom:20,display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+          <div>
+            <div style={{fontSize:18,fontWeight:700}}>اختر الدورة</div>
+            <div style={{fontSize:13,color:"#6b7280"}}>مرحباً {sName} — كل دورة تتطلب رمز دخول خاص</div>
+          </div>
+          <div style={{display:"flex",gap:8}}>
+            <button onClick={()=>setScreen("my-results")} style={{padding:"7px 14px",border:"0.5px solid #e5e7eb",borderRadius:8,background:"white",cursor:"pointer",fontSize:13}}>📋 نتائجي</button>
+            <button onClick={()=>setScreen("home")} style={{padding:"7px 14px",border:"0.5px solid #e5e7eb",borderRadius:8,background:"white",cursor:"pointer",fontSize:13,color:"#6b7280"}}>← رجوع</button>
+          </div>
+        </div>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(230px,1fr))",gap:14}}>
+          {courses.map(c=>(
+            <button key={c.id} onClick={()=>{setSelectedCourse(c);setCourseCode("");setCodeErr("");setScreen("course-code");}} style={{background:"white",border:"0.5px solid #e5e7eb",borderRadius:14,padding:"1.5rem",textAlign:"right",cursor:"pointer",transition:"all .2s",boxShadow:"0 2px 8px rgba(0,0,0,0.04)"}}>
+              <div style={{fontSize:36,marginBottom:10}}>{c.icon}</div>
+              <div style={{fontSize:15,fontWeight:700,marginBottom:8,color:"#111827"}}>{c.title}</div>
+              <div style={{display:"flex",flexDirection:"column",gap:4}}>
+                <span style={{fontSize:12,color:"#9ca3af"}}>⏱ {EXAM_HOURS} ساعة للإنجاز</span>
+                <span style={{fontSize:12,color:"#9ca3af"}}>📝 {c.scenarios.length} سيناريو تحليلي</span>
+                <span style={{fontSize:12,color:"#059669",fontWeight:600}}>🎯 {c.passMark}% للنجاح</span>
+              </div>
+              {/* مؤشر السيناريوهات */}
+              {(()=>{
+                const done=subs.filter(s=>s.studentId===sId&&s.courseId===c.id&&s.status==="scenario_completed").length;
+                const inProg=subs.filter(s=>s.studentId===sId&&s.courseId===c.id&&s.status==="in_progress").length;
+                const submitted=subs.filter(s=>s.studentId===sId&&s.courseId===c.id&&["submitted","grading","pass","fail"].includes(s.status)).length;
+                if(submitted>0) return <div style={{marginTop:8,fontSize:11,color:"#065f46",background:"#d1fae5",borderRadius:6,padding:"4px 8px",textAlign:"center"}}>✓ تم تقديم الاختبار</div>;
+                if(done>0||inProg>0) return <div style={{marginTop:8,fontSize:11,color:"#d97706",background:"#fef3c7",borderRadius:6,padding:"4px 8px",textAlign:"center"}}>⏳ جارٍ الاختبار — {done} سيناريو مكتمل</div>;
+                return null;
+              })()}
+              <div style={{marginTop:8,padding:"6px 10px",background:"#f0faf6",borderRadius:6,fontSize:12,color:"#1a5f4a",fontWeight:600,textAlign:"center"}}>🔑 يتطلب رمز دخول</div>
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
+  /* Student login */
+  if(screen==="student-login") return(
+    <div style={{...base,display:"flex",alignItems:"center",justifyContent:"center",padding:"1rem"}}>
+      <div style={{background:"white",border:"0.5px solid #e5e7eb",borderRadius:16,padding:"2rem",width:400,maxWidth:"100%",boxShadow:"0 4px 20px rgba(0,0,0,0.06)"}}>
+        <div style={{textAlign:"center",marginBottom:"1.5rem"}}>
+          <div style={{fontSize:36,marginBottom:8}}>👤</div>
+          <div style={{fontSize:18,fontWeight:700}}>تسجيل دخول المتدرب</div>
+          <div style={{fontSize:12,color:"#9ca3af",marginTop:4}}>{ORG}</div>
+        </div>
+        <div style={{marginBottom:12}}>
+          <label style={{fontSize:13,color:"#374151",display:"block",marginBottom:5,fontWeight:500}}>رقم الهوية الوطنية <span style={{color:"#dc2626"}}>*</span></label>
+          <input value={sId} onChange={e=>setSId(e.target.value)} placeholder="1xxxxxxxxx" style={{...inp}}/>
+        </div>
+        <div style={{marginBottom:12}}>
+          <label style={{fontSize:13,color:"#374151",display:"block",marginBottom:5,fontWeight:500}}>الاسم الثلاثي بالإنجليزية <span style={{color:"#dc2626"}}>*</span> <span style={{color:"#9ca3af",fontWeight:400,fontSize:12}}>(كما في الهوية)</span></label>
+          <input value={sName} onChange={e=>setSName(e.target.value)} placeholder="Mohammed Ahmed Ali" style={{...inp,direction:"ltr"}}/>
+        </div>
+        <div style={{marginBottom:12}}>
+          <label style={{fontSize:13,color:"#374151",display:"block",marginBottom:5,fontWeight:500}}>تاريخ الميلاد <span style={{color:"#dc2626"}}>*</span></label>
+          <input type="date" value={sBirthdate} onChange={e=>setSBirthdate(e.target.value)} max={new Date().toISOString().split("T")[0]} style={{...inp,direction:"ltr",cursor:"pointer"}}/>
+        </div>
+        <div style={{marginBottom:12}}>
+          <label style={{fontSize:13,color:"#374151",display:"block",marginBottom:5,fontWeight:500}}>رقم الجوال <span style={{color:"#dc2626"}}>*</span></label>
+          <input value={sPhone} onChange={e=>setSPhone(e.target.value)} placeholder="05xxxxxxxx" style={{...inp,direction:"ltr"}}/>
+        </div>
+        <div style={{marginBottom:10}}>
+          <label style={{fontSize:13,color:"#374151",display:"block",marginBottom:5,fontWeight:500}}>رقم الطلب <span style={{color:"#dc2626"}}>*</span> <span style={{color:"#9ca3af",fontWeight:400,fontSize:12}}>(الموجود في سلة)</span></label>
+          <input value={sOrderNum} onChange={e=>setSOrderNum(e.target.value)} placeholder="ORD-XXXXXXXX" style={{...inp,direction:"ltr"}}/>
+        </div>
+        <div style={{background:"#fffbeb",border:"0.5px solid #fde68a",borderRadius:8,padding:"8px 12px",marginBottom:12,fontSize:12,color:"#92400e"}}>
+          ⚠️ بعد اختيار الدورة والبدء يُتاح لك <strong>{EXAM_HOURS} ساعة</strong> لإنهاء الاختبار تلقائياً.
+        </div>
+        {err&&<div style={{color:"#dc2626",fontSize:13,marginBottom:10,textAlign:"center",background:"#fef2f2",padding:"8px",borderRadius:6}}>{err}</div>}
+        <button onClick={doLogin} style={{width:"100%",padding:"11px",background:"#1a5f4a",color:"white",border:"none",borderRadius:8,fontSize:15,cursor:"pointer",fontWeight:700,marginBottom:8}}>دخول ←</button>
+        <button onClick={()=>{setScreen("home");setErr("");}} style={{width:"100%",padding:"8px",background:"none",border:"none",color:"#6b7280",fontSize:13,cursor:"pointer"}}>← رجوع</button>
+      </div>
+    </div>
+  );
+
+  /* Home */
+  return(
+    <div style={{...base,display:"flex",alignItems:"center",justifyContent:"center",padding:"1rem",minHeight:"100vh"}}>
+      <div style={{maxWidth:520,width:"100%",textAlign:"center"}}>
+        {/* Logo */}
+        <div style={{marginBottom:"2rem"}}>
+          <div style={{width:80,height:80,borderRadius:"50%",background:"linear-gradient(135deg,#1a5f4a,#0d3d2e)",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 16px",fontSize:34,boxShadow:"0 8px 24px rgba(26,95,74,0.3)"}}>🎓</div>
+          <div style={{fontSize:11,color:"#9ca3af",letterSpacing:3,marginBottom:6}}>{ORG_EN.toUpperCase()}</div>
+          <div style={{fontSize:26,fontWeight:800,color:"#111827",lineHeight:1.2,marginBottom:4}}>{ORG}</div>
+          <div style={{fontSize:14,color:"#6b7280",marginBottom:2}}>نظام الاختبارات التحليلية</div>
+          <div style={{fontSize:12,color:"#9ca3af"}}>نمط NEBOSH Open Book — سيناريوهات قائمة على الدور</div>
+        </div>
+
+        {/* Cards */}
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14,marginBottom:16}}>
+          <button onClick={()=>{setScreen("student-login");setErr("");}} style={{background:"white",border:"0.5px solid #e5e7eb",borderRadius:16,padding:"1.75rem 1.25rem",cursor:"pointer",textAlign:"center",boxShadow:"0 2px 12px rgba(0,0,0,0.06)",transition:"all .2s"}}>
+            <div style={{fontSize:34,marginBottom:10}}>👤</div>
+            <div style={{fontSize:15,fontWeight:700,marginBottom:4,color:"#111827"}}>دخول المتدرب</div>
+            <div style={{fontSize:12,color:"#9ca3af"}}>تقديم الاختبار التحليلي</div>
+          </button>
+          <button onClick={()=>{setScreen("trainer-login");setErr("");setTPass("");}} style={{background:"white",border:"0.5px solid #e5e7eb",borderRadius:16,padding:"1.75rem 1.25rem",cursor:"pointer",textAlign:"center",boxShadow:"0 2px 12px rgba(0,0,0,0.06)",transition:"all .2s"}}>
+            <div style={{fontSize:34,marginBottom:10}}>🏫</div>
+            <div style={{fontSize:15,fontWeight:700,marginBottom:4,color:"#111827"}}>دخول المدرب</div>
+            <div style={{fontSize:12,color:"#9ca3af"}}>تصحيح النتائج والشهادات</div>
+          </button>
+        </div>
+
+        {/* Info */}
+        <div style={{background:"white",border:"0.5px solid #e5e7eb",borderRadius:12,padding:"1rem",boxShadow:"0 2px 8px rgba(0,0,0,0.04)"}}>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:8}}>
+            {courses.map(c=>(
+              <div key={c.id} style={{textAlign:"center",padding:"8px 4px"}}>
+                <div style={{fontSize:20,marginBottom:4}}>{c.icon}</div>
+                <div style={{fontSize:11,color:"#374151",fontWeight:500,lineHeight:1.3}}>{c.title}</div>
+                <div style={{fontSize:10,color:"#9ca3af",marginTop:2}}>🔑 رمز خاص</div>
+              </div>
+            ))}
+          </div>
+          <div style={{borderTop:"0.5px solid #f3f4f6",marginTop:10,paddingTop:10,display:"flex",justifyContent:"center",gap:16}}>
+            <span style={{fontSize:12,color:"#6b7280"}}>⏱ {EXAM_HOURS} ساعة لكل اختبار</span>
+            <span style={{fontSize:12,color:"#6b7280"}}>📝 سيناريوهات تحليلية</span>
+            <span style={{fontSize:12,color:"#6b7280"}}>🏅 شهادة عند النجاح</span>
+          </div>
+        </div>
+
+        <div style={{marginTop:14,fontSize:11,color:"#d1d5db"}}>{ORG_EN} © {new Date().getFullYear()}</div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>
