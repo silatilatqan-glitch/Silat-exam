@@ -71,11 +71,11 @@ function handleSupabase(route) {
 (async () => {
   /* static server */
   const server = http.createServer((req, res) => {
-    const f = path.join('/home/claude/exam-site', req.url === '/' ? 'index.html' : req.url);
+    const f = path.join(__dirname, '..', req.url === '/' ? 'index.html' : req.url);
     try { res.setHeader('content-type', 'text/html; charset=utf-8'); res.end(fs.readFileSync(f)); } catch (e) { res.statusCode = 404; res.end('nf'); }
   }).listen(PORT);
 
-  const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome' });
+  const browser = await chromium.launch({ executablePath: require('fs').existsSync('/opt/pw-browsers/chromium-1194/chrome-linux/chrome')?'/opt/pw-browsers/chromium-1194/chrome-linux/chrome':undefined });
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
 
   const pageErrors = [];
@@ -91,11 +91,12 @@ function handleSupabase(route) {
     'supabase.js': 'node_modules/@supabase/supabase-js/dist/umd/supabase.js',
     'firebase-app-compat.js': 'node_modules/firebase/firebase-app-compat.js',
     'firebase-firestore-compat.js': 'node_modules/firebase/firebase-firestore-compat.js',
+    'qrcode.min.js': 'node_modules/qrcodejs2/qrcode.min.js',
   };
   await page.route(/cdnjs\.cloudflare\.com|cdn\.jsdelivr\.net|www\.gstatic\.com/, route => {
     const u = route.request().url();
     const key = Object.keys(LIBS).find(k => u.endsWith(k));
-    if (key) return route.fulfill({ status: 200, contentType: 'application/javascript', body: fs.readFileSync(path.join('/home/claude/exam-site', LIBS[key])) });
+    if (key) return route.fulfill({ status: 200, contentType: 'application/javascript', body: fs.readFileSync(path.join(__dirname, '..', LIBS[key])) });
     return route.fulfill({ status: 200, contentType: 'application/javascript', body: '' });
   });
   await page.route(/supabase\.co/, handleSupabase);
