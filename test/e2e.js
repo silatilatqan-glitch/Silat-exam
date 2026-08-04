@@ -259,8 +259,21 @@ function handleSupabase(route) {
   check('27. 🎯 محاولة جديدة بسيناريو واحد = 100 درجة عظمى (لا تلوث من المحاولة القديمة)', resub && resub.maxScore === 100 && resub.completedScenarioIds.length === 1, `maxScore=${resub && resub.maxScore}`);
   check('28. إجابات المحاولة الجديدة فقط (4 مهام)', resub && Object.keys(resub.answers).length === 4, `answers=${resub && Object.keys(resub.answers).length}`);
 
+  /* ═══ 10) زر حذف سجل من اللوحة (تأكيد مزدوج) ═══ */
+  await page.click('button:has-text("العودة للرئيسية")');
+  await page.click('text=دخول المدرب');
+  await page.fill('input[placeholder="كلمة مرور المدرب"]', 'HSE@2024');
+  await page.click('button:has-text("دخول")');
+  await page.waitForSelector('text=لوحة تحكم المدرب');
+  await page.waitForTimeout(700);
+  const delBtn = page.locator('div.row-grid').filter({ hasText: 'انتظار التصحيح' }).locator('button[title="حذف السجل نهائياً"]');
+  await delBtn.first().click();
+  await page.waitForTimeout(800);
+  check('29. 🗑 حذف السجل يحذفه من قاعدة البيانات', !allSubs().some(s => s.status === 'submitted'));
+  check('30. السجلات الأخرى لم تُمس بالحذف', allSubs().some(s => s.status === 'pass'));
+
   /* ═══ خلاصة ═══ */
-  check('29. لا أخطاء JavaScript طوال الرحلة كاملة', pageErrors.length === 0, pageErrors.slice(0, 2).join(' | '));
+  check('31. لا أخطاء JavaScript طوال الرحلة كاملة', pageErrors.length === 0, pageErrors.slice(0, 2).join(' | '));
 
   const failed = results.filter(r => !r.ok);
   console.log('\n══════════════════');
