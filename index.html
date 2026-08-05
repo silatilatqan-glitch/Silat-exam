@@ -8,6 +8,7 @@
 <!-- v24 — تمديد تلقائي بعد انتهاء الوقت، طلبات فتح التعديل بموافقة المدرب، الرجوع بين السيناريوهات، دمج الإجابات من قاعدة البيانات، تعقيم المعرفات المكررة، تنبيه الأسئلة المكررة، تأكيد الإرسال (2026-07-29) -->
 <!-- v25 — إصلاح مسار إعادة الدخول بعد الموافقة (كان يعيد الطالب لطلب جديد بلا نهاية)، إدارة رموز دخول الدورات من اللوحة (الدورات المضافة كانت بلا رمز = مستحيلة الدخول)، عزل سيناريوهات المحاولة الواحدة بنافذة وقتها (منع دمج إجابات محاولة قديمة)، استعادة شاشة انتظار التمديد بعد تحديث الصفحة، تعليم النتائج كمقروءة، تواريخ الإشعارات ميلادية، توريث ساعات الاختبار للسيناريو التالي، إصلاحات أخرى (2026-07-30) -->
 <!-- v26 — الهوية الجديدة: كحلي/برتقالي من الشعار الرسمي، خط IBM Plex Sans Arabic، الشعار مضمّن في الواجهات، شهادة رسمية جديدة برمز QR للتحقق، تحسين الجوال، رسائل خطأ لكل حقل في تسجيل الدخول، زر حذف سجل بتأكيد مزدوج في لوحة المدرب (2026-08-03) -->
+<!-- v27 — المرحلة الأمنية (الحزمة 2): كل العمليات تمر عبر الدالة الخادمية exam-api — كلمة مرور المدرب ورموز الدورات ومعايير التصحيح لم تعد موجودة في هذا الملف إطلاقاً، جلسة مدرب موقّعة من الخادم، الطالب لا يستطيع تعديل درجاته أو سجلات غيره (2026-08-04) -->
 <link rel="icon" type="image/webp" href="data:image/webp;base64,UklGRrAMAABXRUJQVlA4TKMMAAAvP8APEFXZzf5/kSTnmJmZmZnP5BMza0EwfLRMvczMzMzMzMw8DIeDezvYVdV/o7f3pktofiNQDApA5oUzz1kKZ2yZioD9n7MJdAgyN4VLQB6HsyEJw9HzVAKHOYjB2wTaEiQzCWwuYpxoZK8nSGEsZVCmaNGSN5ZCaEsJcBbnCSNRJJeRxps0LgDBTxjAWGIpibbkKQK5tm2bttSfUbZtZFZs22GlFVqp63+5B7XbtpVW0j4XLlDEPTgBgpa7xpOyX23d/d3d3eU5kSuN2razkc6HsB5ltsh0PJPO7tha27a9w2Jt27a3a9u/bNu2d3tyct4JwDPHBSAyASKnk55CiEyAJUSNiK4XQARgZhMQCREFYVIfsQxMAuIF8AKY5OR4pAvDzVdTLNfHTTLiiBQgX1AbKcC8TIBBgCksKaKdQSN36bxHKHY+Tr7zUvEGd8lYd/Fqd+mSYgLfsJounY2IkKrYCLwMZgHh41VqZ5ev39UMjnf/ZQmjQeOrxS0g6QSwevICkjhKI84wAp9L2fLZdBtlkYo4AQmCCL4eS3cT+7ewgq1bQgNmFwEiswmohBgJmLuWMM2hWx/p8vbuunmURaqhfwkiZEZqk+O693YDS9i76aeZ9GQBNCUWYzVijUmLJbGk5Sjz966TTRLCaiEJsYIImklpvH+P/7xg+xbacPXaGXEYZ0QMXY+bm2U2MhSMLGA8tEDR1AbsluG4geMwlpMf1ZXtgakh5FSJQwLDAiLltO4839Ba27gN5BfMEaB7qYwYbtmgQbZR+Ds0LJ6tEnY1VZyrIrVrWP0x4/LuQbWS6a00tnqsV/F8lgGrg4yIEyDl46/fwFPYrIW6t8mv60iJguATEMuVuP0vN56kwTwe4x5X4R+jkUBvZS/JnKmqMikIqeIL98ynVN+1ibp5i0Dak6SbBVhiMYF76uS4jXQeSEIIgBEhRJJ1j+rynncpiFKXeoVVOD1gV8V6AebSObPTtm3+Z5OeQiv9AQL03xIE+1iXt4VOcAMpgGD+clTg9mxjUAT2cSnsCvEk/rEq7pIdHOd0686GrWGL5upHx6vUW6aPqKEUFvjIDov9teMKCn1YHkHWuUvmiAQla/zYwo8zQkgpe/RY3bgVbNpS27kZzKPmmQgdN2K2aW7YEDIgS1FkxtelUOIoks5DvFYGNtEEga+bg9V7jkfLU3ueBTCz6XHTVZUUMwHcBJU6H92spbZxK22PJuCH5ymEjmqyKtrXbwoZIUtAJl9DMXtIJ7MzkWjkgaMSz3t/wUOf/A/Zj6nnY2b2cqHC5btbwC4t4eGuHlOAA2wrB1TvsnUr2KJFYEW6P56jIIFaNajViNmUbIsjI0wjNRRDwQisSpSwVRfCtCN/J/ttOU6v8OTbW24/39PyfH3170EvfwSXdb0b+/6bwkbm6maWf7ZpDbVYlYO1XWPVw/C6HrW6bNEatmweWJHuH895H41Xj8r7P5rMRkQWg75LxRp5++gkI3G9dx3JTZ5/smnIiT96lXvx6S23X+9B7i9vA495/4n6gE2GuuffibaRpfqirVppbpJ92V1ZUY3bAAKEHlpdzL65UgGiZ1esv5ZiZgWwBZIQ4WBq8GMVft2ZOIAMYs+zv6298tX7qsvn9+FBl3cwcKk8Nue/+PG2LWCLlnBeN/5dg8eDbK9bRACenfFd9NZNyVU0jRIw+gUCQJSl649TbB9TIxqJrUwKJAKJWtg5R+09Km1zuJwxceWhpzQOsXMoTatlzq+QvXAOtV4wRZ6uItF3LZkQWoViAl+17L6kvz/rVhmR98tAOdmreGZjZh3YEwvPkgexIohJAgwmhxABIQIkAQ4Bwe7ipWX4LRCPqIVkJ5xUSDgyv2h8BNlAxETaSE3lkV0+0MagBlYh0e0UjelbGTYvwR9boHBSLuPZj1FsfmT59vu7enSLNtAws4EehzGWMgGgm16mS/nysvklnfQLB9ZK6KhfoxqnW86RrfKQzpyjEgo7rDhLxfaIcWVPc2bTOXRHANXqS03at8fv0zZqDRt4BvUz2me8Nem1i3KawTFK09kks0nN7BYVee1aNKzlTbfAumG4+MCuHQughZJ2j2xvP8H9W5u2Urdv+mvDnkEdRq+kl94YNdpRwqikff1atPQXEojRRPSx3Xt47zbN/91dJ6N/aizGqY/YvXh2KG7SHQ4ZuFjCaVaLWfKUgGhM8Gy8Lx4J7LzZBEwsIZvVYpQ8JdB33Eay/P8E559/ecy4//DeL9/97BsTvOFM9tt6nBA/u0eIWl5yuH7NhdF793/WwG0nwdLUAVljFV0hnjBBLRpGDJsQUoCNgYh/Weiu1XUxIpaX+lpPvnjou+m0OHphJ4SuLE21nn9xTZkUOGLp1tn43lc7p+//LwPWGacek022geEwIn4hRP1rk1bamzfyVKvJKnlONElI7arda/PWYMmE8Oij/3Rtcv/rzZHLS92snf83qPXo8x+Tjv6TjPZXvhsbsPlUsgpsVDerU/aKDXNUwqUJ4pJM9hFHevh4Axv4UFo9xoBlghCX9dPotkUr7UMbt9TSA/FMs/AVpdF/42mNXmd/mzHw1K9DfTafFs3ZcVyn2c3v/Dd3uvjjsIDNJ1brkAyEB9ZKdS+b71q6wUMy2aV4+cEevtyl6Y/dTb7t3OzbRa6duNx4pkfxjMuNZ9y3q2c3HivYvIW2Ij1wgqeZIWxFGXzDws4iTwgKLFzYGYQDips9cPKkwNYBSYiQHkUy+dMkb1pkEJ4UmJTrTy4MJmf4UeO9aQ4/Wpg3LeahisO79OTfX1akB8WraWYA7NIkEGJjGFYnm4yIrq0UhN7kYFYIs0IYk5K1lTGYJRKLOafbNzawgL16AuEkp25bBDE1ZrRoyGxiPQCU6VAQWa4AcXzB6VQA8+sudv3i5pZwYI8+tdIrD6ZaSAHaV9dVmdermLDEIKjMVzTCUzrBQzxt92ZqY0Ybsqtg8WMwelZ3Hu7bBI7vLuSQnXvLDJXox3Z5Wy1Ot5ETTdc0VTmIEpmrcMMGXsJGbWCjnkHz+l01ta06sEcPtmoNDRr2q8gd2ojR6eEVx0IoEnFGag3mpE3bBHZs+mXTNtDIsCRjlcqGatl2aKlt2Trw1QbMbid271cYWdLjEXPLjwQYy3Pm3bRN8z+famhY+TqbyvrqyEf18NPhPf7USb/AIBhZaIxGa98mykqtxJ590/M2aQMNDT2vW6WS6yjCVLUqk6tZg9KMBACXuHH4XHceUBHBpMGaOSwjDNiSKrFmbjSegnoG1FZySSYUEkwqxR9Qbng9C4jG5pJM7lk3HUA7g+JWhg1RanhDp6ja2QncKkBUz/LCgiEljXx3aEz6r6vk9CsyRiOXIIokhOIGlOV7pqhaaRVgRCT1uRv3VNuu6a/N2mj/VYN+mfGiPjo5xDKi6xMQvYXRTzu9RCPv++fTZSeV41XOUJF1nVkAK8BUaVgL0zZtoW7Yc6jPqMiwW2sVDAJvd918xGPUBJgIMqAoMo0ic3op/rC8ojn/s3Epvu/2srleg3BI8XxPcYGnaKMRxfNmPFxx6jAPHx7V/QeH9/hBp7ptNKthfDVnfsEkip9g1AlgkFaUoXBQQaGnwTBL2hnUnUe35xWOXy8D4bI873DN+LhICMXFCDL/inBcDCVbIjHrDZAQBVWjwWkE43JY+cMoaVQ+edRlEgMIQPRvFfcdXSUWQwChGrfHSA2FuBzPM11F1jVmXTMRvAw6CfQK8EvIWpAmiOYf4djIWZiVSVC/LcdR/ptOkmftPKoz/vC/TQce+8MnTZcUgJ3a16/XoX4OcVmuZ4qalW91mjscBOt/Jf9ksDxi2UXK7F1HGa0v/LhpzIH/K/uf/G1Jj/O/r6h/9+sHoctLI4BVaGlYr41BLnFZXvkMVYkyoVqKHDKfa2Z0NHpulzz1yF/dem+QGzUZRktELu5NMLejMrfb0JrJzJ+/AyqmBMTkKRofuiCiYxbLoPD/Clf4fzgCi6bnP3mka+MRr8mIzVs0bSGJJxWtomJGQ32GHkxUkTdoSE0XEhAC7IRiw/d1rFeT9bn0cINwGNnVhD46GTXYXSklFuMvlyycqC4DQDxi84vGVOD15qVUJbdnrzpZUACpCIJA2uXi+dfiJtajSWKRghGlh1/RWT+9WUaDYo082SvWt9evxfEYy4G0EBfZCs0BNf+YfuUuXarpGs9SsXepV6s1o8FA7cxYTOSl/OdsI980W8VOmaqCjYbWVPKMaHYMJrCEGGbm5BQKoIVkk28aoqWQDSo3IoxxGrHZ5dtHaLq0lLuMiP3rkjhMaJXRKJt826x0B30Xz/gCAA=="/>
 <!-- preconnect لتسريع تحميل المكتبات -->
 <link rel="preconnect" href="https://cdnjs.cloudflare.com"/>
@@ -19,7 +20,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.4/babel.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 <!-- XLSX وQR تُحمَّلان فقط عند الحاجة -->
@@ -86,26 +86,38 @@ const LOGO_MARK="data:image/webp;base64,UklGRoo4AABXRUJQVlA4TH04AAAvzsA8EE1AbttI
    ⚙️  إعدادات النظام
 ═══════════════════════════════════════════════ */
 /* ══════════════════════════════════════════════════
-   🔑  ضع بيانات Supabase هنا بعد إنشاء المشروع
+   🔐  الطبقة الخادمية الآمنة — كل العمليات عبر exam-api
+   لا وصول مباشراً لقاعدة البيانات من المتصفح بعد الآن
 ══════════════════════════════════════════════════ */
 const SUPABASE_URL = "https://unhokrmdxdqejphaffgb.supabase.co";
-const SUPABASE_KEY = "sb_publishable_4xbMnEg7jGX8dgLxKUAzEA_vtpTCgMe";
+const API_URL = SUPABASE_URL + "/functions/v1/exam-api";
+let TRAINER_TOKEN = null;      // رمز جلسة المدرب — يصدره الخادم موقّعاً عند الدخول
+let TRAINER_CODES = {};        // رموز الدورات — تصل للمدرب فقط بعد المصادقة
+let DEFAULT_CRITERIA_SRV = {}; // معايير التصحيح الافتراضية — تصل للمدرب فقط
 
-const _sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+async function api(action, payload = {}, opts = {}) {
+  const res = await fetch(API_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ action, payload, token: TRAINER_TOKEN || undefined }),
+    ...(opts.keepalive ? { keepalive: true } : {})
+  });
+  let j = null; try { j = await res.json(); } catch (e) {}
+  if (!res.ok) {
+    const err = new Error((j && j.error) || ("http_" + res.status));
+    err.code = (j && j.error) || null; err.status = res.status;
+    throw err;
+  }
+  return j || {};
+}
 
 /* ══════════════════════════════════════════════════
-   🗄️  وظائف قاعدة البيانات (Supabase)
+   🗄️  وظائف البيانات (تمر كلها عبر الخزنة الخادمية)
 ══════════════════════════════════════════════════ */
 async function dbLoad(studentId=null){
   try{
-    let query=_sb.from("exam_subs").select("data").order("updated_at",{ascending:false});
-    // الطالب يحمّل بياناته فقط — المدرب يحمّل الكل
-    if(studentId){
-      query=_sb.from("exam_subs").select("data").contains("data",{studentId});
-    }
-    const{data,error}=await query;
-    if(error)throw error;
-    return(data||[]).map(r=>r.data);
+    if(studentId){const r=await api("student_load",{studentId});return r.subs||[];}
+    const r=await api("trainer_load");return r.subs||[];
   }catch(e){
     console.error("dbLoad:",e);
     try{const r=localStorage.getItem("itqan_v3_fb");return r?JSON.parse(r):[];}catch{return[];}
@@ -114,7 +126,8 @@ async function dbLoad(studentId=null){
 
 async function dbUpsert(sub){
   try{
-    await _sb.from("exam_subs").upsert({id:sub.id,data:sub,updated_at:new Date().toISOString()});
+    if(TRAINER_TOKEN)await api("trainer_save",{sub});
+    else await api("student_save",{sub,studentId:sub.studentId});
   }catch(e){
     console.error("dbUpsert:",e);
     // fallback
@@ -123,39 +136,28 @@ async function dbUpsert(sub){
 }
 
 async function dbDelete(ids){
-  try{await _sb.from("exam_subs").delete().in("id",ids);}
+  try{await api("trainer_delete",{ids});}
   catch(e){console.error("dbDelete:",e);}
 }
 
 async function dbClearAll(){
-  try{await _sb.from("exam_subs").delete().neq("id","__x__");}
+  try{await api("trainer_clear_all");}
   catch(e){console.error("dbClearAll:",e);}
 }
 
+/* بيانات الإعدادات — للمدرب المصادَق فقط */
 async function dbGetMeta(key){
-  try{const{data}=await _sb.from("exam_meta").select("value").eq("key",key).single();return data?.value||null;}
+  try{const r=await api("trainer_get_meta",{keys:[key]});return (r.meta&&r.meta[key])??null;}
   catch{return null;}
 }
 
 async function dbSetMeta(key,value){
-  try{
-    const{error}=await _sb.from("exam_meta").upsert({key,value},{onConflict:"key"});
-    if(error)throw error;
-  }catch(e){
-    // احتياط: جرّب التحديث ثم الإدراج إذا لم يكن key مفتاحاً فريداً
-    try{
-      const{data}=await _sb.from("exam_meta").update({value}).eq("key",key).select();
-      if(!data||data.length===0)await _sb.from("exam_meta").insert({key,value});
-    }catch(e2){console.error("dbSetMeta:",e2);}
-  }
+  try{await api("trainer_set_meta",{key,value});}
+  catch(e){console.error("dbSetMeta:",e);}
 }
 
 async function addNotification(type,data){
-  try{
-    const notifs=JSON.parse((await dbGetMeta("notifications"))||"[]");
-    notifs.unshift({type,data,time:new Date().toISOString(),read:false});
-    await dbSetMeta("notifications",JSON.stringify(notifs.slice(0,50)));
-  }catch(e){}
+  try{await api("add_notification",{type,data});}catch(e){}
 }
 async function getNotifications(){
   try{return JSON.parse((await dbGetMeta("notifications"))||"[]");}catch{return[];}
@@ -167,24 +169,29 @@ async function markNotifsRead(){
   }catch(e){}
 }
 
-/* وظائف إدارة الدورات */
-async function dbLoadCourses(){
+/* وظائف إدارة الدورات — الحفظ والحذف للمدرب المصادَق فقط */
+async function dbSaveCourse(course,accessCode){
   try{
-    const{data,error}=await _sb.from("exam_courses").select("data").order("updated_at",{ascending:false});
-    if(error)throw error;
-    if(data&&data.length>0)return data.map(r=>r.data);
-    return null; // null = استخدم الدورات الافتراضية
-  }catch(e){console.error("dbLoadCourses:",e);return null;}
-}
-
-async function dbSaveCourse(course){
-  try{await _sb.from("exam_courses").upsert({id:course.id,data:course,updated_at:new Date().toISOString()});}
-  catch(e){console.error("dbSaveCourse:",e);}
+    await api("trainer_save_course",{course,accessCode:accessCode||undefined});
+    if(accessCode)TRAINER_CODES[course.id]=accessCode;
+  }catch(e){console.error("dbSaveCourse:",e);}
 }
 
 async function dbDeleteCourse(id){
-  try{await _sb.from("exam_courses").delete().eq("id",id);}
+  try{await api("trainer_delete_course",{id});delete TRAINER_CODES[id];}
   catch(e){console.error("dbDeleteCourse:",e);}
+}
+
+/* دمج الدورات المحمَّلة فوق الافتراضية مع احترام المحذوفة */
+function mergeCourses(loaded,deletedIds){
+  const base=COURSES.filter(c=>!(deletedIds||[]).includes(c.id));
+  const list=sanitizeCourses(loaded||[]);
+  if(list&&list.length>0){
+    const merged=base.map(def=>list.find(s=>s.id===def.id)||def);
+    const newOnes=list.filter(s=>!COURSES.find(d=>d.id===s.id)&&!(deletedIds||[]).includes(s.id));
+    return [...merged,...newOnes];
+  }
+  return base;
 }
 
 /* 🧹 تعقيم الدورات المحملة من قاعدة البيانات:
@@ -221,39 +228,34 @@ function sanitizeCourses(list){
 ══════════════════════════════════════════════════ */
 
 async function issueCertificate(sub,course){
+  const certId="CERT-"+serial(sub.id);
+  const today=new Date().toISOString().split("T")[0];
+  const exp=new Date();
+  exp.setFullYear(exp.getFullYear()+(course.certValidityYears||3));
+  const expiry=exp.toISOString().split("T")[0];
+  const cert={
+    name:sub.studentName,course:sub.courseTitle,date:today,expiry,
+    hours:course.hours||"—",trainer:course.trainer||"مركز صلة الإتقان للتدريب",
+    studentId:sub.studentId,studentOrderNum:sub.studentOrderNum||"",
+    phone:sub.studentPhone||"",certId,issuedAt:new Date().toISOString()
+  };
+  // ① المسار الآمن: الإصدار من الخادم (يتفعل بالكامل في الحزمة 3)
   try{
-    const certId="CERT-"+serial(sub.id);
-    const today=new Date().toISOString().split("T")[0];
-    const exp=new Date();
-    exp.setFullYear(exp.getFullYear()+(course.certValidityYears||3));
-    const expiry=exp.toISOString().split("T")[0];
-    // Firestore لا يرفض الكتابة عند انقطاع الشبكة بل يعيد المحاولة للأبد — مهلة 12 ثانية حتى لا يعلق الاعتماد
-    const write=window._fbDb.collection("certificates").doc(certId).set({
-      name:sub.studentName,
-      course:sub.courseTitle,
-      date:today,
-      expiry:expiry,
-      hours:course.hours||"—",
-      trainer:course.trainer||"مركز صلة الإتقان للتدريب",
-      studentId:sub.studentId,
-      studentOrderNum:sub.studentOrderNum||"",
-      phone:sub.studentPhone||"",
-      certId:certId,
-      issuedAt:new Date().toISOString()
-    });
+    const r=await api("issue_certificate",{cert});
+    if(r.ok)return certId;
+  }catch(e){
+    if(e.code!=="firebase_not_configured")console.error("issueCertificate(api):",e);
+  }
+  // ② احتياط مؤقت حتى اكتمال الحزمة 3: الكتابة المباشرة القديمة بمهلة 12 ثانية
+  try{
+    const write=window._fbDb.collection("certificates").doc(certId).set(cert);
     await Promise.race([write,new Promise((_,rej)=>setTimeout(()=>rej(new Error("انتهت مهلة الاتصال بـ Firebase")),12000))]);
     return certId;
   }catch(e){console.error("issueCertificate:",e);return null;}
 }
 
-let TRAINER_CODE="HSE@2024"; // يُحمَّل من Supabase عند بدء التطبيق
-let COURSE_CODES={
-  osha30:"OSHA001",
-  hazwoper40:"HAWZOPER002",
-  chartered3:"CIEH003",
-  rigging:"LIFTING004",
-  iosh:"IOSH005"
-}; // تُحمَّل من Supabase
+/* 🔒 v27: كلمة مرور المدرب ورموز الدورات لم تعد موجودة في هذا الملف —
+   التحقق كله يتم داخل الدالة الخادمية exam-api */
 const ORG="مركز صلة الإتقان للتدريب";
 const ORG_EN="Silat Al-Itqan Training Center";
 let EXAM_HOURS=24; // يُحدَّث من لوحة التحكم
@@ -274,10 +276,10 @@ const COURSES=[
         roleDesc:"أنت Safety Supervisor في مصنع تصنيع صناعي خاضع لـ OSHA General Industry 29 CFR 1910.",
         context:"مصنع AlMasna'a Industrial تلقّى زيارة تفتيشية مفاجئة من OSHA. وجد المفتش: ثلاث إصابات غير مسجّلة في OSHA 300 خلال 6 أشهر، تسرب هيدروليكي مُهمَل أسبوعين، عمال في Confined Space بدون PTW، غياب برنامج LOTO موثّق، وعامل دون حماية سمع في منطقة 95 dB. المفتش يُشير لاحتمال Willful Violation.",
         tasks:[
-          {id:"t1",num:1,text:"ما الفرق بين Willful، Serious، وOther-than-Serious Violations؟ ما العقوبات القصوى لكل منها وفق OSHA 2024؟ كيف ستستجيب للمفتش بشأن الإصابات غير المسجّلة؟",marks:25,criteria:"التمييز الدقيق بين أنواع الانتهاكات مع العقوبات المالية الصحيحة (12) + استراتيجية الاستجابة (13)."},
-          {id:"t2",num:2,text:"صمّم برنامج Permit-Required Confined Space كاملاً وفق OSHA 29 CFR 1910.146. ما العناصر الإلزامية للتصريح؟ ما إجراءات الإنقاذ الطارئ؟",marks:25,criteria:"تعريف PRCS (5) + 10 من أصل 16 عنصر إلزامي (12) + إجراءات الإنقاذ (8)."},
-          {id:"t3",num:3,text:"وضّح خطوات تطبيق LOTO وفق OSHA 29 CFR 1910.147 بالتسلسل الصحيح. ما الفرق بين Lockout وTagout؟ متى يُسمح بـ Tagout فقط؟",marks:25,criteria:"الخطوات الست بالترتيب (12) + الفرق Lock/Tag (8) + حالات Tagout فقط (5)."},
-          {id:"t4",num:4,text:"وفق OSHA Hearing Conservation Program (29 CFR 1910.95)، ما Action Level وPEL؟ صمّم البرنامج الشامل الإلزامي مع مكوناته الثمانية.",marks:25,criteria:"AL=85dB وPEL=90dB TWA (8) + 8 مكونات البرنامج (12) + المراقبة الطبية (5)."}
+          {id:"t1",num:1,text:"ما الفرق بين Willful، Serious، وOther-than-Serious Violations؟ ما العقوبات القصوى لكل منها وفق OSHA 2024؟ كيف ستستجيب للمفتش بشأن الإصابات غير المسجّلة؟",marks:25},
+          {id:"t2",num:2,text:"صمّم برنامج Permit-Required Confined Space كاملاً وفق OSHA 29 CFR 1910.146. ما العناصر الإلزامية للتصريح؟ ما إجراءات الإنقاذ الطارئ؟",marks:25},
+          {id:"t3",num:3,text:"وضّح خطوات تطبيق LOTO وفق OSHA 29 CFR 1910.147 بالتسلسل الصحيح. ما الفرق بين Lockout وTagout؟ متى يُسمح بـ Tagout فقط؟",marks:25},
+          {id:"t4",num:4,text:"وفق OSHA Hearing Conservation Program (29 CFR 1910.95)، ما Action Level وPEL؟ صمّم البرنامج الشامل الإلزامي مع مكوناته الثمانية.",marks:25}
         ]
       },
       {
@@ -286,10 +288,10 @@ const COURSES=[
         roleDesc:"أنت Site Safety Officer في مشروع بناء تجاري خاضع لـ OSHA Construction 29 CFR 1926.",
         context:"مشروع بناء مركز تجاري، 85 عاملاً من مقاولين متعددين. رصدت في أول أسبوع: سقالة غير مثبّتة بشكل صحيح مع عمال دون حزام أمان على ارتفاع 15م، حفرة عمق 7 أقدام دون حماية Cave-in، كابل كهربائي مكشوف قرب منطقة المرور، وغياب HAZCOM محدّث بعد دخول مواد جديدة.",
         tasks:[
-          {id:"t5",num:1,text:"ما صلاحيات Competent Person وفق OSHA 1926.451؟ ما قائمة فحص السقالة الإلزامية قبل كل وردية (10 عناصر على الأقل)؟ متى يجب إيقاف العمل فوراً؟",marks:25,criteria:"تعريف وصلاحيات Competent Person (8) + قائمة الفحص (10) + معايير الإيقاف الفوري (7)."},
-          {id:"t6",num:2,text:"وفق OSHA 1926 Subpart P، ما خيارات الحماية الأربعة للحفريات (Sloping/Benching/Shoring/Shielding)؟ أيها تختار لحفرة 7 أقدام ولماذا؟",marks:25,criteria:"الحد الأدنى للتطبيق 5 أقدام (3) + وصف كل خيار (14) + الاختيار المناسب مع المبرر (8)."},
-          {id:"t7",num:3,text:"وضّح إجراءات السلامة الكهربائية وفق OSHA 1926 Subpart K. ما مسافات الحماية الإلزامية من خطوط الكهرباء حسب الجهد؟ وما إجراء العزل الآمن في البناء؟",marks:25,criteria:"مسافات الأمان الصحيحة حسب الجهد (10) + إجراءات العزل (10) + PPE الكهربائي (5)."},
-          {id:"t8",num:4,text:"وفق OSHA HCS 2012 المبني على GHS، ما عناصر SDS الستة عشر؟ ما التزامات صاحب العمل في HAZCOM Training؟ ما حق Right-to-Know للعامل؟",marks:25,criteria:"15 من 16 عنصر SDS (15) + التزامات التدريب الثلاثة (7) + Right-to-Know (3)."}
+          {id:"t5",num:1,text:"ما صلاحيات Competent Person وفق OSHA 1926.451؟ ما قائمة فحص السقالة الإلزامية قبل كل وردية (10 عناصر على الأقل)؟ متى يجب إيقاف العمل فوراً؟",marks:25},
+          {id:"t6",num:2,text:"وفق OSHA 1926 Subpart P، ما خيارات الحماية الأربعة للحفريات (Sloping/Benching/Shoring/Shielding)؟ أيها تختار لحفرة 7 أقدام ولماذا؟",marks:25},
+          {id:"t7",num:3,text:"وضّح إجراءات السلامة الكهربائية وفق OSHA 1926 Subpart K. ما مسافات الحماية الإلزامية من خطوط الكهرباء حسب الجهد؟ وما إجراء العزل الآمن في البناء؟",marks:25},
+          {id:"t8",num:4,text:"وفق OSHA HCS 2012 المبني على GHS، ما عناصر SDS الستة عشر؟ ما التزامات صاحب العمل في HAZCOM Training؟ ما حق Right-to-Know للعامل؟",marks:25}
         ]
       }
     ]
@@ -303,10 +305,10 @@ const COURSES=[
         roleDesc:"أنت Emergency Response Team Leader في منشأة صناعية معتمدة وفق HAZWOPER 29 CFR 1910.120.",
         context:"الساعة 14:30 — انفجر خط أنابيب يحمل Toluene (~500 جالون) في وحدة الإنتاج الثالثة مع اشتعال جزئي. مصابان بحروق من الدرجة الثانية والثالثة. درجة الحرارة 42°م. الرياح 15 كم/ساعة نحو منطقة سكنية 800م. فريقك 12 شخصاً — 8 منهم حاملو HAZWOPER 40 ساعة.",
         tasks:[
-          {id:"t9",num:1,text:"حدّد الإجراءات الأولية لـ ICS وفق NIMS. كيف تُحدد Hot/Warm/Cold Zones لهذا الحادث تحديداً؟ ما أدوات تنبؤ الانتشار الكيميائي (CAMEO/ALOHA) وكيف تستخدمها؟",marks:25,criteria:"هيكل ICS وتعيين الأدوار (8) + تحديد المناطق للـ Toluene (10) + أدوات التنبؤ (7)."},
-          {id:"t10",num:2,text:"ما مستوى PPE المطلوب للدخول لـ Hot Zone؟ برّر اختيارك من خصائص Toluene في SDS. ما إجراءات Entry Authorization الإلزامية وما نظام Buddy System؟",marks:25,criteria:"مستوى PPE الصحيح مع مبرر من SDS (10) + Entry Authorization (10) + Buddy System (5)."},
-          {id:"t11",num:3,text:"الحرارة 42° مع PPE مكثّف يُنشئ Heat Stress. ما مؤشرات Heat Stroke الحرجة الست؟ صمّم Work/Rest Ratio وفق NIOSH Guidelines لهذه الظروف.",marks:25,criteria:"أعراض Heat Stroke الست (6) + Work/Rest Ratio للظروف الحارة (12) + بروتوكول المراقبة الطبية (7)."},
-          {id:"t12",num:4,text:"صمّم محطة Decontamination الكاملة لهذا الحادث بمحطاتها المتسلسلة. ما الخطوات الإلزامية لـ Decon PPE والأفراد؟ كيف تتعامل مع النفايات وفق RCRA؟",marks:25,criteria:"تصميم Decon Station بمحطاتها (10) + تسلسل الخطوات (10) + التعامل مع النفايات وفق RCRA (5)."}
+          {id:"t9",num:1,text:"حدّد الإجراءات الأولية لـ ICS وفق NIMS. كيف تُحدد Hot/Warm/Cold Zones لهذا الحادث تحديداً؟ ما أدوات تنبؤ الانتشار الكيميائي (CAMEO/ALOHA) وكيف تستخدمها؟",marks:25},
+          {id:"t10",num:2,text:"ما مستوى PPE المطلوب للدخول لـ Hot Zone؟ برّر اختيارك من خصائص Toluene في SDS. ما إجراءات Entry Authorization الإلزامية وما نظام Buddy System؟",marks:25},
+          {id:"t11",num:3,text:"الحرارة 42° مع PPE مكثّف يُنشئ Heat Stress. ما مؤشرات Heat Stroke الحرجة الست؟ صمّم Work/Rest Ratio وفق NIOSH Guidelines لهذه الظروف.",marks:25},
+          {id:"t12",num:4,text:"صمّم محطة Decontamination الكاملة لهذا الحادث بمحطاتها المتسلسلة. ما الخطوات الإلزامية لـ Decon PPE والأفراد؟ كيف تتعامل مع النفايات وفق RCRA؟",marks:25}
         ]
       },
       {
@@ -315,10 +317,10 @@ const COURSES=[
         roleDesc:"أنت Site Safety Officer في موقع تنظيف نفايات خطرة مُدرج في قائمة EPA Superfund.",
         context:"موقع صناعي مهجور 15 عاماً. تربة ومياه جوفية ملوّثة بـ PCBs وHeavy Metals وVOCs. 18 عاملاً في فريق التنظيف. أُفيد بوجود براميل مجهولة مدفونة. نشاط ميكروبي ينتج غازات قابلة للاشتعال. الموقع مجاور لمنطقة سكنية — مياهها الجوفية مصدر شرب.",
         tasks:[
-          {id:"t13",num:1,text:"ما العناصر الإلزامية الثمانية لـ Site Safety and Health Plan (SSHP) وفق OSHA 1910.120(b)(4)؟ كيف تتعامل مع البراميل مجهولة المحتوى؟",marks:25,criteria:"8 عناصر SSHP الإلزامية (16) + بروتوكول Unknown Materials (5) + تسلسل المسؤوليات (4)."},
-          {id:"t14",num:2,text:"الغازات القابلة للاشتعال تُنشئ Explosive Atmosphere. ما حدود LEL وUEL؟ ما إجراءات Air Monitoring المستمر والأجهزة المناسبة؟ متى توقف العمليات فوراً؟",marks:25,criteria:"تعريف LEL/UEL وعتبات الإيقاف (10) + أجهزة الرصد لكل ملوّث (10) + بروتوكول الإيقاف (5)."},
-          {id:"t15",num:3,text:"ما Occupational Exposure Limits لـ PCBs وHeavy Metals وفق OSHA/NIOSH؟ صمّم برنامج Medical Surveillance الإلزامي للعمال بمكوناته.",marks:25,criteria:"OELs الصحيحة لـ PCBs وRep. Heavy Metal (8) + عناصر Medical Surveillance (12) + التوثيق الطبي (5)."},
-          {id:"t16",num:4,text:"مياه جوفية ملوّثة مجاورة لمنطقة سكنية. من الجهات الإلزامية للإخطار الفوري؟ ما قانون CERCLA وكيف يُطبَّق هنا؟ ما الالتزامات القانونية لصاحب المشروع؟",marks:25,criteria:"الجهات الإلزامية للإخطار (8) + CERCLA وتطبيقه (10) + الالتزامات القانونية (7)."}
+          {id:"t13",num:1,text:"ما العناصر الإلزامية الثمانية لـ Site Safety and Health Plan (SSHP) وفق OSHA 1910.120(b)(4)؟ كيف تتعامل مع البراميل مجهولة المحتوى؟",marks:25},
+          {id:"t14",num:2,text:"الغازات القابلة للاشتعال تُنشئ Explosive Atmosphere. ما حدود LEL وUEL؟ ما إجراءات Air Monitoring المستمر والأجهزة المناسبة؟ متى توقف العمليات فوراً؟",marks:25},
+          {id:"t15",num:3,text:"ما Occupational Exposure Limits لـ PCBs وHeavy Metals وفق OSHA/NIOSH؟ صمّم برنامج Medical Surveillance الإلزامي للعمال بمكوناته.",marks:25},
+          {id:"t16",num:4,text:"مياه جوفية ملوّثة مجاورة لمنطقة سكنية. من الجهات الإلزامية للإخطار الفوري؟ ما قانون CERCLA وكيف يُطبَّق هنا؟ ما الالتزامات القانونية لصاحب المشروع؟",marks:25}
         ]
       }
     ]
@@ -332,10 +334,10 @@ const COURSES=[
         roleDesc:"أنت مشرف السلامة المعيّن حديثاً في شركة Gulf Chem Industries — مصنع متوسط الحجم يعمل في تصنيع المواد الكيميائية ويضم 280 عاملاً.",
         context:"مصنع Gulf Chem يعمل 24 ساعة بثلاث ورديات. خلال جولتك الأولى لاحظت: عمال يتعاملون مع مواد خطرة دون قفازات، Emergency Showers مُعطّلة، غياب SDS في محطات العمل، براميل مواد سامة مجاورة لمواد قابلة للاشتعال. المدير يرفض أي توقف إنتاجي. آخر تدريب طوارئ قبل 18 شهراً. وقوع حادثة مشابهة قبل عامين.",
         tasks:[
-          {id:"t17",num:1,text:"حدّد المخاطر الرئيسية مرتّبةً وفق Risk Matrix (Likelihood × Severity). استند إلى ISO 45001 وOSHA 29 CFR 1910.119. وضّح منهجيتك في الترتيب الكمي.",marks:25,criteria:"4+ مخاطر محددة (5) + معادلة L×S والترتيب الكمي (10) + ربط صحيح بالمعايير (10)."},
-          {id:"t18",num:2,text:"الإدارة ترفض التوقف عن الإنتاج. ابنِ حجتك لإقناعها مستخدماً الحجج القانونية (ILO C155، لوائح مكتب العمل السعودي) والاقتصادية (Cost of Accidents Iceberg) والأخلاقية.",marks:25,criteria:"الحجج القانونية مع نصوص محددة (10) + الحجج الاقتصادية (8) + الأخلاقية والمهنية (7)."},
-          {id:"t19",num:3,text:"ضَع Corrective Action Plan لثلاثة من أبرز المخاطر. يجب أن تتضمن كل إجراء: الإجراء التصحيحي، المسؤول، الإطار الزمني، ومعيار Close-Out Verification.",marks:25,criteria:"اكتمال الخطة لكل خطر 5×3 (15) + واقعية الإطار الزمني (5) + معيار التحقق (5)."},
-          {id:"t20",num:4,text:"حادثة مشابهة قبل عامين تُشير لضعف ثقافة السلامة. وفق نموذج Bradley Curve ومفهوم Just Culture، شخّص الوضع واقترح خطة تحسين تنظيمي شامل.",marks:25,criteria:"موضع الشركة في Bradley مع مبرر (5) + تحليل Just Culture (10) + خطة التحسين متعددة الأبعاد (10)."}
+          {id:"t17",num:1,text:"حدّد المخاطر الرئيسية مرتّبةً وفق Risk Matrix (Likelihood × Severity). استند إلى ISO 45001 وOSHA 29 CFR 1910.119. وضّح منهجيتك في الترتيب الكمي.",marks:25},
+          {id:"t18",num:2,text:"الإدارة ترفض التوقف عن الإنتاج. ابنِ حجتك لإقناعها مستخدماً الحجج القانونية (ILO C155، لوائح مكتب العمل السعودي) والاقتصادية (Cost of Accidents Iceberg) والأخلاقية.",marks:25},
+          {id:"t19",num:3,text:"ضَع Corrective Action Plan لثلاثة من أبرز المخاطر. يجب أن تتضمن كل إجراء: الإجراء التصحيحي، المسؤول، الإطار الزمني، ومعيار Close-Out Verification.",marks:25},
+          {id:"t20",num:4,text:"حادثة مشابهة قبل عامين تُشير لضعف ثقافة السلامة. وفق نموذج Bradley Curve ومفهوم Just Culture، شخّص الوضع واقترح خطة تحسين تنظيمي شامل.",marks:25}
         ]
       },
       {
@@ -344,10 +346,10 @@ const COURSES=[
         roleDesc:"أنت مستشار سلامة مستقل مُكلَّف بتقييم موقع بناء برج سكني 40 طابقاً في وسط المدينة.",
         context:"شركة AlBanna Contracting تنفذ برجاً سكنياً (30 شهراً — مضى 8). 420 موظفاً من 6 جنسيات. وجدت: عمال على ارتفاع 60م مع حماية سقوط غير مكتملة، رافعة يشغّلها عامل غير مرخص، غياب Rescue Plan محدّث، ثلاثة مقاولين من الباطن دون تنسيق. إحصاء: 3 حوادث سقوط في 3 أشهر.",
         tasks:[
-          {id:"t21",num:1,text:"قيّم خطر السقوط من الارتفاع وفق Hierarchy of Controls مستنداً لـ OSHA 29 CFR 1926 Subpart M وBS 8411. حدّد الفجوات الحالية بدقة.",marks:25,criteria:"تطبيق الهرم بالترتيب الصحيح E→S→E→A→P (10) + الفجوات من السيناريو (10) + ربط المعايير (5)."},
-          {id:"t22",num:2,text:"مقاولون متعددون دون تنسيق يُنشئ Cumulative Risk. كيف تُصمم نظام إدارة مقاولين آمن وفق ISO 45001 Clause 8.1.4؟",marks:25,criteria:"فهم Cumulative Risk (8) + منظومة إدارة المقاولين (اختيار، تأهيل، إشراف، تقييم) (12) + ربط ISO 45001 (5)."},
-          {id:"t23",num:3,text:"ثلاثة حوادث سقوط في ثلاثة أشهر. أجرِ تحليل أسباب جذرية باستخدام 5 Whys أو Bow-Tie Analysis لحادثة متخيّلة. اقترح إجراءات وقاية.",marks:25,criteria:"اختيار الأداة مع مبرر (5) + التطبيق الصحيح (12) + الإجراءات الوقائية القابلة للتطبيق (8)."},
-          {id:"t24",num:4,text:"الرافعة يشغّلها عامل غير مؤهل. ما الإجراءات الفورية والاستراتيجية؟ ما المسؤوليات القانونية للشركة وفق اللوائح السعودية وASME B30.3؟",marks:25,criteria:"الإجراءات الفورية المتسلسلة (10) + ASME B30.3 (8) + المسؤوليات القانونية السعودية (7)."}
+          {id:"t21",num:1,text:"قيّم خطر السقوط من الارتفاع وفق Hierarchy of Controls مستنداً لـ OSHA 29 CFR 1926 Subpart M وBS 8411. حدّد الفجوات الحالية بدقة.",marks:25},
+          {id:"t22",num:2,text:"مقاولون متعددون دون تنسيق يُنشئ Cumulative Risk. كيف تُصمم نظام إدارة مقاولين آمن وفق ISO 45001 Clause 8.1.4؟",marks:25},
+          {id:"t23",num:3,text:"ثلاثة حوادث سقوط في ثلاثة أشهر. أجرِ تحليل أسباب جذرية باستخدام 5 Whys أو Bow-Tie Analysis لحادثة متخيّلة. اقترح إجراءات وقاية.",marks:25},
+          {id:"t24",num:4,text:"الرافعة يشغّلها عامل غير مؤهل. ما الإجراءات الفورية والاستراتيجية؟ ما المسؤوليات القانونية للشركة وفق اللوائح السعودية وASME B30.3؟",marks:25}
         ]
       }
     ]
@@ -361,10 +363,10 @@ const COURSES=[
         roleDesc:"أنت Appointed Lifting Supervisor في منشأة بتروكيماوية وفق Saudi Aramco GI-6.015.",
         context:"رفع مبادل حراري (Heat Exchanger) وزنه 32 طناً، أبعاده 8×3م، داخل وحدة إنتاج نشطة. الارتفاع 18م. الرافعة Liebherr LTM 1100 سعتها 100 طن. الـ Sling يُكمل 3 سنوات. الرياح 28 كم/ساعة. عضو الفريق الرئيسي غاب وأُحضر بديل غير متمرّن.",
         tasks:[
-          {id:"t25",num:1,text:"وفق Saudi Aramco GI-6.015 وASME B30.5، ما المكونات الإلزامية لـ Lifting Plan؟ ما تصنيف هذا الرفع (Critical/Non-Critical) مع ذكر المبررات الثلاثة؟",marks:25,criteria:"تصنيف Critical مع 3 مبررات واضحة (10) + عناصر خطة الرفع 10+ (12) + توقيعات الاعتماد المطلوبة (3)."},
-          {id:"t26",num:2,text:"الـ Sling مُكمِل 3 سنوات والرياح 28 كم/ساعة. ما معايير استبعاد الرباط وفق ASME B30.9 (5 أسباب على الأقل)؟ ما حدود الرياح المسموح بها؟ ما قائمة Pre-lift Inspection الشاملة؟",marks:25,criteria:"5+ معايير استبعاد الرباط (10) + حدود الرياح وآلية القياس (8) + قائمة الفحص (7)."},
-          {id:"t27",num:3,text:"وفق ASME B30.3 وSaudi Aramco HSE-SAF-PRC-0001، ما متطلبات Rigger Certification؟ ما محتوى Pre-lift Toolbox Talk للعضو الجديد؟ ما إشارات اليد الإلزامية وفق ASME؟",marks:25,criteria:"متطلبات التأهيل (8) + محتوى Toolbox Talk (10) + إشارات اليد المعتمدة (7)."},
-          {id:"t28",num:4,text:"الرفع داخل وحدة إنتاج نشطة. ما التصاريح المطلوبة وفق نظام PTW السعودي (أرامكو)؟ كيف تُدير تعارض عمليات الرفع مع الإنتاج الجاري؟",marks:25,criteria:"أنواع التصاريح المطلوبة (8) + إجراءات نظام PTW (10) + إدارة تعارض العمليات (7)."}
+          {id:"t25",num:1,text:"وفق Saudi Aramco GI-6.015 وASME B30.5، ما المكونات الإلزامية لـ Lifting Plan؟ ما تصنيف هذا الرفع (Critical/Non-Critical) مع ذكر المبررات الثلاثة؟",marks:25},
+          {id:"t26",num:2,text:"الـ Sling مُكمِل 3 سنوات والرياح 28 كم/ساعة. ما معايير استبعاد الرباط وفق ASME B30.9 (5 أسباب على الأقل)؟ ما حدود الرياح المسموح بها؟ ما قائمة Pre-lift Inspection الشاملة؟",marks:25},
+          {id:"t27",num:3,text:"وفق ASME B30.3 وSaudi Aramco HSE-SAF-PRC-0001، ما متطلبات Rigger Certification؟ ما محتوى Pre-lift Toolbox Talk للعضو الجديد؟ ما إشارات اليد الإلزامية وفق ASME؟",marks:25},
+          {id:"t28",num:4,text:"الرفع داخل وحدة إنتاج نشطة. ما التصاريح المطلوبة وفق نظام PTW السعودي (أرامكو)؟ كيف تُدير تعارض عمليات الرفع مع الإنتاج الجاري؟",marks:25}
         ]
       },
       {
@@ -373,10 +375,10 @@ const COURSES=[
         roleDesc:"أنت Lifting Engineer معتمد مكلّف بالإشراف على عملية Tandem Lift في موقع بناء جسر.",
         context:"رفع قطعة خرسانية مسبقة الصب وزنها 55 طناً بـ Tandem Lift نظراً لمحدودية المساحة. الرافعة A سعتها 60 طناً والرافعة B سعتها 50 طناً. المسافة 45م. يجب تمرير القطعة فوق خط كهرباء 33 KV بعيداً 12م عن المسار. أحد مشغّلي الرافعة يُبلّغ عن خلل في نظام الفرامل.",
         tasks:[
-          {id:"t29",num:1,text:"وفق ASME B30.5 وBS 7121-3، ما اشتراطات Tandem Lift الإلزامية؟ كيف توزّع الحمل 55 طناً مع مراعاة 75% من SWL لكل رافعة؟ من يقود العملية (Lead Crane)؟",marks:25,criteria:"اشتراطات Tandem الإلزامية (8) + حساب توزيع الحمل الصحيح (10) + صلاحيات Lead Crane (7)."},
-          {id:"t30",num:2,text:"وفق OSHA 1926.1408 وNFPA 70E، ما مسافات الحماية الإلزامية من خط 33 KV؟ ما إجراءات التنسيق مع شركة الكهرباء؟ كيف تُصمم مسار الرفع الآمن؟",marks:25,criteria:"مسافات الحماية الصحيحة لـ 33 KV (10) + إجراءات التنسيق مع الجهة الكهربائية (8) + تصميم المسار (7)."},
-          {id:"t31",num:3,text:"ما معيار ASME B30.5 بشأن أعطال الرافعة؟ هل يُسمح بالمتابعة مع خلل الفرامل؟ ما الإجراء التدريجي Step-by-Step للتعامل مع هذا الموقف؟",marks:25,criteria:"معيار ASME B30.5 بشأن الأعطال (8) + قرار الإيقاف المبرر (7) + الإجراء التدريجي الكامل (10)."},
-          {id:"t32",num:4,text:"بعد اكتمال الرفع، يُكتشف أن أحد الفريق تجاوز منطقة Under the Load. عالج هذا كـ Near Miss وفق ILO ولوائح العمل السعودية. ما الدروس المستفادة الإجرائية؟",marks:25,criteria:"قرار الإبلاغ الصحيح (5) + تطبيق Near Miss Investigation (12) + الدروس المنهجية (8)."}
+          {id:"t29",num:1,text:"وفق ASME B30.5 وBS 7121-3، ما اشتراطات Tandem Lift الإلزامية؟ كيف توزّع الحمل 55 طناً مع مراعاة 75% من SWL لكل رافعة؟ من يقود العملية (Lead Crane)؟",marks:25},
+          {id:"t30",num:2,text:"وفق OSHA 1926.1408 وNFPA 70E، ما مسافات الحماية الإلزامية من خط 33 KV؟ ما إجراءات التنسيق مع شركة الكهرباء؟ كيف تُصمم مسار الرفع الآمن؟",marks:25},
+          {id:"t31",num:3,text:"ما معيار ASME B30.5 بشأن أعطال الرافعة؟ هل يُسمح بالمتابعة مع خلل الفرامل؟ ما الإجراء التدريجي Step-by-Step للتعامل مع هذا الموقف؟",marks:25},
+          {id:"t32",num:4,text:"بعد اكتمال الرفع، يُكتشف أن أحد الفريق تجاوز منطقة Under the Load. عالج هذا كـ Near Miss وفق ILO ولوائح العمل السعودية. ما الدروس المستفادة الإجرائية؟",marks:25}
         ]
       }
     ]
@@ -390,10 +392,10 @@ const COURSES=[
         roleDesc:"أنت مدير عمليات في شركة خدمات لوجستية متوسطة الحجم، مُلزَم بتطبيق IOSH Managing Safely.",
         context:"FastTrack Logistics، 120 موظفاً. 8 إصابات في 6 أشهر (4 انزلاق وسقوط، 3 رفع يدوي، 1 فوركليفت). معدل الغياب ارتفع 35%. شكاوى ضغط العمل تتصاعد. الإدارة العليا تراها طبيعية. لا يوجد نظام Near Miss. آخر تقييم مخاطر قبل 4 سنوات.",
         tasks:[
-          {id:"t33",num:1,text:"وفق IOSH Managing Safely، كيف تبني 'Business Case for Safety' لإقناع الإدارة؟ استخدم Cost of Accidents Iceberg مع تكاليف مباشرة وغير مباشرة.",marks:25,criteria:"نموذج Iceberg بمكوناته الكاملة (8) + حساب تكريبي لتكلفة 8 إصابات (8) + خطة تقديم الحجة للإدارة (9)."},
-          {id:"t34",num:2,text:"صمّم نظام إبلاغ Near Miss يُشجّع Positive Reporting Culture. ما العوائق النفسية الرئيسية للإبلاغ وكيف تتغلب عليها؟",marks:25,criteria:"مكونات نظام الإبلاغ الفعّال (10) + العوائق النفسية وحلولها (10) + ربط بمبادئ IOSH (5)."},
-          {id:"t35",num:3,text:"طبّق منهج IOSH الرباعي (Spot the Hazard → Assess the Risk → Fix the Problem → Measure Performance) على مخاطر الانزلاق والسقوط والرفع اليدوي بشكل مفصّل.",marks:25,criteria:"تطبيق المنهج الرباعي لكل خطر (12) + ضوابط SMART قابلة للقياس (8) + مؤشرات الأداء (5)."},
-          {id:"t36",num:4,text:"ارتفاع شكاوى الإجهاد وضغط العمل — مخاطر نفسية اجتماعية (Psychosocial Hazards). كيف يُصنّفها IOSH؟ ما دور المدير المباشر؟ كيف تُدمجها في نظام إدارة السلامة؟",marks:25,criteria:"تصنيف المخاطر النفسية الستة (12) + دور المدير المباشر (8) + آلية الدمج في النظام (5)."}
+          {id:"t33",num:1,text:"وفق IOSH Managing Safely، كيف تبني 'Business Case for Safety' لإقناع الإدارة؟ استخدم Cost of Accidents Iceberg مع تكاليف مباشرة وغير مباشرة.",marks:25},
+          {id:"t34",num:2,text:"صمّم نظام إبلاغ Near Miss يُشجّع Positive Reporting Culture. ما العوائق النفسية الرئيسية للإبلاغ وكيف تتغلب عليها؟",marks:25},
+          {id:"t35",num:3,text:"طبّق منهج IOSH الرباعي (Spot the Hazard → Assess the Risk → Fix the Problem → Measure Performance) على مخاطر الانزلاق والسقوط والرفع اليدوي بشكل مفصّل.",marks:25},
+          {id:"t36",num:4,text:"ارتفاع شكاوى الإجهاد وضغط العمل — مخاطر نفسية اجتماعية (Psychosocial Hazards). كيف يُصنّفها IOSH؟ ما دور المدير المباشر؟ كيف تُدمجها في نظام إدارة السلامة؟",marks:25}
         ]
       },
       {
@@ -402,10 +404,10 @@ const COURSES=[
         roleDesc:"أنت مدير مشروع في شركة بناء وصيانة متوسطة، مُلزَم بتطبيق ثقافة السلامة الإيجابية.",
         context:"AlBina Construction، 65 موظفاً من 3 جنسيات. المشرفون يُطبّقون السلامة كردود أفعال فقط. العمال يرفعون قيود السلامة لتسريع العمل. لا توجد Toolbox Talks منتظمة. بعض المشرفين يُعاقبون على الإبلاغ لحماية سجل الشركة.",
         tasks:[
-          {id:"t37",num:1,text:"وفق نموذج Bradley Curve، حدّد موقع الشركة الحالي وصف الانتقال المطلوب. كيف يختلف نهج Compliance-Driven عن Value-Driven في السلامة؟",marks:25,criteria:"موضع الشركة مع مبرر واضح (8) + الانتقال المطلوب وخطواته (10) + الفرق بين النهجين (7)."},
-          {id:"t38",num:2,text:"3 جنسيات مع اختلاف ثقافي في الإدراك. كيف تُصمم برنامج توعية سلامة فعّال يراعي الاختلافات الثقافية؟ ما التحديات التواصلية وكيف تتغلب عليها؟",marks:25,criteria:"استراتيجيات التواصل متعدد اللغات/الثقافات (12) + تصميم البرنامج (8) + التحديات والحلول (5)."},
-          {id:"t39",num:3,text:"صمّم برنامج Toolbox Talk فعّال ومنتظم لفريق البناء. ما مواصفاته السبعة على الأقل؟ كيف تُقيّم فعاليته؟",marks:25,criteria:"7+ مواصفات Toolbox Talk الفعّال (14) + آلية التقييم والمتابعة (6) + الجدول الزمني (5)."},
-          {id:"t40",num:4,text:"رفع قيود السلامة لتسريع العمل — Production vs Safety Pressure. وفق IOSH، كيف تُنشئ ثقافة تجعل السلامة قيمة ذاتية؟ ما دور القيادة (Visible Leadership) في تشكيل هذه الثقافة؟",marks:25,criteria:"تعريف Value-Based Safety Culture (8) + دور Visible Leadership (9) + خطوات التحول الثقافي (8)."}
+          {id:"t37",num:1,text:"وفق نموذج Bradley Curve، حدّد موقع الشركة الحالي وصف الانتقال المطلوب. كيف يختلف نهج Compliance-Driven عن Value-Driven في السلامة؟",marks:25},
+          {id:"t38",num:2,text:"3 جنسيات مع اختلاف ثقافي في الإدراك. كيف تُصمم برنامج توعية سلامة فعّال يراعي الاختلافات الثقافية؟ ما التحديات التواصلية وكيف تتغلب عليها؟",marks:25},
+          {id:"t39",num:3,text:"صمّم برنامج Toolbox Talk فعّال ومنتظم لفريق البناء. ما مواصفاته السبعة على الأقل؟ كيف تُقيّم فعاليته؟",marks:25},
+          {id:"t40",num:4,text:"رفع قيود السلامة لتسريع العمل — Production vs Safety Pressure. وفق IOSH، كيف تُنشئ ثقافة تجعل السلامة قيمة ذاتية؟ ما دور القيادة (Visible Leadership) في تشكيل هذه الثقافة؟",marks:25}
         ]
       }
     ]
@@ -575,7 +577,7 @@ function CourseBuilder({courses,onSave,onBack}){
   const emptyCourse=()=>({id:uid2(),title:"",icon:"📋",passMark:60,scenarios:[emptyScenario()]});
 
   const startNew=()=>{setEditing({...JSON.parse(JSON.stringify(emptyCourse())),accessCode:""});setView("edit");};
-  const startEdit=c=>{setEditing({...JSON.parse(JSON.stringify(c)),accessCode:COURSE_CODES[c.id]||""});setView("edit");};
+  const startEdit=c=>{setEditing({...JSON.parse(JSON.stringify(c)),accessCode:TRAINER_CODES[c.id]||""});setView("edit");};
 
   const updField=(path,val)=>setEditing(prev=>{
     const d=JSON.parse(JSON.stringify(prev));
@@ -594,14 +596,10 @@ function CourseBuilder({courses,onSave,onBack}){
     if(!editing.title.trim()){alert("يرجى إدخال اسم الدورة");return;}
     const code=(editing.accessCode||"").trim().toUpperCase();
     // بدون رمز دخول لا يستطيع أي متدرب فتح الدورة — إلزامي
-    if(!code&&!COURSE_CODES[editing.id]){alert("يرجى تحديد رمز دخول للدورة — بدونه لا يستطيع المتدربون الدخول إليها");return;}
+    if(!code&&!TRAINER_CODES[editing.id]){alert("يرجى تحديد رمز دخول للدورة — بدونه لا يستطيع المتدربون الدخول إليها");return;}
     setSaving(true);
-    if(code&&code!==COURSE_CODES[editing.id]){
-      COURSE_CODES[editing.id]=code;
-      await dbSetMeta("course_codes",JSON.stringify(COURSE_CODES));
-    }
-    const{accessCode,...courseData}=editing; // الرمز يُخزَّن في exam_meta وليس داخل بيانات الدورة
-    await dbSaveCourse(courseData);
+    const{accessCode,...courseData}=editing; // الرمز يُحفظ في الخادم وليس داخل بيانات الدورة
+    await dbSaveCourse(courseData,code&&code!==TRAINER_CODES[editing.id]?code:undefined);
     const exists=courses.find(c=>c.id===courseData.id);
     const updated=exists?courses.map(c=>c.id===courseData.id?courseData:c):[...courses,courseData];
     onSave(updated);
@@ -610,17 +608,7 @@ function CourseBuilder({courses,onSave,onBack}){
 
   const doDelete=async(id)=>{
     if(!confirm("هل أنت متأكد من حذف هذه الدورة؟"))return;
-    await dbDeleteCourse(id);
-    // سجّل الحذف حتى لا تعود الدورة الافتراضية بعد تحديث الصفحة
-    try{
-      const raw=await dbGetMeta("deleted_courses");
-      const arr=raw?JSON.parse(raw):[];
-      if(!arr.includes(id)){arr.push(id);await dbSetMeta("deleted_courses",JSON.stringify(arr));}
-    }catch(e){}
-    // احذف رمز الدخول المرتبط بها
-    try{
-      if(COURSE_CODES[id]){delete COURSE_CODES[id];await dbSetMeta("course_codes",JSON.stringify(COURSE_CODES));}
-    }catch(e){}
+    await dbDeleteCourse(id); // الخادم يسجّل الحذف ويزيل رمز الدخول معاً
     onSave(courses.filter(c=>c.id!==id));
   };
 
@@ -646,8 +634,8 @@ function CourseBuilder({courses,onSave,onBack}){
             <div style={{fontSize:15,fontWeight:600}}>{c.title}</div>
             <div style={{fontSize:12,color:"#9ca3af",marginTop:2}}>
               {c.scenarios.length} سيناريو · {c.scenarios.reduce((a,s)=>a+s.tasks.length,0)} مهمة · نجاح {c.passMark}%
-              {COURSE_CODES[c.id]
-                ?<span style={{color:"#1B3059",fontWeight:600}}> · 🔑 {COURSE_CODES[c.id]}</span>
+              {TRAINER_CODES[c.id]
+                ?<span style={{color:"#1B3059",fontWeight:600}}> · 🔑 {TRAINER_CODES[c.id]}</span>
                 :<span style={{color:"#dc2626",fontWeight:600}}> · ⚠️ بلا رمز دخول — عدّل الدورة وحدد رمزاً</span>}
             </div>
           </div>
@@ -833,7 +821,7 @@ function GradingView({sub,onSave,onBack,courses}){
               <p style={{fontSize:13,color:"#374151",margin:"0 0 10px",lineHeight:1.7,background:"#f8fafc",padding:"8px 12px",borderRadius:8}}>{task.text}</p>
               <div style={{background:"#fffbeb",border:"0.5px solid #fde68a",borderRadius:8,padding:"8px 12px",marginBottom:8}}>
                 <div style={{fontSize:11,color:"#92400e",fontWeight:600,marginBottom:4}}>📋 معايير التصحيح (للمدرب فقط)</div>
-                <div style={{fontSize:12,color:"#78350f",lineHeight:1.7}}>{task.criteria}</div>
+                <div style={{fontSize:12,color:"#78350f",lineHeight:1.7}}>{task.criteria||DEFAULT_CRITERIA_SRV[task.id]||"—"}</div>
               </div>
               <div style={{background:"#f8fafc",borderRadius:8,padding:"10px 12px"}}>
                 <div style={{fontSize:11,color:"#9ca3af",marginBottom:4}}>إجابة المتدرب:</div>
@@ -870,11 +858,13 @@ function SecuritySettings(){
   const savePass=async()=>{
     if(!newPass||newPass.length<6){setMsg("❌ كلمة المرور يجب أن تكون 6 أحرف على الأقل");return;}
     setSaving(true);
-    await dbSetMeta("trainer_code",newPass);
-    TRAINER_CODE=newPass;
-    setMsg("✅ تم تغيير كلمة المرور بنجاح");
-    setNewPass("");setSaving(false);
-    setTimeout(()=>setMsg(""),3000);
+    try{
+      await api("trainer_change_password",{newPassword:newPass});
+      setMsg("✅ تم تغيير كلمة المرور بنجاح — استخدم الجديدة من دخولك القادم");
+      setNewPass("");
+    }catch(e){setMsg("❌ تعذر الحفظ — تأكد من اتصالك وحاول مجدداً");}
+    setSaving(false);
+    setTimeout(()=>setMsg(""),4000);
   };
 
   return(
@@ -885,7 +875,7 @@ function SecuritySettings(){
       </button>
       {show&&(
         <div style={{padding:"0 16px 16px",borderTop:"0.5px solid #f3f4f6"}}>
-          <div style={{fontSize:12,color:"#6b7280",marginBottom:10,marginTop:10}}>كلمة المرور الحالية محفوظة بأمان في Supabase</div>
+          <div style={{fontSize:12,color:"#6b7280",marginBottom:10,marginTop:10}}>🔒 كلمة المرور محفوظة مشفّرة في الخادم — لا تظهر في كود الموقع إطلاقاً</div>
           <div style={{display:"flex",gap:8,alignItems:"center"}}>
             <input type="password" value={newPass} onChange={e=>setNewPass(e.target.value)} placeholder="كلمة مرور جديدة (6+ أحرف)" style={{flex:1,padding:"9px 12px",border:"0.5px solid #e5e7eb",borderRadius:8,fontSize:14}}/>
             <button onClick={savePass} disabled={saving} style={{padding:"9px 16px",border:"none",borderRadius:8,background:"#1B3059",color:"white",cursor:"pointer",fontSize:13,fontWeight:600,whiteSpace:"nowrap"}}>{saving?"⏳...":"✓ حفظ"}</button>
@@ -1322,9 +1312,9 @@ function ExamView({sub,setSubs,subs,onSubmit,onNextScenario,courses,setActiveSub
     if(expired)return;
     const poll=setInterval(async()=>{
       try{
-        const fresh=await _sb.from("exam_subs").select("data").eq("id",sub.id).single();
-        if(fresh?.data?.data){
-          const updated=fresh.data.data;
+        const r=await api("student_get_sub",{id:sub.id,studentId:sub.studentId});
+        if(r.sub){
+          const updated=r.sub;
           // إذا تغيّر extensionHours أو startTime — حدّث الـ activeSub
           if(updated.extensionHours!==sub.extensionHours||updated.startTime!==sub.startTime){
             setSubs(prev=>prev.map(s=>s.id===sub.id?updated:s));
@@ -1348,11 +1338,11 @@ function ExamView({sub,setSubs,subs,onSubmit,onNextScenario,courses,setActiveSub
     if(!expired)return;
     const poll=setInterval(async()=>{
       try{
-        const{data}=await _sb.from("exam_subs").select("data").eq("id",sub.id).single();
-        if(data?.data&&!isExpired(data.data)){
+        const r=await api("student_get_sub",{id:sub.id,studentId:sub.studentId});
+        if(r.sub&&!isExpired(r.sub)){
           clearInterval(poll);
-          setSubs(prev=>prev.map(s=>s.id===sub.id?data.data:s));
-          if(setActiveSub)setActiveSub(data.data);
+          setSubs(prev=>prev.map(s=>s.id===sub.id?r.sub:s));
+          if(setActiveSub)setActiveSub(r.sub);
         }
       }catch(e){}
     },30*1000);
@@ -1379,12 +1369,12 @@ function ExamView({sub,setSubs,subs,onSubmit,onNextScenario,courses,setActiveSub
     const handleUnload=()=>{
       if(!expired&&answers&&Object.keys(answers).length>0){
         const updated={...sub,answers,autoSavedAt:new Date().toISOString()};
-        // إرسال فعلي لقاعدة البيانات عند الإغلاق — fetch keepalive يستمر بعد إغلاق الصفحة
+        // إرسال فعلي عبر الخزنة عند الإغلاق — fetch keepalive يستمر بعد إغلاق الصفحة
         try{
-          fetch(`${SUPABASE_URL}/rest/v1/exam_subs?on_conflict=id`,{
+          fetch(API_URL,{
             method:"POST",keepalive:true,
-            headers:{"Content-Type":"application/json","apikey":SUPABASE_KEY,"Authorization":`Bearer ${SUPABASE_KEY}`,"Prefer":"resolution=merge-duplicates"},
-            body:JSON.stringify({id:updated.id,data:updated,updated_at:new Date().toISOString()})
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({action:"student_save",payload:{sub:updated,studentId:updated.studentId}})
           }).catch(()=>{});
         }catch(e){}
         // حفظ احتياطي في localStorage
@@ -1636,14 +1626,11 @@ function ExpiredWaitScreen({sub,onResume,onHome}){
   useEffect(()=>{
     const poll=setInterval(async()=>{
       try{
-        const{data}=await _sb.from("exam_subs").select("data").eq("id",sub.id).single();
-        if(data?.data){
-          const updated=data.data;
-          if(!isExpired(updated)){
-            clearInterval(poll);
-            setMsg("✅ تم التمديد! جارٍ فتح الاختبار...");
-            setTimeout(()=>onResume(updated),1500);
-          }
+        const r=await api("student_get_sub",{id:sub.id,studentId:sub.studentId});
+        if(r.sub&&!isExpired(r.sub)){
+          clearInterval(poll);
+          setMsg("✅ تم التمديد! جارٍ فتح الاختبار...");
+          setTimeout(()=>onResume(r.sub),1500);
         }
       }catch(e){}
     },30*1000);
@@ -1653,10 +1640,10 @@ function ExpiredWaitScreen({sub,onResume,onHome}){
   const checkNow=async()=>{
     setChecking(true);setMsg("");
     try{
-      const{data}=await _sb.from("exam_subs").select("data").eq("id",sub.id).single();
-      if(data?.data&&!isExpired(data.data)){
+      const r=await api("student_get_sub",{id:sub.id,studentId:sub.studentId});
+      if(r.sub&&!isExpired(r.sub)){
         setMsg("✅ تم التمديد! جارٍ فتح الاختبار...");
-        setTimeout(()=>onResume(data.data),1500);
+        setTimeout(()=>onResume(r.sub),1500);
       } else {
         setMsg("⏳ لم يتم التمديد بعد — انتظر المدرب");
       }
@@ -1708,42 +1695,49 @@ function App(){
   const[certSub,setCertSub]=useState(null);
   const[trainerAuth,setTrainerAuth]=useState(false);
   const[tPass,setTPass]=useState("");
+  const[tBusy,setTBusy]=useState(false);
   const[err,setErr]=useState("");
   const[fieldErr,setFieldErr]=useState({}); // رسائل خطأ لكل حقل في تسجيل الدخول
+
+  /* 🔐 دخول المدرب — التحقق في الخادم، ويعود برمز جلسة موقّع */
+  const doTrainerLogin=async()=>{
+    if(!tPass){setErr("أدخل كلمة المرور");return;}
+    setTBusy(true);setErr("");
+    try{
+      const r=await api("trainer_login",{password:tPass});
+      if(r.ok&&r.token){
+        TRAINER_TOKEN=r.token;
+        // نسخة المدرب الكاملة من الدورات: بالمعايير ورموز الدخول
+        try{
+          const tc=await api("trainer_courses");
+          DEFAULT_CRITERIA_SRV=tc.defaultCriteria||{};
+          TRAINER_CODES=tc.codes||{};
+          setCourses(mergeCourses(tc.courses,tc.deleted));
+        }catch(e){console.error("trainer_courses:",e);}
+        setTrainerAuth(true);setScreen("dashboard");
+      }else setErr("كلمة المرور خاطئة");
+    }catch(e){setErr(e.status===401?"كلمة المرور خاطئة":"تعذر الاتصال بالخادم — حاول مجدداً");}
+    setTBusy(false);
+  };
   const[selectedCourse,setSelectedCourse]=useState(null);
   const[courseCode,setCourseCode]=useState("");
   const[codeErr,setCodeErr]=useState("");
+  const[codeBusy,setCodeBusy]=useState(false);
 
-  /* تحميل البيانات والدورات عند البداية */
+  /* تحميل الإعدادات العامة والدورات عند البداية — عبر الخزنة (بلا معايير ولا رموز) */
   useEffect(()=>{
     (async()=>{
-      // ① تحميل وقت الاختبار أولاً — يطبق على الطالب والمدرب
-      const savedHours=await dbGetMeta("exam_hours");
-      if(savedHours){EXAM_HOURS=parseInt(savedHours);}
+      // ① الإعدادات العامة (ساعات الاختبار)
+      try{
+        const cfg=await api("get_public_config");
+        if(cfg.examHours)EXAM_HOURS=parseInt(cfg.examHours);
+      }catch(e){console.error("config:",e);}
 
-      // ② تحميل كلمة مرور المدرب من Supabase
-      const savedTrainerCode=await dbGetMeta("trainer_code");
-      if(savedTrainerCode){TRAINER_CODE=savedTrainerCode;}
-
-      // ③ تحميل رموز الدورات من Supabase — دمج فوق الافتراضية حتى لا تُفقد رموز لم تُحفظ بعد
-      const savedCourseCodes=await dbGetMeta("course_codes");
-      if(savedCourseCodes){try{COURSE_CODES={...COURSE_CODES,...JSON.parse(savedCourseCodes)};}catch(e){}}
-
-      // ④ تحميل الدورات — مع احترام الدورات المحذوفة حتى لا تعود بعد التحديث
-      let deletedIds=[];
-      try{const raw=await dbGetMeta("deleted_courses");deletedIds=raw?JSON.parse(raw):[];}catch(e){}
-      const baseCourses=COURSES.filter(c=>!deletedIds.includes(c.id));
-      const loadedCourses=sanitizeCourses(await dbLoadCourses());
-      if(loadedCourses&&loadedCourses.length>0){
-        const merged=baseCourses.map(def=>{
-          const saved=loadedCourses.find(s=>s.id===def.id);
-          return saved||def;
-        });
-        const newOnes=loadedCourses.filter(s=>!COURSES.find(d=>d.id===s.id)&&!deletedIds.includes(s.id));
-        setCourses([...merged,...newOnes]);
-      }else{
-        setCourses(baseCourses);
-      }
+      // ② الدورات للطالب — الخادم يحذف معايير التصحيح قبل الإرسال
+      try{
+        const r=await api("get_courses");
+        setCourses(mergeCourses(r.courses,r.deleted));
+      }catch(e){console.error("courses:",e);setCourses(COURSES);}
 
       /* ═══ استعادة جلسة الطالب تلقائياً عند تحديث الصفحة ═══ */
       try{
@@ -1961,7 +1955,7 @@ function App(){
   if(screen==="certificate"&&certSub) return <Certificate sub={certSub} courses={courses} onBack={()=>setScreen("dashboard")}/>;
   if(screen==="grading"&&gradingSub) return <GradingView sub={gradingSub} courses={courses} onSave={onSaveGrade} onBack={()=>{setGradingSub(null);setScreen("dashboard");}}/>;
   if(screen==="manage-courses"&&trainerAuth) return <CourseBuilder courses={courses} onSave={updated=>{setCourses(updated);}} onBack={()=>setScreen("dashboard")}/>;
-  if(screen==="dashboard"&&trainerAuth) return <Dashboard subs={subs} setSubs={setSubs} courses={courses} onGrade={s=>{setGradingSub(s);setScreen("grading");}} onCert={s=>{setCertSub(s);setScreen("certificate");}} onLogout={()=>{setTrainerAuth(false);setScreen("home");setSubs([]);}} onRefresh={refreshSubs} onManageCourses={()=>setScreen("manage-courses")} onLoad={loadAllSubs}/>;
+  if(screen==="dashboard"&&trainerAuth) return <Dashboard subs={subs} setSubs={setSubs} courses={courses} onGrade={s=>{setGradingSub(s);setScreen("grading");}} onCert={s=>{setCertSub(s);setScreen("certificate");}} onLogout={()=>{TRAINER_TOKEN=null;TRAINER_CODES={};DEFAULT_CRITERIA_SRV={};setTrainerAuth(false);setScreen("home");setSubs([]);}} onRefresh={refreshSubs} onManageCourses={()=>setScreen("manage-courses")} onLoad={loadAllSubs}/>;
   if(screen==="exam"&&activeSub) return <ExamView key={activeSub.id} sub={activeSub} setSubs={setSubs} subs={subs} courses={courses} onSubmit={onSubmit} onNextScenario={onNextScenario} setActiveSub={setActiveSub}/>;
 
   /* شاشة انتهاء الوقت — الإجابات محفوظة */
@@ -2020,9 +2014,9 @@ function App(){
           <div style={{fontSize:18,fontWeight:700,color:"#101F3C"}}>🔐 دخول المدرب</div>
           <div style={{fontSize:12,color:"#9ca3af",marginTop:4}}>{ORG}</div>
         </div>
-        <input value={tPass} onChange={e=>setTPass(e.target.value)} onKeyDown={e=>e.key==="Enter"&&(tPass===TRAINER_CODE?(setTrainerAuth(true),setScreen("dashboard"),setErr("")):(setErr("كلمة المرور خاطئة")))} type="password" placeholder="كلمة مرور المدرب" style={{...inp,textAlign:"center",letterSpacing:4,marginBottom:10}}/>
+        <input value={tPass} onChange={e=>setTPass(e.target.value)} onKeyDown={e=>e.key==="Enter"&&!tBusy&&doTrainerLogin()} type="password" placeholder="كلمة مرور المدرب" style={{...inp,textAlign:"center",letterSpacing:4,marginBottom:10}}/>
         {err&&<div style={{color:"#dc2626",fontSize:13,marginBottom:8,textAlign:"center"}}>{err}</div>}
-        <button onClick={()=>tPass===TRAINER_CODE?(setTrainerAuth(true),setScreen("dashboard"),setErr("")):(setErr("كلمة المرور خاطئة"))} style={{width:"100%",padding:"11px",background:"#1B3059",color:"white",border:"none",borderRadius:8,fontSize:15,cursor:"pointer",fontWeight:600,marginBottom:8}}>دخول</button>
+        <button onClick={doTrainerLogin} disabled={tBusy} style={{width:"100%",padding:"11px",background:"#1B3059",color:"white",border:"none",borderRadius:8,fontSize:15,cursor:"pointer",fontWeight:600,marginBottom:8,opacity:tBusy?0.7:1}}>{tBusy?"⏳ جارٍ التحقق...":"دخول"}</button>
         <button onClick={()=>{setScreen("home");setErr("");}} style={{width:"100%",padding:"8px",background:"none",border:"none",color:"#6b7280",fontSize:13,cursor:"pointer"}}>← رجوع</button>
       </div>
     </div>
@@ -2060,12 +2054,17 @@ function App(){
     </div>
   );
 
-  /* Course code entry */
-  const verifyCourseCode=()=>{
-    const expected=COURSE_CODES[selectedCourse?.id];
-    if(!expected){setCodeErr("لم يُحدَّد رمز دخول لهذه الدورة بعد — يحدده المدرب من «إدارة الدورات» ثم أعد المحاولة");return;}
-    if(courseCode&&courseCode===expected){setCodeErr("");setScreen("scenario-select");}
-    else setCodeErr("رمز الدخول غير صحيح");
+  /* Course code entry — التحقق يتم في الخادم، الرمز الصحيح غير موجود في المتصفح */
+  const verifyCourseCode=async()=>{
+    if(!courseCode){setCodeErr("أدخل رمز الدخول");return;}
+    setCodeBusy(true);setCodeErr("");
+    try{
+      const r=await api("verify_code",{courseId:selectedCourse?.id,code:courseCode});
+      if(r.reason==="no_code")setCodeErr("لم يُحدَّد رمز دخول لهذه الدورة بعد — يحدده المدرب من «إدارة الدورات» ثم أعد المحاولة");
+      else if(r.ok){setCodeErr("");setScreen("scenario-select");}
+      else setCodeErr("رمز الدخول غير صحيح");
+    }catch(e){setCodeErr("تعذر الاتصال بالخادم — حاول مجدداً");}
+    setCodeBusy(false);
   };
   if(screen==="course-code"&&selectedCourse) return(
     <div style={{...base,display:"flex",alignItems:"center",justifyContent:"center",padding:"1rem"}}>
@@ -2078,7 +2077,7 @@ function App(){
         <input value={courseCode} onChange={e=>setCourseCode(e.target.value.toUpperCase())} onKeyDown={e=>e.key==="Enter"&&verifyCourseCode()}
           placeholder="أدخل الرمز هنا..." style={{...inp,textAlign:"center",letterSpacing:3,fontWeight:700,fontSize:17,marginBottom:10,background:"#f8fafc"}}/>
         {codeErr&&<div style={{color:"#dc2626",fontSize:13,marginBottom:10,textAlign:"center"}}>{codeErr}</div>}
-        <button onClick={verifyCourseCode} style={{width:"100%",padding:"11px",background:"#1B3059",color:"white",border:"none",borderRadius:8,fontSize:15,cursor:"pointer",fontWeight:600,marginBottom:8}}>تحقق من الرمز ←</button>
+        <button onClick={verifyCourseCode} disabled={codeBusy} style={{width:"100%",padding:"11px",background:"#1B3059",color:"white",border:"none",borderRadius:8,fontSize:15,cursor:"pointer",fontWeight:600,marginBottom:8,opacity:codeBusy?0.7:1}}>{codeBusy?"⏳ جارٍ التحقق...":"تحقق من الرمز ←"}</button>
         <button onClick={()=>{setScreen("courses");setCourseCode("");setCodeErr("");}} style={{width:"100%",padding:"8px",background:"none",border:"none",color:"#6b7280",fontSize:13,cursor:"pointer"}}>← تغيير الدورة</button>
       </div>
     </div>
