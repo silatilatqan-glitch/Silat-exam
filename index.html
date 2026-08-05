@@ -9,6 +9,7 @@
 <!-- v25 — إصلاح مسار إعادة الدخول بعد الموافقة (كان يعيد الطالب لطلب جديد بلا نهاية)، إدارة رموز دخول الدورات من اللوحة (الدورات المضافة كانت بلا رمز = مستحيلة الدخول)، عزل سيناريوهات المحاولة الواحدة بنافذة وقتها (منع دمج إجابات محاولة قديمة)، استعادة شاشة انتظار التمديد بعد تحديث الصفحة، تعليم النتائج كمقروءة، تواريخ الإشعارات ميلادية، توريث ساعات الاختبار للسيناريو التالي، إصلاحات أخرى (2026-07-30) -->
 <!-- v26 — الهوية الجديدة: كحلي/برتقالي من الشعار الرسمي، خط IBM Plex Sans Arabic، الشعار مضمّن في الواجهات، شهادة رسمية جديدة برمز QR للتحقق، تحسين الجوال، رسائل خطأ لكل حقل في تسجيل الدخول، زر حذف سجل بتأكيد مزدوج في لوحة المدرب (2026-08-03) -->
 <!-- v27 — المرحلة الأمنية (الحزمة 2): كل العمليات تمر عبر الدالة الخادمية exam-api — كلمة مرور المدرب ورموز الدورات ومعايير التصحيح لم تعد موجودة في هذا الملف إطلاقاً، جلسة مدرب موقّعة من الخادم، الطالب لا يستطيع تعديل درجاته أو سجلات غيره (2026-08-04) -->
+<!-- v28 — رقم الطلب 9 أرقام بالضبط (أرقام فقط)، عرض تاريخي الدخول والإرسال في قائمة المدرب مع فرز حسب أيهما وزر تبديل الأحدث/الأقدم، إضافة تاريخ الدخول لتصدير Excel (2026-08-05) -->
 <link rel="icon" type="image/webp" href="data:image/webp;base64,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"/>
 <!-- preconnect لتسريع تحميل المكتبات -->
 <link rel="preconnect" href="https://cdnjs.cloudflare.com"/>
@@ -891,6 +892,8 @@ function Dashboard({subs,setSubs,courses,onGrade,onCert,onLogout,onRefresh,onMan
   const[filter,setFilter]=useState("all");
   const[selCourse,setSelCourse]=useState("all");
   const[searchQ,setSearchQ]=useState("");
+  const[sortBy,setSortBy]=useState("startTime"); // startTime = تاريخ الدخول · submittedAt = تاريخ الإرسال
+  const[sortDesc,setSortDesc]=useState(true);     // الأحدث أولاً افتراضياً
   const[ext,setExt]=useState({});
   const[showConfirm,setShowConfirm]=useState(false);
   const[archiving,setArchiving]=useState(false);
@@ -929,6 +932,14 @@ function Dashboard({subs,setSubs,courses,onGrade,onCert,onLogout,onRefresh,onMan
       return(s.studentName||"").toLowerCase().includes(q)||(s.studentId||"").includes(q)||(s.studentPhone||"").includes(q);
     }
     return true;
+  }).sort((a,b)=>{
+    // الفرز حسب التاريخ المختار — السجلات بلا تاريخ (كإرسال لم يتم) تُدفع للأسفل دائماً
+    const ta=a[sortBy]?new Date(a[sortBy]).getTime():null;
+    const tb=b[sortBy]?new Date(b[sortBy]).getTime():null;
+    if(ta===null&&tb===null)return 0;
+    if(ta===null)return 1;
+    if(tb===null)return -1;
+    return sortDesc?tb-ta:ta-tb;
   });
   const counts={all:subs.filter(s=>!HIDDEN_STATUSES.includes(s.status)).length,inprog:subs.filter(s=>s.status==="in_progress").length,pending:subs.filter(s=>s.status==="submitted").length,grading:subs.filter(s=>s.status==="grading").length,pass:subs.filter(s=>s.status==="pass").length,fail:subs.filter(s=>s.status==="fail").length,reentry:subs.filter(s=>s.status==="reentry_pending").length};
 
@@ -945,11 +956,11 @@ function Dashboard({subs,setSubs,courses,onGrade,onCert,onLogout,onRefresh,onMan
     if(!d.length){alert("لا توجد بيانات");return false;}
     const month=new Date().toLocaleDateString("ar-SA-u-ca-gregory-nu-latn",{year:"numeric",month:"long"});
     const rows=[[`أرشيف اختبارات ${month} — ${ORG}`],[],
-      ["الاسم","رقم الهوية","تاريخ الميلاد","رقم الجوال","رقم الطلب","الدورة","السيناريو","الدرجة","النسبة%","الحالة","تاريخ التقديم","تاريخ المراجعة"],
-      ...d.map(s=>[s.studentName,s.studentId,s.studentBirthdate||"",s.studentPhone||"",s.studentOrderNum||"",s.courseTitle,s.scenarioTitle||"",s.totalScore??"-",s.maxScore&&s.totalScore!==undefined?Math.round(((s.totalScore||0)/s.maxScore)*100)+"%":"-",s.status==="pass"?"ناجح":s.status==="fail"?"راسب":s.status==="grading"?"قيد التصحيح":s.status==="in_progress"?"جارٍ الاختبار":"انتظار",fmtFull(s.submittedAt),fmtFull(s.reviewedAt)])
+      ["الاسم","رقم الهوية","تاريخ الميلاد","رقم الجوال","رقم الطلب","الدورة","السيناريو","الدرجة","النسبة%","الحالة","تاريخ الدخول","تاريخ التقديم","تاريخ المراجعة"],
+      ...d.map(s=>[s.studentName,s.studentId,s.studentBirthdate||"",s.studentPhone||"",s.studentOrderNum||"",s.courseTitle,s.scenarioTitle||"",s.totalScore??"-",s.maxScore&&s.totalScore!==undefined?Math.round(((s.totalScore||0)/s.maxScore)*100)+"%":"-",s.status==="pass"?"ناجح":s.status==="fail"?"راسب":s.status==="grading"?"قيد التصحيح":s.status==="in_progress"?"جارٍ الاختبار":"انتظار",fmtFull(s.startTime),fmtFull(s.submittedAt),fmtFull(s.reviewedAt)])
     ];
     const ws=XLSX.utils.aoa_to_sheet(rows);
-    ws["!cols"]=[{wch:22},{wch:14},{wch:14},{wch:14},{wch:14},{wch:24},{wch:30},{wch:10},{wch:10},{wch:14},{wch:22},{wch:22}];
+    ws["!cols"]=[{wch:22},{wch:14},{wch:14},{wch:14},{wch:14},{wch:24},{wch:30},{wch:10},{wch:10},{wch:14},{wch:22},{wch:22},{wch:22}];
     const wb=XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb,ws,"النتائج");
     const stats=[["إحصائيات"],[],["الإجمالي",d.length],["ناجح",d.filter(s=>s.status==="pass").length],["راسب",d.filter(s=>s.status==="fail").length],["لم يُصحَّح",d.filter(s=>["submitted","grading"].includes(s.status)).length],["نسبة النجاح",d.filter(s=>["pass","fail"].includes(s.status)).length?Math.round(d.filter(s=>s.status==="pass").length/d.filter(s=>["pass","fail"].includes(s.status)).length*100)+"%":"—"]];
@@ -1190,6 +1201,15 @@ function Dashboard({subs,setSubs,courses,onGrade,onCert,onLogout,onRefresh,onMan
             <option value="all">جميع الدورات</option>
             {courses.map(c=><option key={c.id} value={c.id}>{c.icon} {c.title}</option>)}
           </select>
+          {/* 📅 الفرز حسب التاريخ */}
+          <div style={{display:"flex",alignItems:"center",gap:6,marginRight:"auto",background:"#F8F6F0",border:"1px solid #EAE5DA",borderRadius:8,padding:"3px 8px"}}>
+            <span style={{fontSize:12,color:"#6b7280"}}>📅 فرز حسب</span>
+            <select value={sortBy} onChange={e=>setSortBy(e.target.value)} style={{padding:"5px 8px",borderRadius:6,border:"0.5px solid #e5e7eb",fontSize:12,background:"white",cursor:"pointer"}}>
+              <option value="startTime">تاريخ الدخول</option>
+              <option value="submittedAt">تاريخ الإرسال</option>
+            </select>
+            <button onClick={()=>setSortDesc(d=>!d)} title="تبديل ترتيب التاريخ" style={{padding:"5px 12px",border:"none",borderRadius:6,background:"#1B3059",color:"white",cursor:"pointer",fontSize:12,fontWeight:600,whiteSpace:"nowrap"}}>{sortDesc?"⬇ الأحدث أولاً":"⬆ الأقدم أولاً"}</button>
+          </div>
           {selCourse!=="all"&&<button onClick={()=>exportExcel(selCourse)} style={{padding:"6px 14px",border:"none",borderRadius:8,background:"#1B3059",color:"white",cursor:"pointer",fontSize:12,fontWeight:600}}>📥 Excel هذه الدورة</button>}
         </div>
 
@@ -1254,7 +1274,10 @@ function Dashboard({subs,setSubs,courses,onGrade,onCert,onLogout,onRefresh,onMan
                         {badge(expired?"expired":sub.status)}
                         {sub.status==="in_progress"&&<TimerBadge sub={sub}/>}
                       </div>
-                      <div style={{fontSize:11,color:"#9ca3af",marginTop:2}}>{fmtFull(sub.submittedAt)}</div>
+                      <div style={{fontSize:11,color:"#9ca3af",marginTop:3,lineHeight:1.6}}>
+                        <div>🔹 دخل: {fmtFull(sub.startTime)}</div>
+                        <div>📨 أرسل: {sub.submittedAt?fmtFull(sub.submittedAt):"—"}</div>
+                      </div>
                     </div>
                     <div style={{textAlign:"center"}}>
                       {sub.status==="in_progress"&&(
@@ -1793,6 +1816,7 @@ function App(){
     if(!sBirthdate)fe.sBirthdate="يرجى اختيار تاريخ الميلاد";
     if(!sPhone.trim()||!/^[0-9+]{9,15}$/.test(sPhone.trim()))fe.sPhone="يرجى إدخال رقم جوال صحيح";
     if(!sOrderNum.trim())fe.sOrderNum="يرجى إدخال رقم الطلب الموجود في سلة";
+    else if(!/^\d{9}$/.test(sOrderNum.trim()))fe.sOrderNum="رقم الطلب يجب أن يكون 9 أرقام بالضبط (أرقام فقط)";
     setFieldErr(fe);
     if(Object.keys(fe).length>0)return;
     setErr("");
@@ -2240,8 +2264,8 @@ function App(){
         </div>
         {fieldWrap("sPhone","رقم الجوال",null,
           <input value={sPhone} onChange={e=>setSPhone(e.target.value)} placeholder="05xxxxxxxx" style={{...inp,direction:"ltr",...errStyle("sPhone")}}/>)}
-        {fieldWrap("sOrderNum","رقم الطلب","(الموجود في سلة)",
-          <input value={sOrderNum} onChange={e=>setSOrderNum(e.target.value)} placeholder="ORD-XXXXXXXX" style={{...inp,direction:"ltr",...errStyle("sOrderNum")}}/>)}
+        {fieldWrap("sOrderNum","رقم الطلب","(9 أرقام — من سلة)",
+          <input value={sOrderNum} onChange={e=>setSOrderNum(e.target.value.replace(/\D/g,"").slice(0,9))} inputMode="numeric" placeholder="123456789" style={{...inp,direction:"ltr",...errStyle("sOrderNum")}}/>)}
         <div style={{background:"#FFF7ED",border:"1px solid #FED7AA",borderRadius:10,padding:"9px 12px",margin:"2px 0 12px",fontSize:12,color:"#9A3412"}}>
           ⚠️ بعد اختيار الدورة والبدء يُتاح لك <strong className="num">{EXAM_HOURS} ساعة</strong> لإنهاء الاختبار تلقائياً.
         </div>
