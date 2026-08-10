@@ -10,6 +10,10 @@
 <!-- v26 — الهوية الجديدة: كحلي/برتقالي من الشعار الرسمي، خط IBM Plex Sans Arabic، الشعار مضمّن في الواجهات، شهادة رسمية جديدة برمز QR للتحقق، تحسين الجوال، رسائل خطأ لكل حقل في تسجيل الدخول، زر حذف سجل بتأكيد مزدوج في لوحة المدرب (2026-08-03) -->
 <!-- v27 — المرحلة الأمنية (الحزمة 2): كل العمليات تمر عبر الدالة الخادمية exam-api — كلمة مرور المدرب ورموز الدورات ومعايير التصحيح لم تعد موجودة في هذا الملف إطلاقاً، جلسة مدرب موقّعة من الخادم، الطالب لا يستطيع تعديل درجاته أو سجلات غيره (2026-08-04) -->
 <!-- v28 — رقم الطلب 9 أرقام بالضبط (أرقام فقط)، عرض تاريخي الدخول والإرسال في قائمة المدرب مع فرز حسب أيهما وزر تبديل الأحدث/الأقدم، إضافة تاريخ الدخول لتصدير Excel (2026-08-05) -->
+<!-- v29 — إصلاح التمديد جذرياً: الساعات تُحسب من لحظة التمديد لا من بداية الاختبار (كان الاختبار المنتهي من مدة يبقى منتهياً بعد التمديد)، رسالة نجاح/فشل واضحة لزر التمديد مع كشف انتهاء جلسة المدرب، عودة الطالب المباشرة لاختباره الجاري أو شاشة الانتظار بمجرد تسجيل الدخول (بلا رمز دورة ولا اختيار سيناريو)، زر «إرسال طلب تمديد للمدرب» في شاشة الانتظار مع إشعار وشارة في اللوحة، موافقة طلب فتح التعديل لاختبار منتهي الوقت تسأل عن ساعات التمديد وتطبقها فوراً، الطالب يعرض شهادته ويطبعها بنفسه من «نتائجي» عند النجاح (2026-08-10) -->
+<!-- v30 — أيقونة صورة لكل دورة تُرفع من إدارة الدورات (مع ضغط تلقائي) وتظهر في كل الواجهات والشهادة، إظهار/إخفاء أي دورة عن المتدربين بمفتاح تبديل، اسم الدورة بالإنجليزية ورقم اعتماد المؤسسة وشعار جهة الاعتماد على الشهادة (كلها تُحرَّر من إدارة الدورات)، تصحيح تلقائي مقترح بالكلمات المفتاحية وتشابه الجمل (إعداداته للمدرب فقط في الخادم — لا تصل للطلاب، والمقترح لا يُنشر إلا بعد اعتماد المدرب)، توضيح المسودة مقابل الاعتماد النهائي في شاشة التصحيح (2026-08-10) -->
+<!-- v31 — تضمين شعار المؤسسة العامة للتدريب التقني والمهني الرسمي ورقم الاعتماد 1157225381812 افتراضياً على مستوى المركز: يظهران تلقائياً على كل شهادة، مع بقاء إمكانية التخصيص لكل دورة من إدارة الدورات (2026-08-10) -->
+<!-- v32 — تواقيع الشهادات: مكتبة تواقيع يديرها المدرب (اسم + صفة + صورة تُرفع وتُضغط) في «إدارة الدورات»، تُطبَّق على دورات مختارة أو الكل بضغطة واحدة (حتى توقيعين لكل شهادة على جانبي رمز التحقق، والإزالة بنفس الطريقة)، وإعادة تصميم الشهادة بشكل احترافي: ترويسة متوازنة برقم الشهادة وتاريخها، علامة مائية بختم المركز، فواصل وخيوط أنيقة بدل الصناديق، شريط تفاصيل بأعمدة مفصولة يشمل الساعات التدريبية، وكتل تواقيع بالصور فوق الخطوط (2026-08-10) -->
 <link rel="icon" type="image/webp" href="data:image/webp;base64,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"/>
 <!-- preconnect لتسريع تحميل المكتبات -->
 <link rel="preconnect" href="https://cdnjs.cloudflare.com"/>
@@ -131,6 +135,10 @@ async function dbUpsert(sub){
     else await api("student_save",{sub,studentId:sub.studentId});
   }catch(e){
     console.error("dbUpsert:",e);
+    // ⚠️ v29: جلسة المدرب انتهت (12 ساعة) — نبّهه بدل الحفظ الصامت محلياً فقط
+    if(TRAINER_TOKEN&&e.status===401){
+      alert("⚠️ انتهت جلسة دخول المدرب — التغيير الأخير لم يُحفظ في الخادم.\nسجّل الدخول من جديد ثم أعد العملية.");
+    }
     // fallback
     try{const all=JSON.parse(localStorage.getItem("itqan_v3_fb")||"[]");const ns=all.filter(s=>s.id!==sub.id);ns.push(sub);localStorage.setItem("itqan_v3_fb",JSON.stringify(ns));}catch{}
   }
@@ -424,6 +432,120 @@ const serial=id=>id.slice(-8).toUpperCase();
 const uid=()=>Math.random().toString(36).slice(2,10);
 const wordCount=txt=>txt?txt.trim().split(/\s+/).filter(Boolean).length:0;
 
+/* 🖼️ v30 — اختيار صورة من الجهاز مع ضغط تلقائي (أيقونات الدورات وشعارات الاعتماد) */
+function pickImage(maxDim){
+  return new Promise(resolve=>{
+    const inp=document.createElement("input");
+    inp.type="file";inp.accept="image/png,image/jpeg,image/webp,image/svg+xml";
+    inp.onchange=()=>{
+      const f=inp.files&&inp.files[0];
+      if(!f)return resolve(null);
+      const r=new FileReader();
+      r.onload=()=>{
+        const img=new Image();
+        img.onload=()=>{
+          try{
+            const scale=Math.min(1,(maxDim||160)/Math.max(img.width||1,img.height||1));
+            const w=Math.max(1,Math.round((img.width||1)*scale)),h=Math.max(1,Math.round((img.height||1)*scale));
+            const c=document.createElement("canvas");c.width=w;c.height=h;
+            c.getContext("2d").drawImage(img,0,0,w,h);
+            let out=c.toDataURL("image/webp",0.85);
+            if(out.indexOf("data:image/webp")!==0)out=c.toDataURL("image/png");
+            if(out.length>300000){alert("⚠️ الصورة كبيرة جداً حتى بعد الضغط — اختر صورة أبسط");return resolve(null);}
+            resolve(out);
+          }catch(e){console.error("pickImage:",e);resolve(null);}
+        };
+        img.onerror=()=>{alert("⚠️ تعذر قراءة الصورة — تأكد أنها PNG أو JPG أو WEBP");resolve(null);};
+        img.src=r.result;
+      };
+      r.readAsDataURL(f);
+    };
+    inp.click();
+  });
+}
+
+/* 🤖 v30 — محرك التصحيح التلقائي المقترح: كلمات مفتاحية + تشابه جمل
+   الإعدادات تُحفظ في exam_meta (للمدرب المصادَق فقط) — لا تصل للطلاب إطلاقاً */
+function agNorm(s){
+  return (s||"").toString().toLowerCase()
+    .replace(/[ً-ْـ]/g,"")
+    .replace(/[أإآا]/g,"ا").replace(/ة/g,"ه").replace(/[ىي]/g,"ي").replace(/ؤ/g,"و").replace(/ئ/g,"ي")
+    .replace(/[^\p{L}\p{N}\s]/gu," ")
+    .replace(/\s+/g," ").trim();
+}
+function agLev(a,b){
+  const m=a.length,n=b.length;
+  if(!m)return n;if(!n)return m;
+  let prev=Array.from({length:n+1},(_,i)=>i);
+  for(let i=1;i<=m;i++){
+    const cur=[i];
+    for(let j=1;j<=n;j++)cur[j]=Math.min(prev[j]+1,cur[j-1]+1,prev[j-1]+(a[i-1]===b[j-1]?0:1));
+    prev=cur;
+  }
+  return prev[n];
+}
+function agSimWord(a,b){
+  if(a===b)return 1;
+  const L=Math.max(a.length,b.length);
+  return L?1-agLev(a,b)/L:0;
+}
+/* هل الكلمة المفتاحية (كلمة أو عبارة، وقد تحوي مرادفات بفاصل |) موجودة في الإجابة؟ */
+function agHasKeyword(answerNorm,answerTokens,keyword){
+  const alts=keyword.split("|").map(agNorm).filter(Boolean);
+  for(const alt of alts){
+    if(!alt)continue;
+    if(answerNorm.includes(alt))return true;                    // تطابق مباشر
+    const kt=alt.split(" ");
+    if(kt.length===1){                                          // كلمة واحدة: تشابه ≥ 0.8 مع أي كلمة
+      if(kt[0].length>=4&&answerTokens.some(t=>agSimWord(t,kt[0])>=0.8))return true;
+    }else{                                                      // عبارة: نافذة كلمات بنفس الطول بتشابه متوسط ≥ 0.8
+      for(let i=0;i+kt.length<=answerTokens.length;i++){
+        let s=0;
+        for(let j=0;j<kt.length;j++)s+=agSimWord(answerTokens[i+j],kt[j]);
+        if(s/kt.length>=0.8)return true;
+      }
+    }
+  }
+  return false;
+}
+/* تشابه جملة نموذجية مع أفضل جملة في الإجابة (معامل Dice على مجموعتي الكلمات) */
+function agPhraseHit(answerSentences,phrase){
+  const p=new Set(agNorm(phrase).split(" ").filter(w=>w.length>1));
+  if(!p.size)return false;
+  let best=0;
+  for(const s of answerSentences){
+    const t=new Set(s.split(" ").filter(w=>w.length>1));
+    if(!t.size)continue;
+    let inter=0;p.forEach(w=>{if(t.has(w))inter++;});
+    best=Math.max(best,(2*inter)/(p.size+t.size));
+  }
+  return best>=0.55;
+}
+/* الحساب الكامل لمهمة: يعيد {suggested, kwHit, kwMiss, phHit, phMiss, coverage} */
+function agSuggest(answerText,settings,marks){
+  const kws=(settings?.kw||"").split("\n").map(s=>s.trim()).filter(Boolean);
+  const phs=(settings?.ph||"").split("\n").map(s=>s.trim()).filter(Boolean);
+  if(kws.length+phs.length===0)return null;
+  const answerNorm=agNorm(answerText);
+  const answerTokens=answerNorm.split(" ").filter(Boolean);
+  const answerSentences=(answerText||"").split(/[.!؟?\n،؛;:]+/).map(agNorm).filter(Boolean);
+  const kwHit=[],kwMiss=[],phHit=[],phMiss=[];
+  kws.forEach(k=>(agHasKeyword(answerNorm,answerTokens,k)?kwHit:kwMiss).push(k));
+  phs.forEach(p=>(agPhraseHit(answerSentences,p)?phHit:phMiss).push(p));
+  const totalItems=kws.length+phs.length;
+  const coverage=totalItems?(kwHit.length+phHit.length)/totalItems:0;
+  const suggested=Math.min(marks,Math.round(coverage*marks));
+  return{suggested,kwHit,kwMiss,phHit,phMiss,coverage};
+}
+const AG_META_KEY="autograde_kw";
+const agKeyOf=(courseId,taskId)=>`${courseId}|${taskId}`;
+
+/* 🏛️ v30 — اعتماد المؤسسة العامة للتدريب التقني والمهني (افتراضي لكل الشهادات على مستوى المركز)
+   عند توفر الشعار والرقم الرسميين يوضعان هنا مرة واحدة فيظهران على كل شهادة تلقائياً،
+   ويمكن تخصيصهما لدورة بعينها من «إدارة الدورات» (حقل الدورة يتقدم على الافتراضي) */
+const CERT_ACCRED_NO_DEFAULT="1157225381812";   // رقم اعتماد المركز لدى المؤسسة العامة للتدريب التقني والمهني
+const CERT_ACCRED_LOGO_DEFAULT="data:image/webp;base64,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"; // شعار المؤسسة العامة للتدريب التقني والمهني — مضمّن (v31)
+
 function getDeadline(sub){
   if(!sub?.startTime)return null;
   const hours=(sub.examHours||EXAM_HOURS)+(sub.extensionHours||0);
@@ -456,6 +578,11 @@ function TimerBadge({sub}){
 ═══════════════════════════════════════════════ */
 function Certificate({sub,onBack,courses}){
   const course=(courses||COURSES).find(c=>c.id===sub.courseId);
+  // v30/v31: اعتماد المؤسسة العامة للتدريب التقني والمهني — حقل الدورة يتقدم على افتراضي المركز
+  const accredNo=(course?.accredNo||CERT_ACCRED_NO_DEFAULT||"").trim();
+  const accredLogo=course?.accredLogo||CERT_ACCRED_LOGO_DEFAULT||"";
+  // v32: تواقيع الشهادة (حتى توقيعين) — تُدار من «إدارة الدورات → تواقيع الشهادات»
+  const sigs=(course?.signatures||[]).filter(s=>s&&(s.img||s.name)).slice(0,2);
   const certNo="CERT-"+serial(sub.id);
   const verifyUrl=`https://verify.silatalitqan.com/cert/${certNo}`;
   const pctVal=sub.maxScore?Math.round(((sub.totalScore||0)/sub.maxScore)*100):0;
@@ -467,11 +594,25 @@ function Certificate({sub,onBack,courses}){
     window.loadQR().then(()=>{
       if(alive&&window.QRCode&&qrRef.current){
         qrRef.current.innerHTML="";
-        new window.QRCode(qrRef.current,{text:verifyUrl,width:82,height:82,colorDark:"#101F3C",colorLight:"#ffffff",correctLevel:window.QRCode.CorrectLevel.M});
+        new window.QRCode(qrRef.current,{text:verifyUrl,width:80,height:80,colorDark:"#101F3C",colorLight:"#ffffff",correctLevel:window.QRCode.CorrectLevel.M});
       }
     });
     return()=>{alive=false;};
   },[]);
+  /* كتلة توقيع واحدة: صورة التوقيع فوق الخط، وتحته الاسم والصفة */
+  const SigBlock=({sig,fallbackLabel,fallbackName})=>(
+    <div style={{textAlign:"center",flex:1,maxWidth:260}}>
+      <div style={{height:50,display:"flex",alignItems:"flex-end",justifyContent:"center",marginBottom:-7,position:"relative",zIndex:1}}>
+        {sig&&sig.img
+          ?<img src={sig.img} alt="" style={{maxHeight:48,maxWidth:180,objectFit:"contain"}}/>
+          :(!sig&&fallbackName?<span className="font-amiri" style={{fontSize:16,color:"#1B3059",paddingBottom:8}}>{fallbackName}</span>:null)}
+      </div>
+      <div style={{borderTop:"1.5px solid #2b3a55",width:210,margin:"0 auto",paddingTop:6}}>
+        <div className="font-amiri" style={{fontSize:15,fontWeight:700,color:"#101F3C",lineHeight:1.3}}>{sig?sig.name:""}&nbsp;</div>
+        <div style={{fontSize:10.5,color:"#8A93A6",letterSpacing:.3}}>{(sig&&sig.title)||fallbackLabel}</div>
+      </div>
+    </div>
+  );
   return(
     <div dir="rtl" style={{fontFamily:"inherit",padding:"1rem",background:"#F7F4EC",minHeight:"100vh"}}>
       <style>{`
@@ -484,78 +625,106 @@ function Certificate({sub,onBack,courses}){
         }
       `}</style>
       <div className="no-print" style={{display:"flex",gap:10,alignItems:"center",maxWidth:1100,margin:"0 auto 16px"}}>
-        <button onClick={onBack} style={{padding:"8px 18px",border:"1px solid #d1d5db",borderRadius:8,background:"white",cursor:"pointer",fontSize:14}}>← لوحة التحكم</button>
+        <button onClick={onBack} style={{padding:"8px 18px",border:"1px solid #d1d5db",borderRadius:8,background:"white",cursor:"pointer",fontSize:14}}>← رجوع</button>
         <button className="btn-hover" onClick={()=>window.print()} style={{padding:"8px 18px",border:"none",borderRadius:8,background:"#E8622C",color:"white",cursor:"pointer",fontSize:14,fontWeight:600}}>🖨 طباعة / حفظ PDF</button>
         <span style={{fontSize:12,color:"#9ca3af"}}>تُطبع بوضع A4 أفقي تلقائياً</span>
       </div>
       <div className="cert-scroll" style={{overflowX:"auto",paddingBottom:14}}>
-        <div className="cert-sheet" style={{width:1100,height:778,margin:"0 auto",background:"white",borderRadius:14,boxShadow:"0 14px 44px rgba(16,31,60,.16)",position:"relative",overflow:"hidden",flexShrink:0}}>
-          {/* الإطار المزدوج */}
-          <div style={{position:"absolute",inset:14,border:"3px solid #101F3C",borderRadius:8,pointerEvents:"none"}}/>
-          <div style={{position:"absolute",inset:23,border:"1.5px solid #E8622C",borderRadius:5,pointerEvents:"none"}}/>
-          {/* زخارف الأركان */}
-          <div style={{position:"absolute",top:34,right:34,width:42,height:42,borderTop:"3px solid #C94E1D",borderRight:"3px solid #C94E1D"}}/>
-          <div style={{position:"absolute",top:34,left:34,width:42,height:42,borderTop:"3px solid #C94E1D",borderLeft:"3px solid #C94E1D"}}/>
-          <div style={{position:"absolute",bottom:34,right:34,width:42,height:42,borderBottom:"3px solid #C94E1D",borderRight:"3px solid #C94E1D"}}/>
-          <div style={{position:"absolute",bottom:34,left:34,width:42,height:42,borderBottom:"3px solid #C94E1D",borderLeft:"3px solid #C94E1D"}}/>
+        <div className="cert-sheet" style={{width:1100,height:778,margin:"0 auto",background:"linear-gradient(180deg,#FFFFFF 0%,#FDFCF8 100%)",borderRadius:14,boxShadow:"0 14px 44px rgba(16,31,60,.16)",position:"relative",overflow:"hidden",flexShrink:0}}>
+          {/* الإطار الثلاثي: كحلي سميك ثم خيط برتقالي ثم خيط كحلي رفيع */}
+          <div style={{position:"absolute",inset:13,border:"3px solid #101F3C",borderRadius:8,pointerEvents:"none"}}/>
+          <div style={{position:"absolute",inset:21,border:"1px solid #D8804F",borderRadius:5,pointerEvents:"none"}}/>
+          <div style={{position:"absolute",inset:25,border:"0.5px solid rgba(16,31,60,.25)",borderRadius:4,pointerEvents:"none"}}/>
+          {/* زخارف الأركان الدقيقة */}
+          <div style={{position:"absolute",top:32,right:32,width:34,height:34,borderTop:"2.5px solid #C94E1D",borderRight:"2.5px solid #C94E1D",borderRadius:"0 3px 0 0"}}/>
+          <div style={{position:"absolute",top:32,left:32,width:34,height:34,borderTop:"2.5px solid #C94E1D",borderLeft:"2.5px solid #C94E1D",borderRadius:"3px 0 0 0"}}/>
+          <div style={{position:"absolute",bottom:32,right:32,width:34,height:34,borderBottom:"2.5px solid #C94E1D",borderRight:"2.5px solid #C94E1D",borderRadius:"0 0 3px 0"}}/>
+          <div style={{position:"absolute",bottom:32,left:32,width:34,height:34,borderBottom:"2.5px solid #C94E1D",borderLeft:"2.5px solid #C94E1D",borderRadius:"0 0 0 3px"}}/>
+          {/* علامة مائية — ختم المركز باهتاً في المنتصف */}
+          <img src={LOGO_MARK} alt="" style={{position:"absolute",top:"50%",left:"50%",transform:"translate(-50%,-50%)",width:430,opacity:0.028,pointerEvents:"none"}}/>
           {/* المحتوى */}
-          <div style={{position:"relative",height:"100%",display:"flex",flexDirection:"column",padding:"36px 62px 32px",textAlign:"center"}}>
-            {/* الترويسة: الختم واسم المركز */}
-            <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:18,marginBottom:4}}>
-              <div style={{width:88,height:88,borderRadius:"50%",background:"white",border:"3px solid #E8622C",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 4px 14px rgba(16,31,60,.14)",flexShrink:0}}>
-                <img src={LOGO_MARK} style={{height:62}} alt=""/>
+          <div style={{position:"relative",height:"100%",display:"flex",flexDirection:"column",padding:"40px 64px 34px",textAlign:"center"}}>
+            {/* الترويسة المتوازنة: الاعتماد يميناً بالعربية · الختم والاسم وسطاً · رقم الشهادة وتاريخها يساراً */}
+            <div style={{display:"grid",gridTemplateColumns:"190px 1fr 190px",alignItems:"center",gap:10}}>
+              <div style={{textAlign:"center"}}>
+                {accredLogo&&<img src={accredLogo} alt="" style={{height:58,maxWidth:185,objectFit:"contain",display:"block",margin:"0 auto 4px"}}/>}
+                {(accredLogo||accredNo)&&(
+                  <div style={{fontSize:9,color:"#6b7280",lineHeight:1.55}}>
+                    معتمد من المؤسسة العامة للتدريب التقني والمهني
+                    {accredNo&&<div className="num" style={{fontSize:11.5,fontWeight:700,color:"#101F3C",letterSpacing:.5,marginTop:1}}>{accredNo}</div>}
+                  </div>
+                )}
               </div>
-              <div style={{textAlign:"right"}}>
-                <div style={{fontSize:23,fontWeight:700,color:"#101F3C"}}>{ORG}</div>
-                <div style={{fontSize:11,color:"#8A93A6",letterSpacing:2.5}}>{ORG_EN.toUpperCase()}</div>
+              <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:16}}>
+                <div style={{width:84,height:84,borderRadius:"50%",background:"white",border:"3px solid #E8622C",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 4px 14px rgba(16,31,60,.14)",flexShrink:0}}>
+                  <img src={LOGO_MARK} style={{height:58}} alt=""/>
+                </div>
+                <div style={{textAlign:"right"}}>
+                  <div style={{fontSize:22,fontWeight:700,color:"#101F3C",lineHeight:1.3}}>{ORG}</div>
+                  <div style={{fontSize:10.5,color:"#8A93A6",letterSpacing:2.2}}>{ORG_EN.toUpperCase()}</div>
+                </div>
+              </div>
+              <div style={{textAlign:"center"}}>
+                <div style={{display:"inline-block",background:"#FBFAF6",border:"1px solid #EBE6DA",borderRadius:10,padding:"7px 14px"}}>
+                  <div style={{fontSize:9,color:"#9ca3af",letterSpacing:.5,marginBottom:2}}><span dir="ltr">رقم الشهادة · Certificate No</span></div>
+                  <div className="num" style={{fontSize:13,fontWeight:700,color:"#101F3C",letterSpacing:1,background:"#101F3C",color:"white",borderRadius:5,padding:"2px 10px",display:"inline-block"}}>{certNo}</div>
+                  <div style={{fontSize:9.5,color:"#6b7280",marginTop:4}}>تاريخ الإصدار: <b className="num" style={{color:"#101F3C"}}>{fmt(sub.reviewedAt)}</b></div>
+                </div>
               </div>
             </div>
-            <div style={{width:150,height:2,background:"linear-gradient(90deg,transparent,#E8622C,transparent)",margin:"6px auto 10px"}}/>
+            {/* فاصل أنيق: خط — معيّن — خط */}
+            <div style={{display:"flex",alignItems:"center",gap:10,margin:"14px auto 10px",width:420}}>
+              <div style={{flex:1,height:1,background:"linear-gradient(90deg,transparent,#C9A87C)"}}/>
+              <div style={{width:7,height:7,background:"#E8622C",transform:"rotate(45deg)"}}/>
+              <div style={{flex:1,height:1,background:"linear-gradient(90deg,#C9A87C,transparent)"}}/>
+            </div>
             {/* العنوان */}
-            <div className="font-amiri" style={{fontSize:42,fontWeight:700,color:"#1B3059",lineHeight:1.2}}>شهادة اجتياز</div>
-            <div style={{fontSize:12,letterSpacing:5,color:"#C94E1D",fontWeight:600,marginBottom:8}}>CERTIFICATE OF ACHIEVEMENT</div>
+            <div className="font-amiri" style={{fontSize:44,fontWeight:700,color:"#1B3059",lineHeight:1.15}}>شهادة اجتياز</div>
+            <div style={{fontSize:11.5,letterSpacing:6,color:"#C94E1D",fontWeight:600,marginTop:2,marginBottom:10}}>CERTIFICATE OF ACHIEVEMENT</div>
             {/* اسم المتدرب */}
-            <div style={{fontSize:15,color:"#4b5563"}}>يشهد مركز صلة الإتقان للتدريب بأن</div>
-            <div className="font-amiri" style={{fontSize:38,fontWeight:700,color:"#101F3C",margin:"4px 0 2px",lineHeight:1.35}}>{sub.studentName}</div>
-            <div style={{fontSize:13,color:"#6b7280"}}>رقم الهوية: <b className="num">{sub.studentId}</b></div>
-            <div style={{fontSize:15,color:"#4b5563",margin:"8px 0 8px"}}>قد اجتاز بنجاح متطلبات دورة</div>
-            {/* الدورة */}
-            <div style={{alignSelf:"center",background:"#F8F9FC",border:"1px solid #D9E0EC",borderRadius:12,padding:"9px 36px",marginBottom:13}}>
-              <div style={{fontSize:23,fontWeight:700,color:"#1B3059"}}>{course?.icon} {sub.courseTitle}</div>
-              <div style={{fontSize:12.5,color:"#6b7280",marginTop:2}}>{sub.scenarioTitle}{course?.hours?` · ${course.hours} تدريبية`:""}</div>
+            <div style={{fontSize:14.5,color:"#4b5563"}}>يشهد مركز صلة الإتقان للتدريب بأن</div>
+            <div className="font-amiri" style={{fontSize:40,fontWeight:700,color:"#101F3C",margin:"3px 0 0",lineHeight:1.3}}>{sub.studentName}</div>
+            <div style={{width:240,height:1.5,background:"linear-gradient(90deg,transparent,#C94E1D,transparent)",margin:"2px auto 5px"}}/>
+            <div style={{fontSize:12.5,color:"#6b7280"}}>رقم الهوية: <b className="num">{sub.studentId}</b></div>
+            <div style={{fontSize:14.5,color:"#4b5563",margin:"9px 0 7px"}}>قد اجتاز بنجاح متطلبات دورة</div>
+            {/* الدورة — بين خطّين رفيعين بدل الصندوق */}
+            <div style={{alignSelf:"center",minWidth:460,maxWidth:760,borderTop:"1px solid #E3DCCB",borderBottom:"1px solid #E3DCCB",padding:"9px 30px 10px",marginBottom:12}}>
+              <div style={{fontSize:23,fontWeight:700,color:"#1B3059",display:"flex",alignItems:"center",justifyContent:"center",gap:9}}>
+                {course?.iconImg?<img src={course.iconImg} alt="" style={{height:30,maxWidth:44,objectFit:"contain"}}/>:<span>{course?.icon}</span>}
+                <span>{sub.courseTitle}</span>
+              </div>
+              {course?.titleEn&&<div style={{fontSize:15,fontWeight:700,color:"#C94E1D",letterSpacing:.8,marginTop:2,direction:"ltr"}}>{course.titleEn}</div>}
+              <div style={{fontSize:12,color:"#8A93A6",marginTop:3}}>{sub.scenarioTitle}</div>
             </div>
-            {/* التفاصيل */}
-            <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:12,marginBottom:10}}>
-              {[["تاريخ الإصدار",fmt(sub.reviewedAt)],["الدرجة المحققة",`${sub.totalScore||0}/${sub.maxScore||100} — ${pctVal}%`],["صالحة حتى",expiry],["رقم الشهادة",certNo]].map(([l,v],i)=>(
-                <div key={i} style={{background:"#FBFAF6",border:"1px solid #EFEBE0",borderRadius:10,padding:"8px 6px"}}>
-                  <div style={{fontSize:10.5,color:"#9ca3af",marginBottom:3}}>{l}</div>
-                  <div className="num" style={{fontSize:13.5,fontWeight:700,color:"#101F3C"}}>{v}</div>
+            {/* شريط التفاصيل — أعمدة مفصولة بخيوط رفيعة */}
+            <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",alignItems:"stretch",margin:"0 30px"}}>
+              {[
+                ["الدرجة المحققة",<span dir="ltr">{`${sub.totalScore||0} / ${sub.maxScore||100}`}</span>],
+                ["النسبة المئوية",`${pctVal}%`],
+                ["صالحة حتى",expiry],
+                ["الساعات التدريبية",course?.hours||"—"],
+              ].map(([l,v],i)=>(
+                <div key={i} style={{padding:"4px 8px",borderLeft:i<3?"1px solid #E9E3D5":"none"}}>
+                  <div style={{fontSize:10,color:"#9ca3af",marginBottom:2,letterSpacing:.4}}>{l}</div>
+                  <div className="num" style={{fontSize:15,fontWeight:700,color:"#101F3C"}}>{v}</div>
                 </div>
               ))}
             </div>
             <div style={{flex:1}}/>
             {/* التواقيع ورمز التحقق */}
-            <div style={{display:"flex",alignItems:"flex-end",justifyContent:"space-between",gap:24}}>
-              <div style={{textAlign:"center",flex:1}}>
-                <div style={{height:42,borderBottom:"1.5px solid #374151",marginBottom:6,display:"flex",alignItems:"flex-end",justifyContent:"center"}}>
-                  <span className="font-amiri" style={{fontSize:15,color:"#1B3059"}}>{course?.trainer||""}</span>
-                </div>
-                <div style={{fontSize:11.5,color:"#6b7280"}}>توقيع المدرب</div>
-              </div>
+            <div style={{display:"flex",alignItems:"flex-end",justifyContent:"space-between",gap:20}}>
+              <SigBlock sig={sigs[0]||null} fallbackLabel="توقيع المدرب" fallbackName={course?.trainer||""}/>
               <div style={{textAlign:"center",flexShrink:0}}>
-                <div ref={qrRef} style={{width:94,height:94,margin:"0 auto 5px",background:"white",border:"1px solid #E5E0D5",borderRadius:10,display:"flex",alignItems:"center",justifyContent:"center",padding:5,overflow:"hidden"}}/>
-                <div style={{fontSize:9.5,color:"#9ca3af"}}>امسح الرمز للتحقق من الشهادة</div>
+                <div ref={qrRef} style={{width:92,height:92,margin:"0 auto 4px",background:"white",border:"1px solid #E5E0D5",borderRadius:10,display:"flex",alignItems:"center",justifyContent:"center",padding:5,overflow:"hidden"}}/>
+                <div style={{fontSize:9,color:"#9ca3af"}}>امسح الرمز للتحقق من الشهادة</div>
               </div>
-              <div style={{textAlign:"center",flex:1}}>
-                <div style={{height:42,borderBottom:"1.5px solid #374151",marginBottom:6}}/>
-                <div style={{fontSize:11.5,color:"#6b7280"}}>توقيع مدير المركز</div>
-              </div>
+              <SigBlock sig={sigs[1]||null} fallbackLabel="توقيع مدير المركز" fallbackName=""/>
             </div>
             {/* التذييل ثنائي اللغة */}
-            <div style={{marginTop:12,paddingTop:10,borderTop:"1px solid #EFEBE0",display:"flex",justifyContent:"space-between",alignItems:"center",gap:10}}>
-              <div style={{fontSize:10.5,color:"#9ca3af"}}>التحقق الإلكتروني: <a href={verifyUrl} target="_blank" style={{color:"#1B3059",fontWeight:600,textDecoration:"none"}}>verify.silatalitqan.com/cert/{certNo}</a></div>
-              <div style={{background:"#101F3C",color:"white",borderRadius:6,padding:"4px 16px",fontSize:12,fontFamily:"monospace",letterSpacing:1.5}}>{certNo}</div>
-              <div style={{fontSize:10.5,color:"#9ca3af",letterSpacing:.5}}>Verified Certificate · {ORG_EN}</div>
+            <div style={{marginTop:12,paddingTop:9,borderTop:"1px solid #EFEBE0",display:"flex",justifyContent:"space-between",alignItems:"center",gap:10}}>
+              <div style={{fontSize:10,color:"#9ca3af"}}>التحقق الإلكتروني: <a href={verifyUrl} target="_blank" style={{color:"#1B3059",fontWeight:600,textDecoration:"none"}}>verify.silatalitqan.com/cert/{certNo}</a></div>
+              <div style={{fontSize:10,color:"#C5C0B4",letterSpacing:1.2}}>OPEN BOOK ANALYTICAL EXAMINATION</div>
+              <div style={{fontSize:10,color:"#9ca3af",letterSpacing:.5}}>Verified Certificate · {ORG_EN}</div>
             </div>
           </div>
         </div>
@@ -568,6 +737,141 @@ function Certificate({sub,onBack,courses}){
    📚  إدارة الدورات — بناء وتعديل
 ═══════════════════════════════════════════════ */
 const uid2=()=>Math.random().toString(36).slice(2,8);
+
+/* ═══════════════════════════════════════════════
+   🖋️  v32 — تواقيع الشهادات: مكتبة يديرها المدرب وتُطبَّق على دورات مختارة أو الكل
+   المكتبة في exam_meta (للمدرب فقط)، والتطبيق ينسخ التواقيع داخل كل دورة فتظهر على شهاداتها
+═══════════════════════════════════════════════ */
+function SignatureManager({courses,onCoursesUpdated}){
+  const[open,setOpen]=useState(false);
+  const[lib,setLib]=useState(null);          // مكتبة التواقيع [{id,name,title,img}]
+  const[nName,setNName]=useState("");
+  const[nTitle,setNTitle]=useState("");
+  const[nImg,setNImg]=useState("");
+  const[selSigs,setSelSigs]=useState([]);    // معرفات التواقيع المختارة بترتيب الاختيار (حد أقصى 2)
+  const[selCourses,setSelCourses]=useState([]);
+  const[busy,setBusy]=useState(false);
+  const[msg,setMsg]=useState("");
+  const flash=(t,ok)=>{setMsg({t,ok});setTimeout(()=>setMsg(""),6000);};
+
+  useEffect(()=>{(async()=>{
+    try{const raw=await dbGetMeta("cert_signatures");setLib(raw?JSON.parse(raw):[]);}
+    catch(e){console.error("sig lib:",e);setLib([]);}
+  })();},[]);
+
+  const saveLib=async(next)=>{
+    setLib(next);
+    try{await api("trainer_set_meta",{key:"cert_signatures",value:JSON.stringify(next)});}
+    catch(e){console.error("sig save:",e);flash("⚠️ تعذر حفظ المكتبة في الخادم — تحقق من الاتصال",false);}
+  };
+  const addSig=async()=>{
+    if(!nName.trim()){flash("⚠️ اكتب اسم الموقّع أولاً",false);return;}
+    if(!nImg){flash("⚠️ ارفع صورة التوقيع أولاً",false);return;}
+    const sig={id:uid2(),name:nName.trim(),title:nTitle.trim()||"توقيع معتمد",img:nImg};
+    await saveLib([...(lib||[]),sig]);
+    setNName("");setNTitle("");setNImg("");
+    flash("✅ أُضيف التوقيع للمكتبة — اختره بالأسفل وطبّقه على الدورات",true);
+  };
+  const delSig=async(id)=>{
+    if(!confirm("حذف هذا التوقيع من المكتبة؟ (لن يُحذف من الدورات المطبَّق عليها إلا بإعادة التطبيق)"))return;
+    setSelSigs(s=>s.filter(x=>x!==id));
+    await saveLib((lib||[]).filter(s=>s.id!==id));
+  };
+  const toggleSig=(id)=>{
+    setSelSigs(prev=>{
+      if(prev.includes(id))return prev.filter(x=>x!==id);
+      if(prev.length>=2){flash("⚠️ الشهادة تعرض توقيعين كحد أقصى (على جانبي رمز التحقق)",false);return prev;}
+      return[...prev,id];
+    });
+  };
+  const toggleCourse=(id)=>setSelCourses(p=>p.includes(id)?p.filter(x=>x!==id):[...p,id]);
+  const allSelected=selCourses.length===courses.length&&courses.length>0;
+  const toggleAll=()=>setSelCourses(allSelected?[]:courses.map(c=>c.id));
+
+  const applyToCourses=async()=>{
+    if(selCourses.length===0){flash("⚠️ اختر الدورات أولاً (أو «تحديد الكل»)",false);return;}
+    const chosen=selSigs.map(id=>(lib||[]).find(s=>s.id===id)).filter(Boolean);
+    setBusy(true);
+    const updated=[];
+    let failed=0;
+    for(const c of courses){
+      if(!selCourses.includes(c.id)){updated.push(c);continue;}
+      const c2={...c,signatures:chosen};
+      try{await api("trainer_save_course",{course:c2});updated.push(c2);}
+      catch(e){console.error("apply sig:",e);failed++;updated.push(c);}
+    }
+    onCoursesUpdated(updated);
+    setBusy(false);
+    if(failed>0)flash(`⚠️ تعذر الحفظ لـ ${failed} دورة — حاول مجدداً`,false);
+    else flash(chosen.length===0
+      ?`🧹 أُزيلت التواقيع من ${selCourses.length} دورة`
+      :`✅ طُبِّق ${chosen.length===2?"التوقيعان":"التوقيع"} على ${selCourses.length} دورة — سيظهر على كل شهاداتها فوراً`,true);
+  };
+
+  const inp={padding:"8px 11px",border:"0.5px solid #e5e7eb",borderRadius:8,fontSize:13,fontFamily:"inherit",boxSizing:"border-box"};
+  return(
+    <div style={{background:"white",border:"0.5px solid #e5e7eb",borderRadius:12,marginBottom:14,overflow:"hidden"}}>
+      <button onClick={()=>setOpen(!open)} style={{width:"100%",padding:"13px 16px",background:"none",border:"none",cursor:"pointer",display:"flex",justifyContent:"space-between",alignItems:"center",gap:8}}>
+        <span style={{fontSize:14,fontWeight:700,color:"#1B3059"}}>🖋️ تواقيع الشهادات <span style={{fontWeight:400,color:"#9ca3af",fontSize:12}}>— {lib===null?"⏳":`${lib.length} توقيع في المكتبة`}</span></span>
+        <span style={{fontSize:12,color:"#9ca3af"}}>{open?"▲ إغلاق":"▼ فتح"}</span>
+      </button>
+      {open&&(
+        <div style={{padding:"0 16px 16px",borderTop:"0.5px solid #f3f4f6"}}>
+          {/* إضافة توقيع */}
+          <div style={{background:"#f8fafc",borderRadius:10,padding:"12px",margin:"12px 0"}}>
+            <div style={{fontSize:12.5,fontWeight:700,color:"#374151",marginBottom:8}}>إضافة توقيع جديد</div>
+            <div style={{display:"flex",gap:8,flexWrap:"wrap",alignItems:"center"}}>
+              <input style={{...inp,flex:"1 1 150px"}} value={nName} onChange={e=>setNName(e.target.value)} placeholder="اسم الموقّع (مثال: م. مفيد ...)"/>
+              <input style={{...inp,flex:"1 1 150px"}} value={nTitle} onChange={e=>setNTitle(e.target.value)} placeholder="الصفة (مثال: المدرب المعتمد / مدير المركز)"/>
+              <button onClick={async()=>{const img=await pickImage(500);if(img)setNImg(img);}} style={{padding:"8px 12px",border:"0.5px solid #d1d5db",borderRadius:8,background:"white",cursor:"pointer",fontSize:12.5,fontWeight:600,color:"#1B3059"}}>⬆️ رفع صورة التوقيع</button>
+              {nImg&&<img src={nImg} alt="" style={{height:34,maxWidth:110,objectFit:"contain",border:"0.5px solid #e5e7eb",borderRadius:6,background:"white"}}/>}
+              <button onClick={addSig} style={{padding:"8px 18px",border:"none",borderRadius:8,background:"#1B3059",color:"white",cursor:"pointer",fontSize:13,fontWeight:700}}>+ إضافة</button>
+            </div>
+            <div style={{fontSize:10.5,color:"#9ca3af",marginTop:6}}>الأفضل صورة توقيع بحبر داكن على خلفية بيضاء أو شفافة (PNG) — تُضغط تلقائياً</div>
+          </div>
+          {/* المكتبة */}
+          {(lib||[]).length>0&&(
+            <div style={{marginBottom:12}}>
+              <div style={{fontSize:12.5,fontWeight:700,color:"#374151",marginBottom:6}}>اختر التواقيع (بالترتيب — الأول يمين الشهادة، والثاني يسارها، بحد أقصى اثنين)</div>
+              {(lib||[]).map(s=>{
+                const idx=selSigs.indexOf(s.id);
+                return(
+                  <div key={s.id} onClick={()=>toggleSig(s.id)} style={{display:"flex",alignItems:"center",gap:10,padding:"8px 12px",border:idx>=0?"1.5px solid #1B3059":"0.5px solid #e5e7eb",borderRadius:10,marginBottom:6,cursor:"pointer",background:idx>=0?"#EEF2F8":"white"}}>
+                    <span style={{width:22,height:22,borderRadius:"50%",background:idx>=0?"#1B3059":"#e5e7eb",color:"white",fontSize:12,fontWeight:700,display:"inline-flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{idx>=0?idx+1:""}</span>
+                    <img src={s.img} alt="" style={{height:30,maxWidth:100,objectFit:"contain",background:"white",border:"0.5px solid #f3f4f6",borderRadius:6,flexShrink:0}}/>
+                    <div style={{flex:1,minWidth:0}}>
+                      <div style={{fontSize:13.5,fontWeight:600,color:"#111827"}}>{s.name}</div>
+                      <div style={{fontSize:11,color:"#9ca3af"}}>{s.title}</div>
+                    </div>
+                    <button onClick={e=>{e.stopPropagation();delSig(s.id);}} style={{padding:"5px 10px",border:"0.5px solid #fecaca",borderRadius:8,background:"#fef2f2",color:"#dc2626",cursor:"pointer",fontSize:12}}>🗑</button>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+          {/* الدورات والتطبيق */}
+          <div style={{marginBottom:10}}>
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:6}}>
+              <div style={{fontSize:12.5,fontWeight:700,color:"#374151"}}>الدورات التي تُطبَّق عليها</div>
+              <button onClick={toggleAll} style={{padding:"5px 12px",border:"0.5px solid #C9D5EA",borderRadius:8,background:allSelected?"#1B3059":"white",color:allSelected?"white":"#1B3059",cursor:"pointer",fontSize:12,fontWeight:700}}>{allSelected?"✓ الكل محدد — إلغاء":"☑️ تحديد الكل"}</button>
+            </div>
+            <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
+              {courses.map(c=>(
+                <button key={c.id} onClick={()=>toggleCourse(c.id)} style={{padding:"6px 12px",border:selCourses.includes(c.id)?"1.5px solid #1B3059":"0.5px solid #e5e7eb",borderRadius:8,background:selCourses.includes(c.id)?"#EEF2F8":"white",color:"#111827",cursor:"pointer",fontSize:12,fontWeight:selCourses.includes(c.id)?700:400}}>
+                  {selCourses.includes(c.id)?"✓ ":""}{c.title}
+                </button>
+              ))}
+            </div>
+          </div>
+          <button onClick={applyToCourses} disabled={busy||lib===null} style={{width:"100%",padding:"11px",border:"none",borderRadius:10,background:selSigs.length===0?"#6b7280":"#1B3059",color:"white",cursor:"pointer",fontSize:14,fontWeight:700}}>
+            {busy?"⏳ جارٍ التطبيق...":selSigs.length===0?`🧹 إزالة التواقيع من الدورات المحددة (${selCourses.length})`:`✍️ تطبيق ${selSigs.length===2?"التوقيعين":"التوقيع"} على الدورات المحددة (${selCourses.length})`}
+          </button>
+          {msg&&<div style={{marginTop:8,fontSize:12.5,fontWeight:600,color:msg.ok?"#065f46":"#b45309",background:msg.ok?"#d1fae5":"#fef3c7",borderRadius:8,padding:"7px 12px"}}>{msg.t}</div>}
+        </div>
+      )}
+    </div>
+  );
+}
 
 function CourseBuilder({courses,onSave,onBack}){
   const[view,setView]=useState("list"); // list | edit
@@ -628,13 +932,17 @@ function CourseBuilder({courses,onSave,onBack}){
           <button onClick={startNew} style={{padding:"8px 16px",border:"none",borderRadius:8,background:"#1B3059",color:"white",cursor:"pointer",fontSize:13,fontWeight:600}}>+ إضافة دورة جديدة</button>
         </div>
       </div>
+      {/* 🖋️ v32: إدارة تواقيع الشهادات وتطبيقها على الدورات */}
+      <SignatureManager courses={courses} onCoursesUpdated={onSave}/>
       {courses.map((c,i)=>(
-        <div key={c.id} style={{background:"white",border:"0.5px solid #e5e7eb",borderRadius:12,padding:"1rem 1.25rem",marginBottom:10,display:"flex",alignItems:"center",gap:12}}>
-          <div style={{fontSize:28}}>{c.icon}</div>
+        <div key={c.id} className="course-row" style={{background:"white",border:"0.5px solid #e5e7eb",borderRadius:12,padding:"1rem 1.25rem",marginBottom:10,display:"flex",alignItems:"center",gap:12,opacity:c.hidden?0.75:1}}>
+          {c.iconImg?<img src={c.iconImg} alt="" style={{width:40,height:40,objectFit:"contain",borderRadius:8}}/>:<div style={{fontSize:28}}>{c.icon}</div>}
           <div style={{flex:1}}>
-            <div style={{fontSize:15,fontWeight:600}}>{c.title}</div>
+            <div style={{fontSize:15,fontWeight:600}}>{c.title} {c.hidden&&<span style={{fontSize:11,fontWeight:700,color:"#991b1b",background:"#fef2f2",border:"0.5px solid #fecaca",borderRadius:6,padding:"2px 8px",marginRight:6}}>🙈 مخفية عن المتدربين</span>}</div>
+            {c.titleEn&&<div style={{fontSize:11.5,color:"#6b7280",direction:"ltr",textAlign:"right"}}>{c.titleEn}</div>}
             <div style={{fontSize:12,color:"#9ca3af",marginTop:2}}>
               {c.scenarios.length} سيناريو · {c.scenarios.reduce((a,s)=>a+s.tasks.length,0)} مهمة · نجاح {c.passMark}%
+              {(c.signatures||[]).length>0&&<span style={{color:"#7c3aed",fontWeight:600}}> · 🖋️ {c.signatures.length===2?"توقيعان":"توقيع واحد"}</span>}
               {TRAINER_CODES[c.id]
                 ?<span style={{color:"#1B3059",fontWeight:600}}> · 🔑 {TRAINER_CODES[c.id]}</span>
                 :<span style={{color:"#dc2626",fontWeight:600}}> · ⚠️ بلا رمز دخول — عدّل الدورة وحدد رمزاً</span>}
@@ -661,18 +969,49 @@ function CourseBuilder({courses,onSave,onBack}){
       {/* معلومات الدورة */}
       <div style={{background:"white",border:"0.5px solid #e5e7eb",borderRadius:12,padding:"1.25rem",marginBottom:14}}>
         <div style={{fontSize:14,fontWeight:600,color:"#1B3059",marginBottom:12}}>معلومات الدورة</div>
-        <div style={{display:"grid",gridTemplateColumns:"2fr 1fr 1fr",gap:10,marginBottom:10}}>
+        <div style={{display:"grid",gridTemplateColumns:"2fr 2fr 1fr",gap:10,marginBottom:10}}>
           <div>
             <label style={{fontSize:12,color:"#6b7280",display:"block",marginBottom:4}}>اسم الدورة *</label>
             <input style={inp} value={editing.title} onChange={e=>updField("title",e.target.value)} placeholder="مثال: الأوشا المتقدمة"/>
           </div>
           <div>
-            <label style={{fontSize:12,color:"#6b7280",display:"block",marginBottom:4}}>الأيقونة</label>
-            <input style={inp} value={editing.icon} onChange={e=>updField("icon",e.target.value)} placeholder="🎓"/>
+            <label style={{fontSize:12,color:"#6b7280",display:"block",marginBottom:4}}>اسم الدورة بالإنجليزية <span style={{color:"#9ca3af"}}>(يظهر في الشهادة)</span></label>
+            <input style={{...inp,direction:"ltr"}} value={editing.titleEn||""} onChange={e=>updField("titleEn",e.target.value)} placeholder="OSHA 30-Hour General Industry"/>
           </div>
           <div>
             <label style={{fontSize:12,color:"#6b7280",display:"block",marginBottom:4}}>نسبة النجاح %</label>
             <input style={inp} type="number" min="50" max="100" value={editing.passMark} onChange={e=>updField("passMark",parseInt(e.target.value)||60)}/>
+          </div>
+        </div>
+        {/* v30: أيقونة الدورة (صورة) + الاعتماد */}
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:10,marginBottom:10}}>
+          <div>
+            <label style={{fontSize:12,color:"#6b7280",display:"block",marginBottom:4}}>🖼️ أيقونة الدورة</label>
+            <div style={{display:"flex",alignItems:"center",gap:8}}>
+              {editing.iconImg
+                ?<img src={editing.iconImg} alt="" style={{width:44,height:44,objectFit:"contain",borderRadius:10,border:"0.5px solid #e5e7eb",background:"#f8fafc",flexShrink:0}}/>
+                :<span style={{fontSize:28,flexShrink:0}}>{editing.icon||"📋"}</span>}
+              <div style={{display:"flex",flexDirection:"column",gap:4,flex:1}}>
+                <button onClick={async()=>{const img=await pickImage(160);if(img)updField("iconImg",img);}} style={{padding:"5px 8px",border:"0.5px solid #d1d5db",borderRadius:6,background:"white",cursor:"pointer",fontSize:11.5,fontWeight:600,color:"#1B3059"}}>⬆️ رفع صورة</button>
+                {editing.iconImg&&<button onClick={()=>updField("iconImg","")} style={{padding:"4px 8px",border:"none",borderRadius:6,background:"#fef2f2",color:"#dc2626",cursor:"pointer",fontSize:11}}>✕ إزالة الصورة</button>}
+              </div>
+            </div>
+            <input style={{...inp,marginTop:6,padding:"6px 10px",fontSize:13}} value={editing.icon||""} onChange={e=>updField("icon",e.target.value)} placeholder="🎓 إيموجي احتياطي"/>
+          </div>
+          <div>
+            <label style={{fontSize:12,color:"#6b7280",display:"block",marginBottom:4}}>🏛️ رقم اعتماد المؤسسة العامة للتدريب التقني والمهني <span style={{color:"#9ca3af"}}>(يظهر في الشهادة)</span></label>
+            <input style={{...inp,direction:"ltr",textAlign:"center"}} value={editing.accredNo||""} onChange={e=>updField("accredNo",e.target.value)} placeholder="رقم اعتماد المنشأة التدريبية"/>
+            <div style={{fontSize:10.5,color:"#9ca3af",marginTop:3}}>اتركه فارغاً لاستخدام الرقم الافتراضي للمركز (إن حُدِّد)</div>
+          </div>
+          <div>
+            <label style={{fontSize:12,color:"#6b7280",display:"block",marginBottom:4}}>🏛️ شعار المؤسسة العامة للتدريب التقني والمهني</label>
+            <div style={{display:"flex",alignItems:"center",gap:8}}>
+              {editing.accredLogo&&<img src={editing.accredLogo} alt="" style={{height:38,maxWidth:80,objectFit:"contain",borderRadius:6,border:"0.5px solid #e5e7eb",background:"white",flexShrink:0}}/>}
+              <div style={{display:"flex",flexDirection:"column",gap:4,flex:1}}>
+                <button onClick={async()=>{const img=await pickImage(400);if(img)updField("accredLogo",img);}} style={{padding:"5px 8px",border:"0.5px solid #d1d5db",borderRadius:6,background:"white",cursor:"pointer",fontSize:11.5,fontWeight:600,color:"#1B3059"}}>⬆️ رفع الشعار</button>
+                {editing.accredLogo&&<button onClick={()=>updField("accredLogo","")} style={{padding:"4px 8px",border:"none",borderRadius:6,background:"#fef2f2",color:"#dc2626",cursor:"pointer",fontSize:11}}>✕ إزالة</button>}
+              </div>
+            </div>
           </div>
         </div>
         <div style={{display:"grid",gridTemplateColumns:"2fr 1fr 1fr",gap:10,marginBottom:10}}>
@@ -696,6 +1035,16 @@ function CourseBuilder({courses,onSave,onBack}){
           </div>
           <div style={{alignSelf:"end",fontSize:11,color:"#9ca3af",lineHeight:1.7,paddingBottom:6}}>
             هذا الرمز يُعطى للمتدربين لدخول الاختبار — بدونه لا يمكن فتح الدورة. يُحفظ عند حفظ الدورة.
+          </div>
+        </div>
+        {/* v30: التحكم بظهور الدورة للمتدربين */}
+        <div onClick={()=>updField("hidden",!editing.hidden)} style={{marginTop:12,display:"flex",alignItems:"center",gap:10,cursor:"pointer",background:editing.hidden?"#fef2f2":"#f0fdf4",border:editing.hidden?"1px solid #fecaca":"1px solid #bbf7d0",borderRadius:10,padding:"10px 14px"}}>
+          <div style={{width:40,height:22,borderRadius:11,background:editing.hidden?"#d1d5db":"#059669",position:"relative",transition:"all .2s",flexShrink:0}}>
+            <div style={{width:18,height:18,borderRadius:"50%",background:"white",position:"absolute",top:2,right:editing.hidden?20:2,transition:"all .2s",boxShadow:"0 1px 3px rgba(0,0,0,0.3)"}}/>
+          </div>
+          <div>
+            <div style={{fontSize:13.5,fontWeight:700,color:editing.hidden?"#991b1b":"#065f46"}}>{editing.hidden?"🙈 الدورة مخفية عن المتدربين":"👁️ الدورة ظاهرة للمتدربين"}</div>
+            <div style={{fontSize:11.5,color:"#6b7280",marginTop:2}}>{editing.hidden?"لا تظهر في الصفحة الرئيسية ولا قائمة الدورات — ومن بدأ اختباره سابقاً يُكمله عادي":"اضغط للإخفاء إن أردت تجهيز الدورة أو اختبارها قبل إتاحتها"}</div>
           </div>
         </div>
       </div>
@@ -777,6 +1126,40 @@ function GradingView({sub,onSave,onBack,courses}){
     :[course?.scenarios.find(s=>s.id===sub.scenarioId)].filter(Boolean);
   const allTasks=allScenarios.flatMap(sc=>sc?.tasks||[]);
   const[scores,setScores]=useState(sub.scores||{});
+
+  /* 🤖 v30 — التصحيح التلقائي المقترح: إعداداته تُحمَّل من الخادم (للمدرب فقط) */
+  const[agMap,setAgMap]=useState(null);      // خريطة الكلمات المفتاحية لكل مهمة
+  const[agRes,setAgRes]=useState({});        // نتيجة آخر حساب لكل مهمة
+  const[agOpen,setAgOpen]=useState({});      // فتح/طي لوحة كل مهمة
+  const[agSaving,setAgSaving]=useState(false);
+  const[agMsg,setAgMsg]=useState("");
+  useEffect(()=>{(async()=>{
+    try{const raw=await dbGetMeta(AG_META_KEY);setAgMap(raw?JSON.parse(raw):{});}
+    catch(e){console.error("autograde load:",e);setAgMap({});}
+  })();},[]);
+  const agGet=taskId=>(agMap&&agMap[agKeyOf(sub.courseId,taskId)])||{kw:"",ph:""};
+  const agSet=(taskId,field,val)=>setAgMap(m=>({...(m||{}),[agKeyOf(sub.courseId,taskId)]:{...agGet(taskId),[field]:val}}));
+  const agSaveSettings=async()=>{
+    setAgSaving(true);
+    try{await api("trainer_set_meta",{key:AG_META_KEY,value:JSON.stringify(agMap||{})});setAgMsg("✅ حُفظت إعدادات التصحيح التلقائي — تنطبق على كل الطلاب القادمين");}
+    catch(e){setAgMsg("⚠️ تعذر حفظ الإعدادات في الخادم — حاول مجدداً");}
+    setAgSaving(false);
+    setTimeout(()=>setAgMsg(""),4000);
+  };
+  const agRunTask=task=>{
+    const res=agSuggest(sub.answers?.[task.id]||"",agGet(task.id),task.marks);
+    setAgRes(r=>({...r,[task.id]:res||{empty:true}}));
+    if(res)setScores(s=>({...s,[task.id]:res.suggested}));
+    return res;
+  };
+  const agConfigured=allTasks.filter(t=>{const s=agGet(t.id);return (s.kw||"").trim()||(s.ph||"").trim();});
+  const agRunAll=()=>{
+    if(agConfigured.length===0){setAgMsg("⚠️ لا توجد كلمات مفتاحية محفوظة لمهام هذه الدورة — افتح «🤖 التصحيح التلقائي» تحت أي مهمة وأدخلها أولاً");setTimeout(()=>setAgMsg(""),5000);return;}
+    agConfigured.forEach(t=>agRunTask(t));
+    setAgOpen(o=>{const n={...o};agConfigured.forEach(t=>{n[t.id]=true;});return n;});
+    setAgMsg(`⚡ حُسبت درجات مقترحة لـ ${agConfigured.length} مهمة — راجعها وعدّلها ثم اعتمد بنفسك`);
+    setTimeout(()=>setAgMsg(""),6000);
+  };
   // اجمع درجات المهام الحالية فقط — تجاهل درجات مهام حُذفت من الدورة بعد التقديم
   const validTaskIds=new Set(allTasks.map(t=>t.id));
   const total=allTasks.length>0
@@ -802,6 +1185,19 @@ function GradingView({sub,onSave,onBack,courses}){
           <div style={{fontSize:11,color:passing?"#065f46":"#991b1b"}}>{total}/{maxScore}</div>
         </div>
       </div>
+      {/* 🤖 v30: شريط التصحيح التلقائي */}
+      <div style={{background:"linear-gradient(135deg,#EEF2F8,#F5F8FF)",border:"1px solid #C9D5EA",borderRadius:12,padding:"12px 16px",marginBottom:14}}>
+        <div style={{display:"flex",alignItems:"center",gap:10,flexWrap:"wrap"}}>
+          <div style={{flex:1,minWidth:220}}>
+            <div style={{fontSize:13.5,fontWeight:700,color:"#1B3059"}}>🤖 التصحيح التلقائي المقترح</div>
+            <div style={{fontSize:11.5,color:"#6b7280",marginTop:2}}>يحسب درجة مقترحة من الكلمات المفتاحية وتشابه الجمل — <b>اقتراح للمراجعة فقط، ولا يصل للطالب شيء قبل اعتمادك</b></div>
+          </div>
+          <button onClick={agRunAll} disabled={agMap===null} style={{padding:"8px 16px",border:"none",borderRadius:8,background:"#1B3059",color:"white",cursor:"pointer",fontSize:13,fontWeight:700}}>{agMap===null?"⏳ تحميل...":`⚡ تصحيح تلقائي (${agConfigured.length} مهمة مهيأة)`}</button>
+          <button onClick={agSaveSettings} disabled={agSaving||agMap===null} style={{padding:"8px 14px",border:"0.5px solid #C9D5EA",borderRadius:8,background:"white",color:"#1B3059",cursor:"pointer",fontSize:12.5,fontWeight:600}}>{agSaving?"⏳...":"💾 حفظ إعدادات الكلمات"}</button>
+        </div>
+        {agMsg&&<div style={{marginTop:8,fontSize:12.5,fontWeight:600,color:agMsg.includes("✅")||agMsg.includes("⚡")?"#065f46":"#b45309",background:agMsg.includes("✅")||agMsg.includes("⚡")?"#d1fae5":"#fef3c7",borderRadius:8,padding:"6px 12px"}}>{agMsg}</div>}
+      </div>
+
       {allScenarios.map((sc,scIdx)=>(
         <div key={sc?.id||scIdx}>
           {allScenarios.length>1&&sc&&(
@@ -824,6 +1220,42 @@ function GradingView({sub,onSave,onBack,courses}){
                 <div style={{fontSize:11,color:"#92400e",fontWeight:600,marginBottom:4}}>📋 معايير التصحيح (للمدرب فقط)</div>
                 <div style={{fontSize:12,color:"#78350f",lineHeight:1.7}}>{task.criteria||DEFAULT_CRITERIA_SRV[task.id]||"—"}</div>
               </div>
+              {/* 🤖 v30: لوحة التصحيح التلقائي لهذه المهمة */}
+              <div style={{background:"#F5F8FF",border:"0.5px solid #C9D5EA",borderRadius:8,marginBottom:8,overflow:"hidden"}}>
+                <button onClick={()=>setAgOpen(o=>({...o,[task.id]:!o[task.id]}))} style={{width:"100%",padding:"8px 12px",background:"none",border:"none",cursor:"pointer",display:"flex",justifyContent:"space-between",alignItems:"center",gap:8}}>
+                  <span style={{fontSize:12,fontWeight:700,color:"#1B3059"}}>
+                    🤖 التصحيح التلقائي
+                    {(()=>{const s=agGet(task.id);const n=(s.kw||"").split("\n").filter(x=>x.trim()).length+(s.ph||"").split("\n").filter(x=>x.trim()).length;return n>0?` — ${n} عنصر محفوظ`:" — لم يُهيأ بعد";})()}
+                  </span>
+                  <span style={{fontSize:11,color:"#9ca3af"}}>{agOpen[task.id]?"▲ إغلاق":"▼ فتح"}</span>
+                </button>
+                {agOpen[task.id]&&(
+                  <div style={{padding:"0 12px 10px",borderTop:"0.5px solid #dbe3f0"}}>
+                    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginTop:8}}>
+                      <div>
+                        <label style={{fontSize:10.5,color:"#6b7280",display:"block",marginBottom:3,fontWeight:600}}>🔑 الكلمات المفتاحية (كل سطر كلمة أو عبارة — مرادفات بفاصل | )</label>
+                        <textarea value={agGet(task.id).kw} onChange={e=>agSet(task.id,"kw",e.target.value)} placeholder={"مثال:\nحماية من السقوط|fall protection\nتقييم المخاطر\nمعدات الوقاية الشخصية|PPE"} style={{width:"100%",minHeight:76,padding:"7px 10px",border:"0.5px solid #dbe3f0",borderRadius:6,fontSize:12,fontFamily:"inherit",boxSizing:"border-box",resize:"vertical",background:"white"}}/>
+                      </div>
+                      <div>
+                        <label style={{fontSize:10.5,color:"#6b7280",display:"block",marginBottom:3,fontWeight:600}}>📝 جمل نموذجية للمقارنة بالتشابه (كل سطر جملة — اختياري)</label>
+                        <textarea value={agGet(task.id).ph} onChange={e=>agSet(task.id,"ph",e.target.value)} placeholder={"مثال:\nيجب إيقاف العمل فوراً عند اكتشاف خطر داهم\nإبلاغ مشرف السلامة وتوثيق الملاحظة"} style={{width:"100%",minHeight:76,padding:"7px 10px",border:"0.5px solid #dbe3f0",borderRadius:6,fontSize:12,fontFamily:"inherit",boxSizing:"border-box",resize:"vertical",background:"white"}}/>
+                      </div>
+                    </div>
+                    <div style={{display:"flex",gap:8,marginTop:8,alignItems:"center",flexWrap:"wrap"}}>
+                      <button onClick={()=>{const r=agRunTask(task);if(!r){setAgMsg("⚠️ أدخل كلمات مفتاحية أو جملاً نموذجية أولاً");setTimeout(()=>setAgMsg(""),3500);}}} style={{padding:"6px 14px",border:"none",borderRadius:6,background:"#1B3059",color:"white",cursor:"pointer",fontSize:12,fontWeight:700}}>⚡ احسب المقترح لهذه المهمة</button>
+                      <span style={{fontSize:10.5,color:"#9ca3af"}}>لا تنسَ «💾 حفظ إعدادات الكلمات» بالأعلى لتُطبق على كل الطلاب</span>
+                    </div>
+                    {agRes[task.id]&&!agRes[task.id].empty&&(
+                      <div style={{marginTop:8,background:"white",border:"0.5px solid #dbe3f0",borderRadius:8,padding:"8px 12px",fontSize:12,lineHeight:1.8}}>
+                        <div style={{fontWeight:700,color:"#1B3059"}}>الدرجة المقترحة: {agRes[task.id].suggested}/{task.marks} <span style={{color:"#6b7280",fontWeight:400}}>(غطّى {Math.round(agRes[task.id].coverage*100)}% من العناصر — عُبّئت في خانة الدرجة، عدّلها كما تشاء)</span></div>
+                        {agRes[task.id].kwHit.length>0&&<div style={{color:"#065f46"}}>✓ ذكر: {agRes[task.id].kwHit.join("، ")}{agRes[task.id].phHit.length>0?"، وجمل مشابهة: "+agRes[task.id].phHit.length:""}</div>}
+                        {(agRes[task.id].kwMiss.length>0||agRes[task.id].phMiss.length>0)&&<div style={{color:"#b45309"}}>✗ لم يذكر: {[...agRes[task.id].kwMiss,...agRes[task.id].phMiss].join("، ")}</div>}
+                      </div>
+                    )}
+                    {agRes[task.id]&&agRes[task.id].empty&&<div style={{marginTop:8,fontSize:11.5,color:"#b45309"}}>⚠️ لا توجد كلمات أو جمل لهذه المهمة — أدخلها ثم احسب</div>}
+                  </div>
+                )}
+              </div>
               <div style={{background:"#f8fafc",borderRadius:8,padding:"10px 12px"}}>
                 <div style={{fontSize:11,color:"#9ca3af",marginBottom:4}}>إجابة المتدرب:</div>
                 <div style={{fontSize:13,color:"#374151",lineHeight:1.9,whiteSpace:"pre-wrap",minHeight:60}}>{sub.answers?.[task.id]||<span style={{color:"#d1d5db",fontStyle:"italic"}}>لم يُجب</span>}</div>
@@ -832,15 +1264,18 @@ function GradingView({sub,onSave,onBack,courses}){
           ))}
         </div>
       ))}
-      <div style={{display:"flex",gap:10,marginTop:16,position:"sticky",bottom:0,background:"#F7F4EC",padding:"10px 0"}}>
-        <button onClick={()=>onSave(sub.id,scores,total,maxScore,"grading")} style={{flex:1,padding:"11px",border:"0.5px solid #e5e7eb",borderRadius:10,background:"white",cursor:"pointer",fontSize:14}}>💾 حفظ مؤقت</button>
-        <button onClick={()=>{
-          if(window.confirm(`⚠️ تأكيد الاعتماد\n\nالطالب: ${sub.studentName}\nالنتيجة: ${passing?"ناجح ✓":"راسب ✗"} — ${pct}%\n\nهل أنت متأكد؟`)){
-            onSave(sub.id,scores,total,maxScore,passing?"pass":"fail");
-          }
-        }} style={{flex:2,padding:"11px",border:"none",borderRadius:10,background:passing?"#059669":"#dc2626",color:"white",cursor:"pointer",fontSize:14,fontWeight:600}}>
-          {passing?"✓ اعتماد كـ ناجح":"✗ اعتماد كـ راسب"} — {pct}%
-        </button>
+      <div style={{marginTop:16,position:"sticky",bottom:0,background:"#F7F4EC",padding:"10px 0"}}>
+        <div style={{fontSize:11.5,color:"#6b7280",textAlign:"center",marginBottom:6}}>🔒 الطالب لا يرى أي درجة الآن — المسودة تبقى «قيد التصحيح» عنده، ولا تصله النتيجة إلا بضغطك على الاعتماد النهائي</div>
+        <div style={{display:"flex",gap:10}}>
+          <button onClick={()=>onSave(sub.id,scores,total,maxScore,"grading")} style={{flex:1,padding:"11px",border:"0.5px solid #e5e7eb",borderRadius:10,background:"white",cursor:"pointer",fontSize:14}}>💾 حفظ كمسودة <span style={{fontSize:11,color:"#9ca3af"}}>(لا يظهر للطالب)</span></button>
+          <button onClick={()=>{
+            if(window.confirm(`⚠️ تأكيد الاعتماد النهائي\n\nالطالب: ${sub.studentName}\nالنتيجة: ${passing?"ناجح ✓":"راسب ✗"} — ${pct}% (${total}/${maxScore})\n\nبعد الاعتماد ستظهر النتيجة للطالب في حسابه فوراً${passing?" وستصدر شهادته تلقائياً":""}.\nهل أنت متأكد؟`)){
+              onSave(sub.id,scores,total,maxScore,passing?"pass":"fail");
+            }
+          }} style={{flex:2,padding:"11px",border:"none",borderRadius:10,background:passing?"#059669":"#dc2626",color:"white",cursor:"pointer",fontSize:14,fontWeight:600}}>
+            {passing?"✓ اعتماد نهائي كـ ناجح":"✗ اعتماد نهائي كـ راسب"} — {pct}% <span style={{fontSize:11,opacity:.85}}>(سيظهر للطالب)</span>
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -895,6 +1330,7 @@ function Dashboard({subs,setSubs,courses,onGrade,onCert,onLogout,onRefresh,onMan
   const[sortBy,setSortBy]=useState("startTime"); // startTime = تاريخ الدخول · submittedAt = تاريخ الإرسال
   const[sortDesc,setSortDesc]=useState(true);     // الأحدث أولاً افتراضياً
   const[ext,setExt]=useState({});
+  const[extMsg,setExtMsg]=useState({}); // v29: رسالة نجاح/فشل التمديد لكل سجل
   const[showConfirm,setShowConfirm]=useState(false);
   const[archiving,setArchiving]=useState(false);
   const[lastArchive,setLastArchive]=useState(null);
@@ -986,12 +1422,30 @@ function Dashboard({subs,setSubs,courses,onGrade,onCert,onLogout,onRefresh,onMan
   };
 
   const doExtend=async(subId,hours)=>{
-    if(!hours||!(hours>0))return; // منع القيم السالبة أو الصفرية
+    if(!hours||!(hours>0)){setExtMsg(m=>({...m,[subId]:{ok:false,txt:"⚠️ أدخل عدد الساعات في الخانة أولاً"}}));return;}
     const updated=subs.find(s=>s.id===subId);
     if(!updated)return;
-    const ns={...updated,extensionHours:(updated.extensionHours||0)+hours};
-    await dbUpsert(ns);
-    setSubs(prev=>prev.map(s=>s.id===subId?ns:s));
+    /* ⏰ v29 — التمديد يُحسب من لحظة الضغط:
+       إن كان الوقت منتهياً: الموعد الجديد = الآن + الساعات الممنوحة (مهما مضى على الاختبار).
+       وإن كان جارياً: الموعد الجديد = الموعد الحالي + الساعات.
+       نُبقي المعادلة القديمة (البداية + ساعات الاختبار + التمديد) بضبط extensionHours بدقة كسور الساعة،
+       فتعمل كل المؤقتات وفحوص الطالب الدورية دون أي تغيير آخر. */
+    const nowMs=Date.now();
+    const curDl=getDeadline(updated);
+    const baseMs=Math.max(nowMs,curDl?curDl.getTime():nowMs);
+    const newDeadlineMs=baseMs+hours*3600000;
+    const newExt=(newDeadlineMs-new Date(updated.startTime).getTime())/3600000-(updated.examHours||EXAM_HOURS);
+    const ns={...updated,extensionHours:Math.round(newExt*1000)/1000,lastExtendedAt:new Date().toISOString(),lastExtendedHours:hours,extensionRequest:null};
+    try{
+      await api("trainer_save",{sub:ns}); // حفظ مباشر بلا fallback صامت — النجاح هنا يعني أنه وصل للخادم فعلاً
+      setSubs(prev=>prev.map(s=>s.id===subId?ns:s));
+      setExt(x=>({...x,[subId]:""}));
+      setExtMsg(m=>({...m,[subId]:{ok:true,txt:"✅ مُدِّد حتى "+fmtFull(new Date(newDeadlineMs).toISOString())+" — سيُفتح للطالب تلقائياً خلال ثوانٍ"}}));
+    }catch(e){
+      console.error("doExtend:",e);
+      if(e.status===401){alert("⚠️ انتهت جلسة دخول المدرب — سجّل الدخول من جديد ثم أعد التمديد.");onLogout();return;}
+      setExtMsg(m=>({...m,[subId]:{ok:false,txt:"⚠️ تعذر حفظ التمديد في الخادم — تحقق من الاتصال وحاول مجدداً"}}));
+    }
   };
 
   const doRefresh=async()=>{
@@ -1097,7 +1551,7 @@ function Dashboard({subs,setSubs,courses,onGrade,onCert,onLogout,onRefresh,onMan
                   {notifs.map((n,i)=>(
                     <div key={i} style={{padding:"10px 14px",borderBottom:"0.5px solid #f9fafb",background:n.read?"white":"#EEF2F8"}}>
                       <div style={{fontSize:12,fontWeight:600,color:"#1B3059"}}>
-                        {n.type==="new_submission"?"📝 اختبار جديد":n.type==="edit_request"?"✏️ طلب فتح تعديل":"🔄 طلب إعادة دخول"}
+                        {n.type==="new_submission"?"📝 اختبار جديد":n.type==="edit_request"?"✏️ طلب فتح تعديل":n.type==="extension_request"?"⏰ طلب تمديد وقت":"🔄 طلب إعادة دخول"}
                       </div>
                       <div style={{fontSize:12,color:"#374151",marginTop:2}}>{n.data?.studentName} — {n.data?.courseTitle}</div>
                       <div style={{fontSize:11,color:"#9ca3af",marginTop:2}}>{fmtFull(n.data?.time)}</div>
@@ -1246,7 +1700,21 @@ function Dashboard({subs,setSubs,courses,onGrade,onCert,onLogout,onRefresh,onMan
                   <div style={{fontSize:11,color:"#9ca3af"}}>طُلب: {fmtFull(req.editRequest?.at)} · {isExpired(req)?"⚠️ وقته منتهٍ — مدّد له بعد الموافقة":"وقت الاختبار ما زال جارياً"}</div>
                 </div>
                 <div style={{display:"flex",gap:8}}>
-                  <button onClick={async()=>{const upd={...req,status:"in_progress",editRequest:{status:"approved",at:new Date().toISOString()}};await dbUpsert(upd);setSubs(prev=>prev.map(s=>s.id===upd.id?upd:s));}} style={{padding:"6px 14px",border:"none",borderRadius:8,background:"#059669",color:"white",cursor:"pointer",fontSize:13,fontWeight:600}}>✓ موافقة وفتح الاختبار</button>
+                  <button onClick={async()=>{
+                    /* v29: إن كان وقته منتهياً — اسأل عن ساعات التمديد وطبّقها من الآن مع الموافقة في خطوة واحدة */
+                    let extra={};
+                    if(isExpired(req)){
+                      const h=window.prompt("⏰ وقت هذا الاختبار منتهٍ.\nكم ساعة تُمنح للمتدرب من الآن؟","24");
+                      if(h===null)return;
+                      const hours=parseFloat(h);
+                      if(!hours||!(hours>0)){alert("لم تتم الموافقة — أدخل عدد ساعات صحيحاً أكبر من صفر");return;}
+                      const newDeadlineMs=Date.now()+hours*3600000;
+                      const newExt=(newDeadlineMs-new Date(req.startTime).getTime())/3600000-(req.examHours||EXAM_HOURS);
+                      extra={extensionHours:Math.round(newExt*1000)/1000,lastExtendedAt:new Date().toISOString(),lastExtendedHours:hours,extensionRequest:null};
+                    }
+                    const upd={...req,...extra,status:"in_progress",editRequest:{status:"approved",at:new Date().toISOString()}};
+                    await dbUpsert(upd);setSubs(prev=>prev.map(s=>s.id===upd.id?upd:s));
+                  }} style={{padding:"6px 14px",border:"none",borderRadius:8,background:"#059669",color:"white",cursor:"pointer",fontSize:13,fontWeight:600}}>✓ موافقة وفتح الاختبار</button>
                   <button onClick={async()=>{const upd={...req,editRequest:{status:"rejected",at:new Date().toISOString()}};await dbUpsert(upd);setSubs(prev=>prev.map(s=>s.id===upd.id?upd:s));}} style={{padding:"6px 14px",border:"none",borderRadius:8,background:"#dc2626",color:"white",cursor:"pointer",fontSize:13,fontWeight:600}}>✗ رفض</button>
                 </div>
               </div>
@@ -1281,9 +1749,15 @@ function Dashboard({subs,setSubs,courses,onGrade,onCert,onLogout,onRefresh,onMan
                     </div>
                     <div style={{textAlign:"center"}}>
                       {sub.status==="in_progress"&&(
-                        <div style={{display:"flex",alignItems:"center",gap:4,justifyContent:"center",flexWrap:"wrap"}}>
-                          <input type="number" min="1" max="72" value={ext[sub.id]||""} onChange={e=>setExt(x=>({...x,[sub.id]:e.target.value}))} placeholder="ساعات" style={{width:55,padding:"4px 6px",border:"0.5px solid #e5e7eb",borderRadius:6,fontSize:12,textAlign:"center"}}/>
-                          <button onClick={()=>{if(ext[sub.id])doExtend(sub.id,parseInt(ext[sub.id]));}} style={{padding:"4px 10px",border:"none",borderRadius:6,background:"#E8622C",color:"white",cursor:"pointer",fontSize:11,fontWeight:600}}>تمديد</button>
+                        <div>
+                          {expired&&sub.extensionRequest&&<div style={{fontSize:11,fontWeight:700,color:"#c2410c",background:"#fff7ed",border:"0.5px solid #fed7aa",borderRadius:6,padding:"3px 8px",marginBottom:5,display:"inline-block"}}>🙋 الطالب يطلب تمديداً {sub.extensionRequest.at?`(${fmtFull(sub.extensionRequest.at)})`:""}</div>}
+                          <div style={{display:"flex",alignItems:"center",gap:4,justifyContent:"center",flexWrap:"wrap"}}>
+                            <input type="number" min="1" max="72" value={ext[sub.id]||""} onChange={e=>setExt(x=>({...x,[sub.id]:e.target.value}))} placeholder="ساعات" style={{width:55,padding:"4px 6px",border:"0.5px solid #e5e7eb",borderRadius:6,fontSize:12,textAlign:"center"}}/>
+                            <button onClick={()=>doExtend(sub.id,parseFloat(ext[sub.id]))} title={expired?"الساعات تُحسب من الآن — سيُفتح الاختبار للطالب فوراً":"تُضاف الساعات إلى الوقت المتبقي"} style={{padding:"4px 10px",border:"none",borderRadius:6,background:"#E8622C",color:"white",cursor:"pointer",fontSize:11,fontWeight:600}}>{expired?"⏰ إعادة فتح":"تمديد"}</button>
+                          </div>
+                          <div style={{fontSize:10,color:"#9ca3af",marginTop:3}}>{expired?"تُحسب الساعات من لحظة التمديد":"تُضاف للوقت المتبقي"}</div>
+                          {extMsg[sub.id]&&<div style={{fontSize:11,fontWeight:600,marginTop:4,lineHeight:1.6,color:extMsg[sub.id].ok?"#065f46":"#b91c1c",background:extMsg[sub.id].ok?"#d1fae5":"#fee2e2",borderRadius:6,padding:"4px 8px"}}>{extMsg[sub.id].txt}</div>}
+                          {sub.lastExtendedAt&&!extMsg[sub.id]&&<div style={{fontSize:10.5,color:"#059669",marginTop:3}}>⏰ آخر تمديد: {fmtFull(sub.lastExtendedAt)} (+{sub.lastExtendedHours}س)</div>}
                         </div>
                       )}
                     </div>
@@ -1455,7 +1929,8 @@ function ExamView({sub,setSubs,subs,onSubmit,onNextScenario,courses,setActiveSub
     const target=subs.find(s=>sameAttempt(s)&&s.scenarioId===prevSc.id);
     if(!target)return;
     const savedCur={...sub,answers,status:"scenario_completed"};
-    const reopened={...target,status:"in_progress"};
+    // v29: ورّث أكبر تمديد في المحاولة حتى لا يعود السيناريو السابق بوقت أقدم منتهٍ
+    const reopened={...target,status:"in_progress",extensionHours:Math.max(target.extensionHours||0,sub.extensionHours||0),examHours:sub.examHours||target.examHours};
     await dbUpsert(savedCur);
     await dbUpsert(reopened);
     setSubs(prev=>prev.map(s=>s.id===savedCur.id?savedCur:s.id===reopened.id?reopened:s));
@@ -1463,24 +1938,7 @@ function ExamView({sub,setSubs,subs,onSubmit,onNextScenario,courses,setActiveSub
   };
 
   if(expired)return(
-    <div dir="rtl" style={{fontFamily:"inherit",display:"flex",alignItems:"center",justifyContent:"center",minHeight:"100vh",background:"#F7F4EC"}}>
-      <div style={{background:"white",border:"0.5px solid #e5e7eb",borderRadius:16,padding:"2.5rem",maxWidth:460,textAlign:"center",boxShadow:"0 4px 20px rgba(0,0,0,0.06)"}}>
-        <div style={{fontSize:52,marginBottom:14}}>⏰</div>
-        <div style={{fontSize:20,fontWeight:700,marginBottom:8,color:"#d97706"}}>انتهى وقت الاختبار</div>
-        <div style={{background:"#d1fae5",border:"0.5px solid #a7f3d0",borderRadius:10,padding:"10px 14px",marginBottom:16,fontSize:13,color:"#065f46",fontWeight:600}}>
-          ✅ إجاباتك محفوظة بالكامل ولم تُحذف
-        </div>
-        <div style={{fontSize:14,color:"#6b7280",lineHeight:1.9,marginBottom:"1.5rem"}}>
-          تواصل مع المدرب لتمديد الوقت.<br/>
-          <strong>سيُفتح الاختبار تلقائياً فور التمديد</strong> — لا تغلق هذه الصفحة.<br/>
-          <span style={{fontSize:12,color:"#9ca3af"}}>(يتحقق تلقائياً كل 30 ثانية — وإجاباتك محفوظة)</span>
-        </div>
-        <div style={{background:"#f8fafc",borderRadius:10,padding:"1rem",marginBottom:"1.5rem",textAlign:"right",fontSize:13}}>
-          <div style={{marginBottom:4}}><b>الدورة:</b> {sub.courseTitle}</div>
-          <div style={{color:"#9ca3af",fontSize:12}}>رقم الاختبار: {serial(sub.id)}</div>
-        </div>
-      </div>
-    </div>
+    <ExpiredWaitScreen sub={{...sub,answers}} onResume={(fresh)=>{setSubs(prev=>prev.map(s=>s.id===fresh.id?fresh:s));if(setActiveSub)setActiveSub(fresh);}} onHome={null}/>
   );
 
   return(
@@ -1513,7 +1971,8 @@ function ExamView({sub,setSubs,subs,onSubmit,onNextScenario,courses,setActiveSub
                 // إن وُجد سجل سابق لهذا السيناريو (سبق فتحه في هذه المحاولة نفسها) أعد فتحه بإجاباته بدل إنشاء سجل مكرر
                 const existing=subs.find(s=>s.id!==sub.id&&sameAttempt(s)&&s.scenarioId===nextScenario.id);
                 if(existing){
-                  const reopened={...existing,status:"in_progress"};
+                  // v29: ورّث أكبر تمديد في المحاولة
+                  const reopened={...existing,status:"in_progress",extensionHours:Math.max(existing.extensionHours||0,sub.extensionHours||0),examHours:sub.examHours||existing.examHours};
                   await dbUpsert(reopened);
                   setSubs(prev=>prev.map(s=>s.id===savedSub.id?savedSub:s.id===reopened.id?reopened:s));
                   onNextScenario(reopened);
@@ -1641,9 +2100,28 @@ function ExamView({sub,setSubs,subs,onSubmit,onNextScenario,courses,setActiveSub
    🚀  التطبيق الرئيسي
 ═══════════════════════════════════════════════ */
 /* شاشة انتهاء الوقت مع polling تلقائي للتمديد */
-function ExpiredWaitScreen({sub,onResume,onHome}){
+function ExpiredWaitScreen({sub,onResume,onHome,onCourses}){
   const[checking,setChecking]=useState(false);
   const[msg,setMsg]=useState("");
+  const[reqSent,setReqSent]=useState(!!sub.extensionRequest);
+  const[reqBusy,setReqBusy]=useState(false);
+
+  /* 📨 v29 — طلب تمديد يصل للمدرب: شارة على سجل الطالب في اللوحة + إشعار في الجرس */
+  const requestExtension=async()=>{
+    setReqBusy(true);
+    let ok=false;
+    try{
+      await api("student_save",{sub:{...sub,extensionRequest:{at:new Date().toISOString()}},studentId:sub.studentId});
+      ok=true;
+    }catch(e){console.error("extensionRequest save:",e);}
+    try{
+      await api("add_notification",{type:"extension_request",data:{studentName:sub.studentName,studentId:sub.studentId,courseTitle:sub.courseTitle,time:new Date().toISOString()}});
+      ok=true;
+    }catch(e){console.error("extensionRequest notify:",e);}
+    if(ok)setReqSent(true);
+    else setMsg("⚠️ تعذر إرسال الطلب — تحقق من الاتصال وحاول مجدداً");
+    setReqBusy(false);
+  };
 
   // تحقق كل 30 ثانية هل مُدِّد الوقت
   useEffect(()=>{
@@ -1692,10 +2170,17 @@ function ExpiredWaitScreen({sub,onResume,onHome}){
           <div style={{color:"#9ca3af",fontSize:12}}>رقم الاختبار: {serial(sub.id)}</div>
         </div>
         {msg&&<div style={{background:msg.includes("✅")?"#d1fae5":"#fef3c7",borderRadius:8,padding:"8px 14px",marginBottom:12,fontSize:13,fontWeight:600,color:msg.includes("✅")?"#065f46":"#92400e"}}>{msg}</div>}
+        {reqSent
+          ?<div style={{background:"#EEF2F8",border:"0.5px solid #dbe3f0",borderRadius:10,padding:"10px 14px",marginBottom:8,fontSize:13,color:"#1B3059",fontWeight:600}}>📨 وصل طلب التمديد للمدرب — ابقَ هنا وسيُفتح الاختبار تلقائياً فور موافقته</div>
+          :<button onClick={requestExtension} disabled={reqBusy} style={{width:"100%",padding:"11px",background:"#E8622C",color:"white",border:"none",borderRadius:10,cursor:"pointer",fontSize:14,fontWeight:700,marginBottom:8}}>
+            {reqBusy?"⏳ جارٍ الإرسال...":"📨 إرسال طلب تمديد للمدرب"}
+          </button>}
         <button onClick={checkNow} disabled={checking} style={{width:"100%",padding:"11px",background:"#1B3059",color:"white",border:"none",borderRadius:10,cursor:"pointer",fontSize:14,fontWeight:600,marginBottom:8}}>
           {checking?"⏳ جارٍ التحقق...":"🔄 تحقق من التمديد الآن"}
         </button>
-        <button onClick={onHome} style={{width:"100%",padding:"8px",background:"none",border:"none",color:"#9ca3af",fontSize:13,cursor:"pointer"}}>العودة للرئيسية</button>
+        {onCourses&&<button onClick={onCourses} style={{width:"100%",padding:"8px",background:"none",border:"0.5px solid #e5e7eb",borderRadius:8,color:"#374151",fontSize:13,cursor:"pointer",marginBottom:4}}>📋 دوراتي ونتائجي</button>}
+        {onHome&&<button onClick={onHome} style={{width:"100%",padding:"8px",background:"none",border:"none",color:"#9ca3af",fontSize:13,cursor:"pointer"}}>العودة للرئيسية</button>}
+        {!onHome&&<div style={{fontSize:12,color:"#9ca3af"}}>لا تغلق هذه الصفحة — إجاباتك محفوظة وستعود لاختبارك فور التمديد</div>}
         <div style={{fontSize:11,color:"#d1d5db",marginTop:8}}>يتحقق تلقائياً كل 30 ثانية</div>
       </div>
     </div>
@@ -1716,6 +2201,7 @@ function App(){
   const[activeSub,setActiveSub]=useState(null);
   const[gradingSub,setGradingSub]=useState(null);
   const[certSub,setCertSub]=useState(null);
+  const[myCertSub,setMyCertSub]=useState(null); // v29: شهادة يعرضها الطالب بنفسه
   const[trainerAuth,setTrainerAuth]=useState(false);
   const[tPass,setTPass]=useState("");
   const[tBusy,setTBusy]=useState(false);
@@ -1820,8 +2306,21 @@ function App(){
     setFieldErr(fe);
     if(Object.keys(fe).length>0)return;
     setErr("");
-    const myData=await dbLoad(sId.trim());
+    let myData=await dbLoad(sId.trim());
     setSubs(myData);
+
+    /* 🔑 v29 — هوية الطالب هي حسابه: أي اختبار جارٍ (أو منتهي الوقت بانتظار التمديد)
+       يُفتح مباشرة بمجرد تسجيل الدخول — بلا رمز دورة ولا اختيار سيناريو ولا أي خطوة إضافية */
+    const mineRunning=myData.filter(s=>s.studentId===sId.trim()&&s.status==="in_progress");
+    const runningActive=mineRunning.filter(s=>!isExpired(s)).sort((a,b)=>new Date(b.startTime)-new Date(a.startTime));
+    const runningExpired=mineRunning.filter(s=>isExpired(s)).sort((a,b)=>new Date(b.startTime)-new Date(a.startTime));
+    const directTarget=runningActive[0]||runningExpired[0];
+    if(directTarget){
+      sessionStorage.setItem("itqan_session",JSON.stringify({subId:directTarget.id,studentId:sId.trim(),studentName:sName.trim()}));
+      setActiveSub(directTarget);
+      setScreen(isExpired(directTarget)?"expired-wait":"exam");
+      return;
+    }
 
     // طلب إعادة دخول معلّق
     const pending=myData.find(s=>s.studentId===sId.trim()&&s.status==="reentry_pending");
@@ -1829,7 +2328,12 @@ function App(){
 
     // موافقة على إعادة الدخول
     const approved=myData.find(s=>s.studentId===sId.trim()&&s.status==="reentry_approved");
-    if(approved){await dbUpsert({...approved,status:"reentry_used"});}
+    if(approved){
+      const used={...approved,status:"reentry_used"};
+      await dbUpsert(used);
+      myData=myData.map(s=>s.id===used.id?used:s); // v29: مزامنة الحالة المحلية أيضاً
+      setSubs(myData);
+    }
 
     // تحقق هل يوجد نتيجة جديدة للطالب
     const newResults=myData.filter(s=>s.studentId===sId.trim()&&["pass","fail"].includes(s.status)&&!s.resultSeen);
@@ -1855,7 +2359,10 @@ function App(){
 
     // هل يوجد اختبار منتهي الوقت في هذه الدورة؟
     const expiredInCourse=subs.find(s=>s.studentId===sid&&s.courseId===course.id&&s.status==="in_progress"&&isExpired(s));
-    if(expiredInCourse){setActiveSub(expiredInCourse);setScreen("expired-wait");return;}
+    if(expiredInCourse){
+      sessionStorage.setItem("itqan_session",JSON.stringify({subId:expiredInCourse.id,studentId:sid,studentName:sName.trim()})); // v29: استعادة شاشة الانتظار عند التحديث
+      setActiveSub(expiredInCourse);setScreen("expired-wait");return;
+    }
 
     // تحقق هل اختبر هذه الدورة من قبل وأنهاها
     const prevInCourse=subs.find(s=>s.studentId===sid&&s.courseId===course.id&&["submitted","grading","pass","fail"].includes(s.status));
@@ -1875,7 +2382,9 @@ function App(){
     const completedInCourse=prevInCourse?[]:subs.filter(s=>s.studentId===sid&&s.courseId===course.id&&s.status==="scenario_completed");
     const sameScenarioSaved=completedInCourse.find(s=>s.scenarioId===scenarioId);
     if(sameScenarioSaved){
-      const reopened={...sameScenarioSaved,status:"in_progress"};
+      // v29: ورّث أكبر تمديد بين سيناريوهات المحاولة نفسها (نفس نافذة الوقت)
+      const maxExt=Math.max(...completedInCourse.filter(s=>s.startTime===sameScenarioSaved.startTime).map(s=>s.extensionHours||0),sameScenarioSaved.extensionHours||0);
+      const reopened={...sameScenarioSaved,status:"in_progress",extensionHours:maxExt};
       await dbUpsert(reopened);
       sessionStorage.setItem("itqan_session",JSON.stringify({subId:reopened.id,studentId:sid,studentName:sName.trim()}));
       setSubs(prev=>prev.map(s=>s.id===reopened.id?reopened:s));
@@ -1977,6 +2486,7 @@ function App(){
 
   /* Screens */
   if(screen==="certificate"&&certSub) return <Certificate sub={certSub} courses={courses} onBack={()=>setScreen("dashboard")}/>;
+  if(screen==="my-certificate"&&myCertSub) return <Certificate sub={myCertSub} courses={courses} onBack={()=>{setMyCertSub(null);setScreen("my-results");}}/>;
   if(screen==="grading"&&gradingSub) return <GradingView sub={gradingSub} courses={courses} onSave={onSaveGrade} onBack={()=>{setGradingSub(null);setScreen("dashboard");}}/>;
   if(screen==="manage-courses"&&trainerAuth) return <CourseBuilder courses={courses} onSave={updated=>{setCourses(updated);}} onBack={()=>setScreen("dashboard")}/>;
   if(screen==="dashboard"&&trainerAuth) return <Dashboard subs={subs} setSubs={setSubs} courses={courses} onGrade={s=>{setGradingSub(s);setScreen("grading");}} onCert={s=>{setCertSub(s);setScreen("certificate");}} onLogout={()=>{TRAINER_TOKEN=null;TRAINER_CODES={};DEFAULT_CRITERIA_SRV={};setTrainerAuth(false);setScreen("home");setSubs([]);}} onRefresh={refreshSubs} onManageCourses={()=>setScreen("manage-courses")} onLoad={loadAllSubs}/>;
@@ -1984,7 +2494,7 @@ function App(){
 
   /* شاشة انتهاء الوقت — الإجابات محفوظة */
   if(screen==="expired-wait"&&activeSub) return(
-    <ExpiredWaitScreen sub={activeSub} onResume={(sub)=>{setActiveSub(sub);setScreen("exam");}} onHome={()=>{setScreen("home");setSId("");setSName("");setSBirthdate("");setSOrderNum("");setSPhone("");setActiveSub(null);}}/>
+    <ExpiredWaitScreen sub={activeSub} onResume={(sub)=>{setActiveSub(sub);setScreen("exam");}} onCourses={()=>{setActiveSub(null);setScreen("courses");}} onHome={()=>{setScreen("home");setSId("");setSName("");setSBirthdate("");setSOrderNum("");setSPhone("");setActiveSub(null);}}/>
   );
 
   /* شاشة طلب إعادة الدخول */
@@ -2094,7 +2604,7 @@ function App(){
     <div style={{...base,display:"flex",alignItems:"center",justifyContent:"center",padding:"1rem"}}>
       <div style={{background:"white",border:"0.5px solid #e5e7eb",borderRadius:16,padding:"2rem",width:400,maxWidth:"100%",boxShadow:"0 4px 20px rgba(0,0,0,0.06)"}}>
         <div style={{textAlign:"center",marginBottom:"1.5rem"}}>
-          <div style={{fontSize:40,marginBottom:8}}>{selectedCourse.icon}</div>
+          {selectedCourse.iconImg?<img src={selectedCourse.iconImg} alt="" style={{height:56,maxWidth:100,objectFit:"contain",margin:"0 auto 8px",display:"block"}}/>:<div style={{fontSize:40,marginBottom:8}}>{selectedCourse.icon}</div>}
           <div style={{fontSize:17,fontWeight:700}}>{selectedCourse.title}</div>
           <div style={{fontSize:13,color:"#6b7280",marginTop:4}}>أدخل رمز الدخول للمتابعة</div>
         </div>
@@ -2113,7 +2623,10 @@ function App(){
       <div style={{maxWidth:800,margin:"0 auto"}}>
         <div style={{marginBottom:16}}>
           <button onClick={()=>{setScreen("courses");setCourseCode("");}} style={{padding:"7px 14px",border:"0.5px solid #e5e7eb",borderRadius:8,background:"white",cursor:"pointer",fontSize:13,marginBottom:10}}>← تغيير الدورة</button>
-          <div style={{fontSize:18,fontWeight:700}}>{selectedCourse.icon} {selectedCourse.title}</div>
+          <div style={{fontSize:18,fontWeight:700,display:"flex",alignItems:"center",gap:8}}>
+            {selectedCourse.iconImg?<img src={selectedCourse.iconImg} alt="" style={{height:30,maxWidth:46,objectFit:"contain"}}/>:<span>{selectedCourse.icon}</span>}
+            <span>{selectedCourse.title}</span>
+          </div>
           <div style={{fontSize:13,color:"#6b7280",marginTop:2}}>مرحباً {sName} — اختر السيناريو الذي تريد اختباره</div>
         </div>
         {selectedCourse.scenarios.map(sc=>(
@@ -2168,12 +2681,13 @@ function App(){
                   <div style={{fontSize:11,color:"#9ca3af",marginTop:2}}>{fmtFull(s.submittedAt)}</div>
                 </div>
                 <div style={{textAlign:"center"}}>
-                  {s.status==="pass"&&<div style={{background:"#d1fae5",color:"#065f46",borderRadius:10,padding:"6px 14px",fontWeight:700,fontSize:14}}>ناجح ✓<br/><span style={{fontSize:12}}>{s.totalScore}/{s.maxScore}</span></div>}
-                  {s.status==="fail"&&<div style={{background:"#fee2e2",color:"#991b1b",borderRadius:10,padding:"6px 14px",fontWeight:700,fontSize:14}}>راسب ✗<br/><span style={{fontSize:12}}>{s.totalScore}/{s.maxScore}</span></div>}
+                  {s.status==="pass"&&<div style={{background:"#d1fae5",color:"#065f46",borderRadius:10,padding:"6px 14px",fontWeight:700,fontSize:14}}>ناجح ✓<br/><span style={{fontSize:12}}>{s.totalScore}/{s.maxScore}{s.maxScore?` (${Math.round(((s.totalScore||0)/s.maxScore)*100)}%)`:""}</span></div>}
+                  {s.status==="fail"&&<div style={{background:"#fee2e2",color:"#991b1b",borderRadius:10,padding:"6px 14px",fontWeight:700,fontSize:14}}>راسب ✗<br/><span style={{fontSize:12}}>{s.totalScore}/{s.maxScore}{s.maxScore?` (${Math.round(((s.totalScore||0)/s.maxScore)*100)}%)`:""}</span></div>}
                   {["submitted","grading"].includes(s.status)&&<div style={{background:"#fef3c7",color:"#92400e",borderRadius:10,padding:"6px 14px",fontWeight:600,fontSize:13}}>⏳ انتظار النتيجة</div>}
                 </div>
               </div>
               {s.status==="pass"&&s.certId&&<div style={{marginTop:8,fontSize:12,color:"#1B3059",background:"#EEF2F8",borderRadius:6,padding:"6px 10px"}}>🏅 رقم الشهادة: <strong>{s.certId}</strong></div>}
+              {s.status==="pass"&&<button onClick={()=>{setMyCertSub(s);setScreen("my-certificate");}} style={{marginTop:8,width:"100%",padding:"10px",background:"linear-gradient(135deg,#E8622C,#C94E1D)",border:"none",color:"white",borderRadius:8,cursor:"pointer",fontSize:13.5,fontWeight:700,boxShadow:"0 3px 10px rgba(232,98,44,0.3)"}}>🏅 عرض الشهادة والطباعة</button>}
               {s.status==="submitted"&&!s.editRequest&&<button onClick={async()=>{
                 const upd={...s,editRequest:{status:"pending",at:new Date().toISOString()}};
                 await dbUpsert(upd);
@@ -2203,9 +2717,9 @@ function App(){
           </div>
         </div>
         <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(230px,1fr))",gap:14}}>
-          {courses.map(c=>(
+          {courses.filter(c=>!c.hidden).map(c=>(
             <button key={c.id} onClick={()=>{setSelectedCourse(c);setCourseCode("");setCodeErr("");setScreen("course-code");}} style={{background:"white",border:"0.5px solid #e5e7eb",borderRadius:14,padding:"1.5rem",textAlign:"right",cursor:"pointer",transition:"all .2s",boxShadow:"0 2px 8px rgba(0,0,0,0.04)"}}>
-              <div style={{fontSize:36,marginBottom:10}}>{c.icon}</div>
+              {c.iconImg?<img src={c.iconImg} alt="" style={{height:52,maxWidth:80,objectFit:"contain",marginBottom:10,display:"block"}}/>:<div style={{fontSize:36,marginBottom:10}}>{c.icon}</div>}
               <div style={{fontSize:15,fontWeight:700,marginBottom:8,color:"#111827"}}>{c.title}</div>
               <div style={{display:"flex",flexDirection:"column",gap:4}}>
                 <span style={{fontSize:12,color:"#9ca3af"}}>⏱ {EXAM_HOURS} ساعة للإنجاز</span>
@@ -2296,7 +2810,7 @@ function App(){
             <button className="card-hover" onClick={()=>{setScreen("student-login");setErr("");}} style={{background:"white",border:"1.5px solid #E7E2D8",borderRadius:18,padding:"1.8rem 1.25rem",cursor:"pointer",textAlign:"center",boxShadow:"0 3px 14px rgba(16,31,60,0.06)"}}>
               <div style={{width:58,height:58,borderRadius:16,background:"linear-gradient(135deg,#1B3059,#101F3C)",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 12px",fontSize:26}}>👤</div>
               <div style={{fontSize:16,fontWeight:700,marginBottom:4,color:"#101F3C"}}>دخول المتدرب</div>
-              <div style={{fontSize:12,color:"#9aa2b1"}}>تقديم الاختبار التحليلي</div>
+              <div style={{fontSize:12,color:"#9aa2b1"}}>تقديم الاختبار · متابعة اختبارك ونتائجك وشهادتك</div>
             </button>
             <button className="card-hover" onClick={()=>{setScreen("trainer-login");setErr("");setTPass("");}} style={{background:"white",border:"1.5px solid #E7E2D8",borderRadius:18,padding:"1.8rem 1.25rem",cursor:"pointer",textAlign:"center",boxShadow:"0 3px 14px rgba(16,31,60,0.06)"}}>
               <div style={{width:58,height:58,borderRadius:16,background:"linear-gradient(135deg,#E8622C,#C94E1D)",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 12px",fontSize:26}}>🏫</div>
@@ -2309,9 +2823,9 @@ function App(){
           <div style={{background:"white",border:"1px solid #E7E2D8",borderRadius:16,padding:"1.1rem 1rem",boxShadow:"0 2px 10px rgba(16,31,60,0.05)"}}>
             <div style={{fontSize:12,fontWeight:700,color:"#1B3059",letterSpacing:1,marginBottom:10}}>الدورات المعتمدة</div>
             <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(96px,1fr))",gap:8}}>
-              {courses.map(c=>(
+              {courses.filter(c=>!c.hidden).map(c=>(
                 <div key={c.id} style={{textAlign:"center",padding:"10px 4px",background:"#FBFAF6",border:"1px solid #F0EBDF",borderRadius:12}}>
-                  <div style={{width:38,height:38,borderRadius:10,background:"#EEF2F8",display:"flex",alignItems:"center",justifyContent:"center",fontSize:19,margin:"0 auto 6px"}}>{c.icon}</div>
+                  <div style={{width:38,height:38,borderRadius:10,background:"#EEF2F8",display:"flex",alignItems:"center",justifyContent:"center",fontSize:19,margin:"0 auto 6px",overflow:"hidden"}}>{c.iconImg?<img src={c.iconImg} alt="" style={{width:32,height:32,objectFit:"contain"}}/>:c.icon}</div>
                   <div style={{fontSize:10.5,color:"#374151",fontWeight:600,lineHeight:1.4}}>{c.title}</div>
                   <div style={{fontSize:9.5,color:"#E8622C",marginTop:3,fontWeight:600}}>🔑 رمز خاص</div>
                 </div>
