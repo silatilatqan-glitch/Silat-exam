@@ -14,6 +14,7 @@
 <!-- v30 — أيقونة صورة لكل دورة تُرفع من إدارة الدورات (مع ضغط تلقائي) وتظهر في كل الواجهات والشهادة، إظهار/إخفاء أي دورة عن المتدربين بمفتاح تبديل، اسم الدورة بالإنجليزية ورقم اعتماد المؤسسة وشعار جهة الاعتماد على الشهادة (كلها تُحرَّر من إدارة الدورات)، تصحيح تلقائي مقترح بالكلمات المفتاحية وتشابه الجمل (إعداداته للمدرب فقط في الخادم — لا تصل للطلاب، والمقترح لا يُنشر إلا بعد اعتماد المدرب)، توضيح المسودة مقابل الاعتماد النهائي في شاشة التصحيح (2026-08-10) -->
 <!-- v31 — تضمين شعار المؤسسة العامة للتدريب التقني والمهني الرسمي ورقم الاعتماد 1157225381812 افتراضياً على مستوى المركز: يظهران تلقائياً على كل شهادة، مع بقاء إمكانية التخصيص لكل دورة من إدارة الدورات (2026-08-10) -->
 <!-- v32 — تواقيع الشهادات: مكتبة تواقيع يديرها المدرب (اسم + صفة + صورة تُرفع وتُضغط) في «إدارة الدورات»، تُطبَّق على دورات مختارة أو الكل بضغطة واحدة (حتى توقيعين لكل شهادة على جانبي رمز التحقق، والإزالة بنفس الطريقة)، وإعادة تصميم الشهادة بشكل احترافي: ترويسة متوازنة برقم الشهادة وتاريخها، علامة مائية بختم المركز، فواصل وخيوط أنيقة بدل الصناديق، شريط تفاصيل بأعمدة مفصولة يشمل الساعات التدريبية، وكتل تواقيع بالصور فوق الخطوط (2026-08-10) -->
+<!-- v33 — لا تكرار للأسماء في قائمة التصحيح: صف واحد لكل متدرب في كل دورة (السجل الأحدث)، وأي سجلات إضافية لنفس المتدرب — محاولات سابقة أو بقايا الحيل القديمة — تنطوي تحت زر «سجلات إضافية» وتُعرض عند الطلب فقط (2026-08-10) -->
 <link rel="icon" type="image/webp" href="data:image/webp;base64,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"/>
 <!-- preconnect لتسريع تحميل المكتبات -->
 <link rel="preconnect" href="https://cdnjs.cloudflare.com"/>
@@ -1331,6 +1332,7 @@ function Dashboard({subs,setSubs,courses,onGrade,onCert,onLogout,onRefresh,onMan
   const[sortDesc,setSortDesc]=useState(true);     // الأحدث أولاً افتراضياً
   const[ext,setExt]=useState({});
   const[extMsg,setExtMsg]=useState({}); // v29: رسالة نجاح/فشل التمديد لكل سجل
+  const[expandedGroups,setExpandedGroups]=useState({}); // v33: فتح/طي السجلات الإضافية لكل متدرب/دورة
   const[showConfirm,setShowConfirm]=useState(false);
   const[archiving,setArchiving]=useState(false);
   const[lastArchive,setLastArchive]=useState(null);
@@ -1377,6 +1379,19 @@ function Dashboard({subs,setSubs,courses,onGrade,onCert,onLogout,onRefresh,onMan
     if(tb===null)return -1;
     return sortDesc?tb-ta:ta-tb;
   });
+
+  /* 🗂 v33 — لا تكرار للأسماء: صف واحد لكل متدرب في كل دورة.
+     السجل الأحدث (بحسب الفرز الحالي) يظهر، وأي سجلات أخرى لنفس المتدرب في نفس الدورة
+     (محاولات سابقة أو بقايا قديمة) تنطوي تحت زر «سجلات أخرى» */
+  const groupedRows=(()=>{
+    const map=new Map();
+    filtered.forEach(s=>{
+      const key=`${s.studentId}|${s.courseId}`;
+      if(!map.has(key))map.set(key,[]);
+      map.get(key).push(s);
+    });
+    return[...map.values()];
+  })();
   const counts={all:subs.filter(s=>!HIDDEN_STATUSES.includes(s.status)).length,inprog:subs.filter(s=>s.status==="in_progress").length,pending:subs.filter(s=>s.status==="submitted").length,grading:subs.filter(s=>s.status==="grading").length,pass:subs.filter(s=>s.status==="pass").length,fail:subs.filter(s=>s.status==="fail").length,reentry:subs.filter(s=>s.status==="reentry_pending").length};
 
   /* مؤشر المساحة — Supabase 500MB مجاناً */
@@ -1725,10 +1740,16 @@ function Dashboard({subs,setSubs,courses,onGrade,onCert,onLogout,onRefresh,onMan
         {filtered.length===0
           ?<div style={{textAlign:"center",padding:"3rem",color:"#9ca3af",background:"white",borderRadius:12,border:"0.5px solid #e5e7eb"}}>لا توجد نتائج بعد</div>
           :<div style={{background:"white",border:"0.5px solid #e5e7eb",borderRadius:12,overflow:"hidden"}}>
-            {filtered.map((sub,idx)=>{
+            {groupedRows.map((grp,gIdx)=>{
+              const gKey=grp[0].studentId+"|"+grp[0].courseId;
+              const open=!!expandedGroups[gKey];
+              const visible=open?grp:[grp[0]];
+              return(
+              <div key={gKey} style={{borderBottom:gIdx<groupedRows.length-1?"0.5px solid #f3f4f6":"none"}}>
+              {visible.map((sub,vIdx)=>{
               const expired=isExpired(sub)&&sub.status==="in_progress";
               return(
-                <div key={sub.id} style={{padding:"1rem 1.25rem",borderBottom:idx<filtered.length-1?"0.5px solid #f3f4f6":"none"}}>
+                <div key={sub.id} style={{padding:"1rem 1.25rem",background:vIdx>0?"#FBFAF9":"white",borderTop:vIdx>0?"0.5px dashed #e5e7eb":"none"}}>
                   <div className="row-grid" style={{display:"grid",gridTemplateColumns:"1.5fr 1.2fr 0.8fr auto",gap:10,alignItems:"center"}}>
                     <div>
                       <div style={{fontWeight:600,fontSize:15}}>{sub.studentName} <span style={{fontSize:12,color:"#9ca3af",fontWeight:400}}>({sub.studentId})</span></div>
@@ -1776,6 +1797,14 @@ function Dashboard({subs,setSubs,courses,onGrade,onCert,onLogout,onRefresh,onMan
                     </div>
                   </div>
                 </div>
+              );
+              })}
+              {grp.length>1&&(
+                <button onClick={()=>setExpandedGroups(x=>({...x,[gKey]:!open}))} style={{width:"100%",padding:"7px 12px",border:"none",borderTop:"0.5px dashed #e5e7eb",background:"#F8FAFC",color:"#1B3059",fontSize:12,fontWeight:700,cursor:"pointer"}}>
+                  {open?"▲ إخفاء السجلات الإضافية":`🗂 يوجد ${grp.length-1===1?"سجل إضافي واحد":(grp.length-1)+" سجلات إضافية"} لنفس المتدرب في هذه الدورة (محاولات أو بقايا قديمة) — عرض ▼`}
+                </button>
+              )}
+              </div>
               );
             })}
           </div>
