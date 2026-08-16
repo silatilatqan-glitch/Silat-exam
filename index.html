@@ -15,6 +15,7 @@
 <!-- v31 — تضمين شعار المؤسسة العامة للتدريب التقني والمهني الرسمي ورقم الاعتماد 1157225381812 افتراضياً على مستوى المركز: يظهران تلقائياً على كل شهادة، مع بقاء إمكانية التخصيص لكل دورة من إدارة الدورات (2026-08-10) -->
 <!-- v32 — تواقيع الشهادات: مكتبة تواقيع يديرها المدرب (اسم + صفة + صورة تُرفع وتُضغط) في «إدارة الدورات»، تُطبَّق على دورات مختارة أو الكل بضغطة واحدة (حتى توقيعين لكل شهادة على جانبي رمز التحقق، والإزالة بنفس الطريقة)، وإعادة تصميم الشهادة بشكل احترافي: ترويسة متوازنة برقم الشهادة وتاريخها، علامة مائية بختم المركز، فواصل وخيوط أنيقة بدل الصناديق، شريط تفاصيل بأعمدة مفصولة يشمل الساعات التدريبية، وكتل تواقيع بالصور فوق الخطوط (2026-08-10) -->
 <!-- v33 — لا تكرار للأسماء في قائمة التصحيح: صف واحد لكل متدرب في كل دورة (السجل الأحدث)، وأي سجلات إضافية لنفس المتدرب — محاولات سابقة أو بقايا الحيل القديمة — تنطوي تحت زر «سجلات إضافية» وتُعرض عند الطلب فقط (2026-08-10) -->
+<!-- v34 — الاختبار متسلسل إجباري: أُلغي اختيار السيناريو الانتقائي (شاشة «خطة الاختبار» تبدأ من الأول)، وأُزيل خيار «إنهاء الاختبار الآن» من نافذة نهاية السيناريو، والإرسال النهائي لا يُتاح إلا بعد إكمال كل سيناريوهات الدورة في نفس المحاولة — فيصل للمدرب سجل واحد يضم جميع السيناريوهات (2026-08-16) -->
 <link rel="icon" type="image/webp" href="data:image/webp;base64,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"/>
 <!-- preconnect لتسريع تحميل المكتبات -->
 <link rel="preconnect" href="https://cdnjs.cloudflare.com"/>
@@ -1829,8 +1830,15 @@ function ExamView({sub,setSubs,subs,onSubmit,onNextScenario,courses,setActiveSub
   const expired=isExpired(sub);
 
   // هل يوجد سيناريو تالٍ؟
+  // v34: السيناريو التالي = أول سيناريو في الدورة لم يُكمَل في هذه المحاولة (وليس التالي بالترتيب فقط)
+  // بهذا لا يستطيع الطالب إنهاء الاختبار وقد تخطّى سيناريوهات — الإرسال النهائي لا يُتاح إلا بعد إكمالها جميعاً
   const currentScenarioIdx=course?.scenarios.findIndex(s=>s.id===sub.scenarioId)??0;
-  const nextScenario=course?.scenarios[currentScenarioIdx+1]||null;
+  const doneInAttempt=new Set(subs.filter(s=>
+    s.studentId===sub.studentId&&s.courseId===sub.courseId&&
+    s.startTime===sub.startTime&&s.status==="scenario_completed"
+  ).map(s=>s.scenarioId));
+  const remainingScenarios=(course?.scenarios||[]).filter(sc=>sc.id!==sub.scenarioId&&!doneInAttempt.has(sc.id));
+  const nextScenario=remainingScenarios[0]||null;
   const isLastScenario=!nextScenario;
 
   // ── Polling — تحقق من التمديد كل 60 ثانية ──────────────
@@ -1978,10 +1986,10 @@ function ExamView({sub,setSubs,subs,onSubmit,onNextScenario,courses,setActiveSub
         <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.6)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:100,padding:"1rem"}}>
           <div style={{background:"white",borderRadius:20,padding:"2.5rem",maxWidth:480,width:"100%",textAlign:"center",boxShadow:"0 20px 60px rgba(0,0,0,0.2)"}}>
             <div style={{fontSize:48,marginBottom:14}}>🎯</div>
-            <div style={{fontSize:20,fontWeight:700,marginBottom:8}}>أتممت السيناريو الأول!</div>
+            <div style={{fontSize:20,fontWeight:700,marginBottom:8}}>أتممت هذا السيناريو!</div>
             <div style={{fontSize:14,color:"#6b7280",lineHeight:1.9,marginBottom:"1.5rem"}}>
-              يوجد سيناريو إضافي في هذه الدورة.<br/>
-              هل تريد الانتقال إليه أم إنهاء الاختبار الآن؟
+              بقي <b className="num">{remainingScenarios.length}</b> {remainingScenarios.length===1?"سيناريو":"سيناريوهات"} في هذه الدورة.<br/>
+              <b style={{color:"#1B3059"}}>يجب إكمال جميع السيناريوهات</b> قبل الإرسال النهائي للتصحيح — وقت الاختبار مشترك بينها جميعاً.
             </div>
             <div style={{background:"#EEF2F8",border:"0.5px solid #C9D5EA",borderRadius:12,padding:"1rem",marginBottom:"1.5rem",textAlign:"right"}}>
               <div style={{fontSize:12,color:"#9ca3af",marginBottom:4}}>السيناريو التالي:</div>
@@ -1990,8 +1998,8 @@ function ExamView({sub,setSubs,subs,onSubmit,onNextScenario,courses,setActiveSub
               <div style={{fontSize:12,color:"#9ca3af",marginTop:4}}>{nextScenario.tasks.length} مهام — {nextScenario.tasks.reduce((a,t)=>a+t.marks,0)} درجة</div>
             </div>
             <div style={{display:"flex",gap:10}}>
-              <button onClick={()=>{if(window.confirm("⚠️ تأكيد الإرسال النهائي\n\nبعد الإرسال لا يمكن التعديل إلا بموافقة المدرب.\nهل أنت متأكد من إرسال الاختبار للتصحيح؟"))onSubmit({...sub,answers});}} style={{flex:1,padding:"12px",border:"0.5px solid #e5e7eb",borderRadius:10,background:"white",cursor:"pointer",fontSize:14,color:"#6b7280",fontWeight:500}}>
-                إنهاء الاختبار الآن
+              <button onClick={()=>setShowNextScenario(false)} style={{flex:1,padding:"12px",border:"0.5px solid #e5e7eb",borderRadius:10,background:"white",cursor:"pointer",fontSize:14,color:"#6b7280",fontWeight:500}}>
+                ← مراجعة إجاباتي
               </button>
               <button onClick={async()=>{
                 // احفظ السيناريو الحالي بحالة "مكتمل" — لا يظهر كاختبار منفصل
@@ -2656,9 +2664,29 @@ function App(){
             {selectedCourse.iconImg?<img src={selectedCourse.iconImg} alt="" style={{height:30,maxWidth:46,objectFit:"contain"}}/>:<span>{selectedCourse.icon}</span>}
             <span>{selectedCourse.title}</span>
           </div>
-          <div style={{fontSize:13,color:"#6b7280",marginTop:2}}>مرحباً {sName} — اختر السيناريو الذي تريد اختباره</div>
+          <div style={{fontSize:13,color:"#6b7280",marginTop:2}}>مرحباً {sName} — هذه خطة اختبارك</div>
         </div>
-        {selectedCourse.scenarios.map(sc=>(
+
+        {/* v34: الاختبار متسلسل إجباري — كل السيناريوهات مطلوبة، والبدء من الأول */}
+        <div style={{background:"#EEF2F8",border:"0.5px solid #C9D5EA",borderRadius:14,padding:"1.25rem",marginBottom:14}}>
+          <div style={{fontSize:15,fontWeight:700,color:"#1B3059",marginBottom:6}}>📋 اختبار هذه الدورة يشمل جميع السيناريوهات</div>
+          <div style={{fontSize:13,color:"#374151",lineHeight:1.9}}>
+            عدد السيناريوهات: <b className="num">{selectedCourse.scenarios.length}</b> ·
+            مجموع المهام: <b className="num">{selectedCourse.scenarios.reduce((a,s)=>a+s.tasks.length,0)}</b> ·
+            الدرجة الكلية: <b className="num">{selectedCourse.scenarios.reduce((a,s)=>a+s.tasks.reduce((x,t)=>x+t.marks,0),0)}</b><br/>
+            تبدأ بالسيناريو الأول، وعند إتمامه تنتقل تلقائياً للذي يليه حتى تكملها كلها، ثم يُتاح الإرسال النهائي.
+            الوقت (<b className="num">{EXAM_HOURS}</b> ساعة) مشترك بين جميع السيناريوهات — ويمكنك الرجوع لأي سيناريو سابق للتعديل قبل الإرسال.
+          </div>
+          {(()=>{
+            const active=subs.find(s=>s.studentId===sId&&s.courseId===selectedCourse.id&&s.status==="in_progress"&&!isExpired(s));
+            const expired=subs.find(s=>s.studentId===sId&&s.courseId===selectedCourse.id&&s.status==="in_progress"&&isExpired(s));
+            if(active)return <button onClick={()=>{setActiveSub(active);setScreen("exam");}} style={{width:"100%",marginTop:14,padding:"12px",border:"none",borderRadius:10,background:"#d97706",color:"white",cursor:"pointer",fontSize:15,fontWeight:700}}>← إكمال الاختبار من حيث توقفت</button>;
+            if(expired)return <button onClick={()=>{setActiveSub(expired);setScreen("expired-wait");}} style={{width:"100%",marginTop:14,padding:"12px",border:"none",borderRadius:10,background:"#dc2626",color:"white",cursor:"pointer",fontSize:15,fontWeight:700}}>⏰ انتهى الوقت — طلب تمديد</button>;
+            return <button onClick={()=>startExam(selectedCourse,selectedCourse.scenarios[0]?.id)} style={{width:"100%",marginTop:14,padding:"12px",border:"none",borderRadius:10,background:"#1B3059",color:"white",cursor:"pointer",fontSize:15,fontWeight:700}}>بدء الاختبار — السيناريو الأول ←</button>;
+          })()}
+        </div>
+
+        {selectedCourse.scenarios.map((sc,scIdx)=>(
           <div key={sc.id} style={{background:"white",border:"0.5px solid #e5e7eb",borderRadius:14,padding:"1.5rem",marginBottom:12,boxShadow:"0 2px 8px rgba(0,0,0,0.04)"}}>
             <div style={{fontSize:16,fontWeight:700,marginBottom:6,color:"#111827"}}>{sc.title}</div>
             <div style={{background:"#fffbeb",border:"0.5px solid #fde68a",borderRadius:8,padding:"8px 12px",marginBottom:10,fontSize:13,color:"#92400e"}}>
@@ -2672,13 +2700,13 @@ function App(){
                 <span style={{fontSize:12,color:"#9ca3af"}}>⏱ {EXAM_HOURS} ساعة</span>
               </div>
               {(()=>{
-                const active=subs.find(s=>s.studentId===sId&&s.scenarioId===sc.id&&s.status==="in_progress"&&!isExpired(s));
-                const expired=subs.find(s=>s.studentId===sId&&s.courseId===selectedCourse.id&&s.status==="in_progress"&&isExpired(s));
-                return active
-                  ?<button onClick={()=>{setActiveSub(active);setScreen("exam");}} style={{padding:"9px 22px",border:"none",borderRadius:8,background:"#d97706",color:"white",cursor:"pointer",fontSize:14,fontWeight:700}}>← إكمال الاختبار</button>
-                  :expired
-                  ?<button onClick={()=>{setActiveSub(expired);setScreen("expired-wait");}} style={{padding:"9px 22px",border:"none",borderRadius:8,background:"#dc2626",color:"white",cursor:"pointer",fontSize:14,fontWeight:700}}>⏰ انتهى الوقت — طلب تمديد</button>
-                  :<button onClick={()=>startExam(selectedCourse,sc.id)} style={{padding:"9px 22px",border:"none",borderRadius:8,background:"#1B3059",color:"white",cursor:"pointer",fontSize:14,fontWeight:700}}>بدء هذا السيناريو ←</button>;
+                // v34: لا بدء انتقائي — الحالة فقط
+                const cur=subs.find(s=>s.studentId===sId&&s.scenarioId===sc.id&&s.status==="in_progress");
+                const done=subs.some(s=>s.studentId===sId&&s.scenarioId===sc.id&&["scenario_completed","submitted","grading","pass","fail"].includes(s.status));
+                const pill=(bg,fg,txt)=><span style={{padding:"7px 16px",borderRadius:8,background:bg,color:fg,fontSize:13,fontWeight:700}}>{txt}</span>;
+                if(cur)return pill("#fef3c7","#92400e","▶ جارٍ الآن");
+                if(done)return pill("#d1fae5","#065f46","✓ مكتمل");
+                return pill("#f3f4f6","#6b7280",`السيناريو ${scIdx+1} — بالترتيب`);
               })()}
             </div>
           </div>
