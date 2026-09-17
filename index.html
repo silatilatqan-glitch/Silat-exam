@@ -31,6 +31,7 @@
 <!-- v47 — اسم المتدرب يُطبع بأحرف كبيرة (UPPERCASE) في الشهادة فقط؛ الاسم المخزَّن وبقية الشاشات بلا تغيير (2026-08-19) -->
 <!-- v48 — وقت اختبار خاص لكل دورة يُحدَّد من «إدارة الدورات» (اتركه فارغاً لاستخدام الوقت الافتراضي)، بدء الاختبار وكل شاشات المتدرب تعرض وقت الدورة نفسها، وحذف عبارة «⏱ ساعة لكل اختبار» من الصفحة الرئيسية (2026-08-28) -->
 <!-- v51 — حل جذري لتخطي السيناريو الثاني: التنقل بين السيناريوهات صار بالموضع (الترتيب) لا بمطابقة المعرفات، والسيناريو لا يُعدّ مكتملاً إلا إذا أُجيبت كل مهامه فعلاً (50+ حرف). الإرسال النهائي مستحيل قبل إكمال كل السيناريوهات بإجاباتها. يشمل أيضاً بديلاً لإيجاد السيناريو الحالي بالعنوان إذا تغيّر معرفه (2026-08-30) -->
+<!-- v52 — دورات «اختبار ملف PDF» من جهة خارجية: المدرب يحدد نوع الدورة ويرفع ملف الأسئلة من إدارة الدورات، والطالب يدخل بنفس البيانات والرمز والمؤقت فيحمّل ملف الأسئلة ويرفع ملف حله (PDF واحد حتى 15MB عبر روابط موقّتة من الخزنة إلى Supabase Storage) ثم يرسله؛ المنصة توثّق الاستلام ووقته فقط والمدرب يحمّل الحل من اللوحة — التصحيح والشهادة لدى الجهة التعليمية. يتطلب تحديث دالة exam-api بالإجراءات الأربعة الجديدة (2026-09-17) -->
 <link rel="icon" type="image/webp" href="data:image/webp;base64,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"/>
 <!-- preconnect لتسريع تحميل المكتبات -->
 <link rel="preconnect" href="https://cdnjs.cloudflare.com"/>
@@ -193,6 +194,17 @@ async function markNotifsRead(){
     const notifs=await getNotifications();
     await dbSetMeta("notifications",JSON.stringify(notifs.map(n=>({...n,read:true}))));
   }catch(e){}
+}
+
+/* 📎 v52 — ملفات اختبارات PDF: الرفع والتحميل عبر روابط موقّتة تصدرها الخزنة exam-api،
+   والملفات تُخزَّن في Supabase Storage (حاوية خاصة exam-files) — لا مفاتيح في المتصفح */
+const PDF_MAX_MB=15;
+function isPdfFile(f){return !!f&&(f.type==="application/pdf"||/\.pdf$/i.test(f.name||""));}
+function fmtBytes(n){if(!n&&n!==0)return "";return n>=1048576?(n/1048576).toFixed(1)+" MB":Math.max(1,Math.round(n/1024))+" KB";}
+async function uploadFileToSignedUrl(url,file){
+  const res=await fetch(url,{method:"PUT",headers:{"Content-Type":file.type||"application/pdf"},body:file});
+  if(!res.ok){let t="";try{t=await res.text();}catch(e){}throw new Error("upload_http_"+res.status+(t?" "+t.slice(0,120):""));}
+  return true;
 }
 
 /* وظائف إدارة الدورات — الحفظ والحذف للمدرب المصادَق فقط */
@@ -931,6 +943,28 @@ function CourseBuilder({courses,onSave,onBack}){
   const[view,setView]=useState("list"); // list | edit
   const[editing,setEditing]=useState(null);
   const[saving,setSaving]=useState(false);
+  // 📎 v52: رفع ملف أسئلة دورة PDF (يُرفع فوراً عبر رابط موقّت ثم يثبت بحفظ الدورة)
+  const[qBusy,setQBusy]=useState(false);
+  const[qMsg,setQMsg]=useState(null);
+  const qFileRef=useRef(null);
+  const onPickQuestionFile=async e=>{
+    const f=e.target.files&&e.target.files[0]; e.target.value="";
+    if(!f)return;
+    if(!isPdfFile(f)){setQMsg({ok:false,text:"يُقبل ملف PDF فقط"});return;}
+    if(f.size>PDF_MAX_MB*1024*1024){setQMsg({ok:false,text:`حجم الملف يتجاوز الحد الأقصى ${PDF_MAX_MB}MB`});return;}
+    setQBusy(true);setQMsg(null);
+    try{
+      const r=await api("trainer_exam_file_upload_url",{courseId:editing.id,fileName:f.name});
+      if(!r.url||!r.path)throw new Error(r.error||"no_url");
+      await uploadFileToSignedUrl(r.url,f);
+      updField("examFile",{path:r.path,name:f.name,size:f.size,uploadedAt:new Date().toISOString()});
+      setQMsg({ok:true,text:"✓ رُفع ملف الأسئلة — احفظ الدورة لتثبيته"});
+    }catch(e){
+      console.error("examFileUpload:",e);
+      setQMsg({ok:false,text:e&&e.status===401?"انتهت جلسة الدخول — سجّل دخول المدرب من جديد ثم أعد المحاولة":"فشل رفع الملف — تأكد من تحديث دالة exam-api ثم حاول مجدداً"});
+    }
+    setQBusy(false);
+  };
   const emptyTask=()=>({id:uid2(),num:1,text:"",marks:25,criteria:""});
   const emptyScenario=()=>({id:uid2(),title:"",role:"",roleDesc:"",context:"",tasks:[emptyTask()]});
   const emptyCourse=()=>({id:uid2(),title:"",icon:"📋",passMark:60,scenarios:[emptyScenario()]});
@@ -953,6 +987,7 @@ function CourseBuilder({courses,onSave,onBack}){
 
   const doSave=async()=>{
     if(!editing.title.trim()){alert("يرجى إدخال اسم الدورة");return;}
+    if(editing.examType==="pdf"&&!editing.examFile){alert("هذه دورة اختبار بملف PDF — يرجى رفع ملف أسئلة الاختبار أولاً");return;}
     const code=(editing.accessCode||"").trim().toUpperCase();
     // بدون رمز دخول لا يستطيع أي متدرب فتح الدورة — إلزامي
     if(!code&&!TRAINER_CODES[editing.id]){alert("يرجى تحديد رمز دخول للدورة — بدونه لا يستطيع المتدربون الدخول إليها");return;}
@@ -995,7 +1030,7 @@ function CourseBuilder({courses,onSave,onBack}){
             <div style={{fontSize:15,fontWeight:600}}>{c.title} {c.hidden&&<span style={{fontSize:11,fontWeight:700,color:"#991b1b",background:"#fef2f2",border:"0.5px solid #fecaca",borderRadius:6,padding:"2px 8px",marginRight:6}}>🙈 مخفية عن المتدربين</span>}</div>
             {c.titleEn&&<div style={{fontSize:11.5,color:"#6b7280",direction:"ltr",textAlign:"right"}}>{c.titleEn}</div>}
             <div style={{fontSize:12,color:"#9ca3af",marginTop:2}}>
-              {c.scenarios.length} سيناريو · {c.scenarios.reduce((a,s)=>a+s.tasks.length,0)} مهمة · نجاح {c.passMark}%
+              {c.examType==="pdf"?<span style={{color:"#C94E1D",fontWeight:700}}>📎 اختبار ملف PDF{c.examFile?` · ${c.examFile.name}`:" · ⚠️ بلا ملف أسئلة"}</span>:<>{c.scenarios.length} سيناريو · {c.scenarios.reduce((a,s)=>a+s.tasks.length,0)} مهمة · نجاح {c.passMark}%</>}
               {(c.signatures||[]).length>0&&<span style={{color:"#7c3aed",fontWeight:600}}> · 🖋️ {c.signatures.length===2?"توقيعان":"توقيع واحد"}</span>}
               {TRAINER_CODES[c.id]
                 ?<span style={{color:"#1B3059",fontWeight:600}}> · 🔑 {TRAINER_CODES[c.id]}</span>
@@ -1106,10 +1141,33 @@ function CourseBuilder({courses,onSave,onBack}){
             <div style={{fontSize:11.5,color:"#6b7280",marginTop:2}}>{editing.hidden?"لا تظهر في الصفحة الرئيسية ولا قائمة الدورات — ومن بدأ اختباره سابقاً يُكمله عادي":"اضغط للإخفاء إن أردت تجهيز الدورة أو اختبارها قبل إتاحتها"}</div>
           </div>
         </div>
+        {/* 📎 v52: نوع الاختبار — سيناريوهات تحليلية أو ملف PDF من جهة خارجية */}
+        <div style={{marginTop:12,background:"#F8FAFC",border:"0.5px solid #e5e7eb",borderRadius:10,padding:"12px 14px"}}>
+          <div style={{fontSize:13,fontWeight:700,color:"#1B3059",marginBottom:8}}>📋 نوع الاختبار</div>
+          <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+            <button onClick={()=>updField("examType","")} style={{flex:1,minWidth:170,padding:"9px 10px",borderRadius:8,cursor:"pointer",fontSize:13,fontWeight:600,border:(editing.examType||"")!=="pdf"?"2px solid #1B3059":"0.5px solid #e5e7eb",background:(editing.examType||"")!=="pdf"?"#EEF2F8":"white",color:"#1B3059"}}>🧩 سيناريوهات تحليلية (الوضع المعتاد)</button>
+            <button onClick={()=>updField("examType","pdf")} style={{flex:1,minWidth:170,padding:"9px 10px",borderRadius:8,cursor:"pointer",fontSize:13,fontWeight:600,border:editing.examType==="pdf"?"2px solid #E8622C":"0.5px solid #e5e7eb",background:editing.examType==="pdf"?"#FFF7ED":"white",color:"#C94E1D"}}>📎 اختبار ملف PDF (من جهة خارجية)</button>
+          </div>
+          {editing.examType==="pdf"&&(
+            <div style={{marginTop:10}}>
+              <div style={{fontSize:12,color:"#6b7280",lineHeight:1.8,marginBottom:8}}>الطالب يدخل بنفس البيانات ورمز الدورة والمؤقت، يحمّل ملف الأسئلة أدناه، ثم يرفع ملف حله (PDF واحد حتى {PDF_MAX_MB}MB) ويرسله — المنصة توثّق الاستلام ووقته فقط، والتصحيح والشهادة لدى الجهة التعليمية.</div>
+              {editing.examFile
+                ?<div style={{display:"flex",alignItems:"center",gap:10,background:"white",border:"0.5px solid #bbf7d0",borderRadius:8,padding:"8px 12px",flexWrap:"wrap"}}>
+                  <span style={{fontSize:13,fontWeight:600,color:"#065f46"}}>📄 {editing.examFile.name}</span>
+                  <span style={{fontSize:11,color:"#9ca3af"}}>{fmtBytes(editing.examFile.size)}</span>
+                  <button onClick={()=>qFileRef.current&&qFileRef.current.click()} disabled={qBusy} style={{padding:"5px 10px",border:"0.5px solid #d1d5db",borderRadius:6,background:"white",cursor:"pointer",fontSize:11.5,fontWeight:600}}>{qBusy?"⏳ جارٍ الرفع...":"↺ استبدال الملف"}</button>
+                  <button onClick={()=>updField("examFile",null)} style={{padding:"5px 10px",border:"none",borderRadius:6,background:"#fef2f2",color:"#dc2626",cursor:"pointer",fontSize:11.5}}>✕ إزالة</button>
+                </div>
+                :<button onClick={()=>qFileRef.current&&qFileRef.current.click()} disabled={qBusy} style={{width:"100%",padding:"12px",border:"1.5px dashed #E8622C",borderRadius:8,background:"white",color:"#C94E1D",cursor:"pointer",fontSize:13,fontWeight:700}}>{qBusy?"⏳ جارٍ رفع الملف...":"⬆️ رفع ملف أسئلة الاختبار (PDF)"}</button>}
+              {qMsg&&<div style={{marginTop:6,fontSize:12,fontWeight:600,color:qMsg.ok?"#065f46":"#b91c1c"}}>{qMsg.text}</div>}
+              <input ref={qFileRef} type="file" accept="application/pdf,.pdf" style={{display:"none"}} onChange={onPickQuestionFile}/>
+            </div>
+          )}
+        </div>
       </div>
 
-      {/* السيناريوهات */}
-      {editing.scenarios.map((sc,sIdx)=>(
+      {/* السيناريوهات — لا تظهر لدورات اختبار PDF */}
+      {editing.examType!=="pdf"&&editing.scenarios.map((sc,sIdx)=>(
         <div key={sc.id} style={{background:"white",border:"0.5px solid #e5e7eb",borderRadius:12,padding:"1.25rem",marginBottom:14}}>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
             <div style={{fontSize:14,fontWeight:700,color:"#1B3059"}}>السيناريو {sIdx+1}</div>
@@ -1168,7 +1226,7 @@ function CourseBuilder({courses,onSave,onBack}){
         </div>
       ))}
 
-      <button onClick={addScenario} style={{width:"100%",padding:"10px",border:"1.5px dashed #1B3059",borderRadius:10,background:"#EEF2F8",color:"#1B3059",cursor:"pointer",fontSize:14,fontWeight:600,marginBottom:14}}>+ إضافة سيناريو جديد</button>
+      {editing.examType!=="pdf"&&<button onClick={addScenario} style={{width:"100%",padding:"10px",border:"1.5px dashed #1B3059",borderRadius:10,background:"#EEF2F8",color:"#1B3059",cursor:"pointer",fontSize:14,fontWeight:600,marginBottom:14}}>+ إضافة سيناريو جديد</button>}
       <button onClick={doSave} disabled={saving} style={{width:"100%",padding:"12px",border:"none",borderRadius:10,background:"#1B3059",color:"white",cursor:"pointer",fontSize:15,fontWeight:700}}>{saving?"⏳ جارٍ الحفظ...":"✅ حفظ الدورة"}</button>
     </div>
   );
@@ -1476,11 +1534,11 @@ function Dashboard({subs,setSubs,courses,onGrade,onCert,onLogout,onRefresh,onMan
     if(!d.length){alert("لا توجد بيانات");return false;}
     const month=new Date().toLocaleDateString("ar-SA-u-ca-gregory-nu-latn",{year:"numeric",month:"long"});
     const rows=[[`أرشيف اختبارات ${month} — ${ORG}`],[],
-      ["الاسم","رقم الهوية","تاريخ الميلاد","رقم الجوال","رقم الطلب","الدورة","السيناريو","الدرجة","النسبة%","الحالة","تاريخ الدخول","تاريخ التقديم","تاريخ المراجعة"],
-      ...d.map(s=>[s.studentName,s.studentId,s.studentBirthdate||"",s.studentPhone||"",s.studentOrderNum||"",s.courseTitle,s.scenarioTitle||"",s.totalScore??"-",s.maxScore&&s.totalScore!==undefined?Math.round(((s.totalScore||0)/s.maxScore)*100)+"%":"-",s.status==="pass"?"ناجح":s.status==="fail"?"راسب":s.status==="grading"?"قيد التصحيح":s.status==="in_progress"?"جارٍ الاختبار":"انتظار",fmtFull(s.startTime),fmtFull(s.submittedAt),fmtFull(s.reviewedAt)])
+      ["الاسم","رقم الهوية","تاريخ الميلاد","رقم الجوال","رقم الطلب","الدورة","السيناريو","ملف الحل","الدرجة","النسبة%","الحالة","تاريخ الدخول","تاريخ التقديم","تاريخ المراجعة"],
+      ...d.map(s=>[s.studentName,s.studentId,s.studentBirthdate||"",s.studentPhone||"",s.studentOrderNum||"",s.courseTitle,s.scenarioTitle||"",s.answerFile?s.answerFile.name:"",s.totalScore??"-",s.maxScore&&s.totalScore!==undefined?Math.round(((s.totalScore||0)/s.maxScore)*100)+"%":"-",s.status==="pass"?"ناجح":s.status==="fail"?"راسب":s.status==="grading"?"قيد التصحيح":s.status==="in_progress"?"جارٍ الاختبار":"انتظار",fmtFull(s.startTime),fmtFull(s.submittedAt),fmtFull(s.reviewedAt)])
     ];
     const ws=XLSX.utils.aoa_to_sheet(rows);
-    ws["!cols"]=[{wch:22},{wch:14},{wch:14},{wch:14},{wch:14},{wch:24},{wch:30},{wch:10},{wch:10},{wch:14},{wch:22},{wch:22},{wch:22}];
+    ws["!cols"]=[{wch:22},{wch:14},{wch:14},{wch:14},{wch:14},{wch:24},{wch:30},{wch:26},{wch:10},{wch:10},{wch:14},{wch:22},{wch:22},{wch:22}];
     const wb=XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb,ws,"النتائج");
     const stats=[["إحصائيات"],[],["الإجمالي",d.length],["ناجح",d.filter(s=>s.status==="pass").length],["راسب",d.filter(s=>s.status==="fail").length],["لم يُصحَّح",d.filter(s=>["submitted","grading"].includes(s.status)).length],["نسبة النجاح",d.filter(s=>["pass","fail"].includes(s.status)).length?Math.round(d.filter(s=>s.status==="pass").length/d.filter(s=>["pass","fail"].includes(s.status)).length*100)+"%":"—"]];
@@ -1827,9 +1885,9 @@ function Dashboard({subs,setSubs,courses,onGrade,onCert,onLogout,onRefresh,onMan
                       {sub.studentBirthdate&&<div style={{fontSize:11,color:"#9ca3af"}}>م: {sub.studentBirthdate} {sub.studentPhone&&`| 📱 ${sub.studentPhone}`} {sub.studentOrderNum&&`| طلب: ${sub.studentOrderNum}`}</div>}
                     </div>
                     <div>
-                      <div style={{fontSize:12,color:"#6b7280",marginBottom:4}}>{sub.totalScore!==undefined&&sub.maxScore?`${sub.totalScore}/${sub.maxScore} (${Math.round((sub.totalScore/sub.maxScore)*100)}%)`:"لم يُصحَّح بعد"}</div>
+                      <div style={{fontSize:12,color:"#6b7280",marginBottom:4}}>{sub.examType==="pdf"?(sub.answerFile?<span style={{color:"#1B3059",fontWeight:600}}>📄 {sub.answerFile.name} <span style={{color:"#9ca3af",fontWeight:400}}>({fmtBytes(sub.answerFile.size)})</span></span>:"📎 لم يُرفع ملف الحل بعد"):(sub.totalScore!==undefined&&sub.maxScore?`${sub.totalScore}/${sub.maxScore} (${Math.round((sub.totalScore/sub.maxScore)*100)}%)`:"لم يُصحَّح بعد")}</div>
                       <div style={{display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>
-                        {badge(expired?"expired":sub.status)}
+                        {sub.examType==="pdf"&&sub.status==="submitted"?<span style={{background:"#d1fae5",color:"#065f46",borderRadius:6,padding:"3px 10px",fontSize:12,fontWeight:600}}>📎 ملف مستلم</span>:badge(expired?"expired":sub.status)}
                         {sub.status==="in_progress"&&<TimerBadge sub={sub}/>}
                       </div>
                       <div style={{fontSize:11,color:"#9ca3af",marginTop:3,lineHeight:1.6}}>
@@ -1852,7 +1910,8 @@ function Dashboard({subs,setSubs,courses,onGrade,onCert,onLogout,onRefresh,onMan
                       )}
                     </div>
                     <div style={{display:"flex",gap:6,justifyContent:"flex-end"}}>
-                      {(sub.status==="submitted"||sub.status==="grading")&&<button onClick={()=>onGrade(sub)} style={{padding:"6px 14px",borderRadius:8,border:"none",background:"#7c3aed",color:"white",cursor:"pointer",fontSize:12,fontWeight:600}}>تصحيح</button>}
+                      {sub.examType==="pdf"&&sub.answerFile&&<button onClick={async()=>{const w=window.open("","_blank");try{const r=await api("trainer_file_url",{path:sub.answerFile.path});if(r.url){if(w)w.location.href=r.url;else window.open(r.url,"_blank","noopener");}else{if(w)w.close();alert("تعذر إنشاء رابط التحميل");}}catch(e){if(w)try{w.close();}catch(x){}alert(e&&e.status===401?"⚠️ انتهت جلسة الدخول — سجّل دخول المدرب من جديد":"تعذر تحميل الملف — تأكد من تحديث دالة exam-api");}}} style={{padding:"6px 14px",borderRadius:8,border:"none",background:"#1B3059",color:"white",cursor:"pointer",fontSize:12,fontWeight:600}}>⬇️ تحميل الحل</button>}
+                      {sub.examType!=="pdf"&&(sub.status==="submitted"||sub.status==="grading")&&<button onClick={()=>onGrade(sub)} style={{padding:"6px 14px",borderRadius:8,border:"none",background:"#7c3aed",color:"white",cursor:"pointer",fontSize:12,fontWeight:600}}>تصحيح</button>}
                       {sub.status==="pass"&&<button onClick={()=>onCert(sub)} style={{padding:"6px 14px",borderRadius:8,border:"none",background:"#E8622C",color:"white",cursor:"pointer",fontSize:12,fontWeight:600}}>🏅 شهادة</button>}
                       {sub.status==="fail"&&<button onClick={()=>onGrade(sub)} style={{padding:"6px 10px",borderRadius:8,border:"0.5px solid #e5e7eb",background:"white",cursor:"pointer",fontSize:12,color:"#6b7280"}}>مراجعة</button>}
                       <button onClick={()=>{setEditSub(sub);setEditForm({studentName:sub.studentName,studentId:sub.studentId,studentBirthdate:sub.studentBirthdate||"",studentPhone:sub.studentPhone||"",studentOrderNum:sub.studentOrderNum||"",courseId:sub.courseId,courseTitle:sub.courseTitle,status:sub.status});}} style={{padding:"6px 10px",borderRadius:8,border:"0.5px solid #e5e7eb",background:"white",cursor:"pointer",fontSize:12,color:"#374151"}} title="تعديل البيانات">✏️</button>
@@ -2216,6 +2275,163 @@ function ExamView({sub,setSubs,subs,onSubmit,onNextScenario,courses,setActiveSub
 }
 
 /* ═══════════════════════════════════════════════
+   📎  v52 — واجهة اختبار ملف PDF
+═══════════════════════════════════════════════ */
+function PdfExamView({sub,setSubs,courses,setActiveSub,onSubmitted}){
+  const course=(courses||COURSES).find(c=>c.id===sub.courseId);
+  const[busyDl,setBusyDl]=useState(false);
+  const[busyUp,setBusyUp]=useState(false);
+  const[busySend,setBusySend]=useState(false);
+  const[msg,setMsg]=useState(null);
+  const fileRef=useRef(null);
+  const expired=isExpired(sub);
+
+  /* نفس نمط ExamView: تحقّق من التمديد كل 60 ثانية */
+  useEffect(()=>{
+    if(expired)return;
+    const poll=setInterval(async()=>{
+      try{
+        const r=await api("student_get_sub",{id:sub.id,studentId:sub.studentId});
+        if(r.sub&&(r.sub.extensionHours!==sub.extensionHours||r.sub.startTime!==sub.startTime)){
+          setSubs(prev=>prev.map(s=>s.id===r.sub.id?r.sub:s));
+          if(setActiveSub)setActiveSub(r.sub);
+        }
+      }catch(e){}
+    },60000);
+    return()=>clearInterval(poll);
+  },[sub.id,sub.extensionHours,sub.startTime,expired]);
+
+  if(expired)return(
+    <ExpiredWaitScreen sub={sub} onResume={(fresh)=>{setSubs(prev=>prev.map(s=>s.id===fresh.id?fresh:s));if(setActiveSub)setActiveSub(fresh);}} onHome={null}/>
+  );
+
+  const downloadExam=async()=>{
+    setBusyDl(true);setMsg(null);
+    const w=window.open("","_blank"); // تُفتح النافذة ضمن نقرة المستخدم نفسها فلا يحجبها المتصفح
+    try{
+      const r=await api("student_exam_file_url",{subId:sub.id,studentId:sub.studentId});
+      if(r.url){
+        if(w)w.location.href=r.url;
+        else{const a=document.createElement("a");a.href=r.url;a.target="_blank";a.rel="noopener";document.body.appendChild(a);a.click();a.remove();}
+      }else{if(w)w.close();setMsg({ok:false,text:"تعذر الحصول على رابط ملف الأسئلة — أبلغ المدرب"});}
+    }catch(e){
+      if(w)try{w.close();}catch(x){}
+      console.error("downloadExam:",e);
+      setMsg({ok:false,text:"تعذر تحميل ملف الأسئلة — تحقق من اتصالك وحاول مجدداً"});
+    }
+    setBusyDl(false);
+  };
+
+  const onPickAnswer=async e=>{
+    const f=e.target.files&&e.target.files[0]; e.target.value="";
+    if(!f)return;
+    if(!isPdfFile(f)){setMsg({ok:false,text:"يُقبل ملف PDF فقط — حوّل حلك إلى PDF ثم ارفعه"});return;}
+    if(f.size>PDF_MAX_MB*1024*1024){setMsg({ok:false,text:`حجم الملف ${fmtBytes(f.size)} يتجاوز الحد الأقصى ${PDF_MAX_MB}MB — صغّر الملف وحاول مجدداً`});return;}
+    setBusyUp(true);setMsg(null);
+    try{
+      const r=await api("student_answer_upload_url",{subId:sub.id,studentId:sub.studentId,fileName:f.name});
+      if(!r.url||!r.path)throw new Error(r.error||"no_url");
+      await uploadFileToSignedUrl(r.url,f);
+      const updated={...sub,answerFile:{path:r.path,name:f.name,size:f.size,uploadedAt:new Date().toISOString()}};
+      await dbUpsert(updated);
+      setSubs(prev=>prev.map(s=>s.id===updated.id?updated:s));
+      if(setActiveSub)setActiveSub(updated);
+      setMsg({ok:true,text:"✓ تم رفع ملف حلك بنجاح — لا تنسَ الضغط على «إرسال الحل نهائياً» بالأسفل"});
+    }catch(e){
+      console.error("uploadAnswer:",e);
+      setMsg({ok:false,text:e&&e.code==="expired"?"انتهى وقت الاختبار — اطلب تمديداً من المدرب":"فشل رفع الملف — تحقق من اتصالك وحاول مجدداً"});
+    }
+    setBusyUp(false);
+  };
+
+  const doSend=async()=>{
+    if(!sub.answerFile||busySend)return;
+    if(!window.confirm("⚠️ تأكيد الإرسال النهائي\n\nسيُرسل ملف حلك المرفوع ويُوثَّق وقت الإرسال، ولن تتمكن من تغييره إلا بموافقة المدرب.\nهل أنت متأكد؟"))return;
+    setBusySend(true);
+    const final={...sub,status:"submitted",submittedAt:new Date().toISOString()};
+    await dbUpsert(final);
+    setSubs(prev=>prev.map(s=>s.id===final.id?final:s));
+    try{await addNotification("pdf_submitted",{studentName:sub.studentName,studentId:sub.studentId,courseTitle:sub.courseTitle,time:new Date().toISOString()});}catch(e){}
+    setBusySend(false);
+    onSubmitted(final);
+  };
+
+  const stepCard={background:"white",border:"0.5px solid #e5e7eb",borderRadius:14,padding:"1.25rem",marginBottom:12,boxShadow:"0 2px 8px rgba(0,0,0,0.04)"};
+  const stepNo=(n,bg)=>(<span style={{width:26,height:26,borderRadius:"50%",background:bg,color:"white",fontSize:13,fontWeight:700,display:"inline-flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{n}</span>);
+  return(
+    <div dir="rtl" style={{fontFamily:"inherit",minHeight:"100vh",background:"#F7F4EC"}}>
+      {/* رأس الصفحة — كما في اختبار السيناريوهات */}
+      <div style={{background:"linear-gradient(135deg,#101F3C,#1B3059)",padding:".85rem 1.25rem",display:"flex",justifyContent:"space-between",alignItems:"center",position:"sticky",top:0,zIndex:10,gap:10}}>
+        <div style={{display:"flex",alignItems:"center",gap:12,minWidth:0}}>
+          <div className="hide-sm" style={{width:48,height:48,borderRadius:"50%",background:"white",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,border:"2px solid #E8622C"}}>
+            <img src={LOGO_MARK} alt="" style={{height:34}}/>
+          </div>
+          <div style={{minWidth:0}}>
+            <div style={{fontSize:11,color:"rgba(255,255,255,0.65)",whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{sub.courseTitle}</div>
+            <div style={{fontSize:14,fontWeight:700,color:"white"}}>{sub.studentName}</div>
+            <div style={{fontSize:11,color:"rgba(255,255,255,0.65)",marginTop:2}}>📎 اختبار بملف PDF</div>
+          </div>
+        </div>
+        <div style={{textAlign:"left",display:"flex",flexDirection:"column",alignItems:"flex-end",gap:6,flexShrink:0}}>
+          <TimerBadge sub={sub}/>
+          <div style={{fontSize:11,color:"rgba(255,255,255,0.65)"}}>الوقت مستمر حتى الإرسال</div>
+        </div>
+      </div>
+
+      <div style={{maxWidth:680,margin:"0 auto",padding:"1.25rem 1rem 3rem"}}>
+        <div style={{background:"#FFF7ED",border:"0.5px solid #FED7AA",borderRadius:12,padding:"10px 14px",marginBottom:14,fontSize:12.5,color:"#9A3412",lineHeight:1.9}}>
+          هذا الاختبار صادر من الجهة التعليمية بملف PDF: حمّل الملف، حِلّه، ثم ارفع حلك بملف PDF واحد وأرسله قبل انتهاء الوقت. المنصة توثّق استلام ملفك ووقته.
+        </div>
+
+        {/* الخطوة 1 — تحميل ملف الأسئلة */}
+        <div style={stepCard}>
+          <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:10}}>
+            {stepNo("١","#1B3059")}
+            <span style={{fontSize:14.5,fontWeight:700,color:"#1B3059"}}>حمّل ملف أسئلة الاختبار</span>
+          </div>
+          <button onClick={downloadExam} disabled={busyDl} className="btn-hover" style={{width:"100%",padding:"12px",border:"none",borderRadius:10,background:"#1B3059",color:"white",cursor:"pointer",fontSize:14.5,fontWeight:700,opacity:busyDl?0.7:1}}>
+            {busyDl?"⏳ جارٍ تجهيز الرابط...":"⬇️ تحميل ملف الأسئلة (PDF)"}
+          </button>
+          {course&&course.examFile&&<div style={{fontSize:11.5,color:"#9ca3af",marginTop:6,textAlign:"center"}}>📄 {course.examFile.name}{course.examFile.size?` · ${fmtBytes(course.examFile.size)}`:""}</div>}
+        </div>
+
+        {/* الخطوة 2 — رفع ملف الحل */}
+        <div style={stepCard}>
+          <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:10}}>
+            {stepNo("٢","#E8622C")}
+            <span style={{fontSize:14.5,fontWeight:700,color:"#C94E1D"}}>ارفع ملف حلك (PDF واحد حتى {PDF_MAX_MB}MB)</span>
+          </div>
+          {sub.answerFile
+            ?<div style={{background:"#f0fdf4",border:"0.5px solid #bbf7d0",borderRadius:10,padding:"10px 14px",marginBottom:8}}>
+              <div style={{fontSize:13.5,fontWeight:700,color:"#065f46"}}>📄 {sub.answerFile.name}</div>
+              <div style={{fontSize:11.5,color:"#6b7280",marginTop:3}}>{fmtBytes(sub.answerFile.size)} · رُفع: {fmtFull(sub.answerFile.uploadedAt)}</div>
+            </div>
+            :<div style={{fontSize:12.5,color:"#9ca3af",marginBottom:8,textAlign:"center",padding:"10px",background:"#F8FAFC",borderRadius:8,border:"1px dashed #e5e7eb"}}>لم يُرفع ملف الحل بعد</div>}
+          <button onClick={()=>fileRef.current&&fileRef.current.click()} disabled={busyUp} style={{width:"100%",padding:"12px",border:"1.5px dashed #E8622C",borderRadius:10,background:"white",color:"#C94E1D",cursor:"pointer",fontSize:14,fontWeight:700,opacity:busyUp?0.7:1}}>
+            {busyUp?"⏳ جارٍ رفع الملف...":sub.answerFile?"↺ استبدال ملف الحل":"📎 اختيار ملف الحل (PDF)"}
+          </button>
+          <input ref={fileRef} type="file" accept="application/pdf,.pdf" style={{display:"none"}} onChange={onPickAnswer}/>
+        </div>
+
+        {msg&&<div style={{marginBottom:12,fontSize:13,fontWeight:600,lineHeight:1.8,color:msg.ok?"#065f46":"#b91c1c",background:msg.ok?"#d1fae5":"#fee2e2",borderRadius:10,padding:"10px 14px"}}>{msg.text}</div>}
+
+        {/* الخطوة 3 — الإرسال النهائي */}
+        <div style={stepCard}>
+          <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:10}}>
+            {stepNo("٣","#059669")}
+            <span style={{fontSize:14.5,fontWeight:700,color:"#065f46"}}>أرسل حلك للتوثيق</span>
+          </div>
+          <button onClick={doSend} disabled={!sub.answerFile||busyUp||busySend} style={{width:"100%",padding:"13px",border:"none",borderRadius:10,background:sub.answerFile&&!busyUp?"#d97706":"#d1d5db",color:"white",cursor:sub.answerFile&&!busyUp?"pointer":"not-allowed",fontSize:15,fontWeight:700}}>
+            {busySend?"⏳ جارٍ الإرسال...":"إرسال الحل نهائياً ✓"}
+          </button>
+          {!sub.answerFile&&<div style={{fontSize:12,color:"#9ca3af",textAlign:"center",marginTop:6}}>يجب رفع ملف حلك أولاً قبل الإرسال</div>}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════
    🚀  التطبيق الرئيسي
 ═══════════════════════════════════════════════ */
 /* شاشة انتهاء الوقت مع polling تلقائي للتمديد */
@@ -2497,6 +2713,15 @@ function App(){
       await dbUpsert(consumed);
       setSubs(prev=>prev.map(s=>s.id===consumed.id?consumed:s));
     }
+    // 📎 v52: دورة اختبار PDF — سجل واحد بلا سيناريوهات، بنفس المؤقت والتمديد وطلبات إعادة الدخول
+    if(course.examType==="pdf"){
+      const sub={id:uid(),studentId:sid,studentName:sName.trim(),studentBirthdate:sBirthdate,studentOrderNum:sOrderNum.trim(),studentPhone:sPhone.trim(),courseId:course.id,courseTitle:course.title,examType:"pdf",scenarioId:null,scenarioTitle:"📎 اختبار ملف PDF",answers:{},scores:{},totalScore:undefined,status:"in_progress",extensionHours:0,examHours:courseHours(course),startTime:new Date().toISOString(),answerFile:null,submittedAt:null,reviewedAt:null};
+      await dbUpsert(sub);
+      sessionStorage.setItem("itqan_session",JSON.stringify({subId:sub.id,studentId:sid,studentName:sName.trim()}));
+      setSubs(prev=>[...prev,sub]);setActiveSub(sub);
+      setScreen("exam");
+      return;
+    }
     // 🛟 محاولة جارية فقدت سجلها النشط (انقطاع أثناء التنقل بين السيناريوهات): أكملها بنفس نافذة الوقت بدل فتح نافذة جديدة
     const completedInCourse=prevInCourse?[]:subs.filter(s=>s.studentId===sid&&s.courseId===course.id&&s.status==="scenario_completed");
     const sameScenarioSaved=completedInCourse.find(s=>s.scenarioId===scenarioId);
@@ -2609,6 +2834,7 @@ function App(){
   if(screen==="grading"&&gradingSub) return <GradingView sub={gradingSub} courses={courses} onSave={onSaveGrade} onBack={()=>{setGradingSub(null);setScreen("dashboard");}}/>;
   if(screen==="manage-courses"&&trainerAuth) return <CourseBuilder courses={courses} onSave={updated=>{setCourses(updated);}} onBack={()=>setScreen("dashboard")}/>;
   if(screen==="dashboard"&&trainerAuth) return <Dashboard subs={subs} setSubs={setSubs} courses={courses} onGrade={s=>{setGradingSub(s);setScreen("grading");}} onCert={s=>{setCertSub(s);setScreen("certificate");}} onLogout={()=>{TRAINER_TOKEN=null;TRAINER_CODES={};DEFAULT_CRITERIA_SRV={};setTrainerAuth(false);setScreen("home");setSubs([]);}} onRefresh={refreshSubs} onManageCourses={()=>setScreen("manage-courses")} onLoad={loadAllSubs}/>;
+  if(screen==="exam"&&activeSub&&activeSub.examType==="pdf") return <PdfExamView key={activeSub.id} sub={activeSub} setSubs={setSubs} courses={courses} setActiveSub={setActiveSub} onSubmitted={final=>{setActiveSub(final);setScreen("pending");}}/>;
   if(screen==="exam"&&activeSub) return <ExamView key={activeSub.id} sub={activeSub} setSubs={setSubs} subs={subs} courses={courses} onSubmit={onSubmit} onNextScenario={onNextScenario} setActiveSub={setActiveSub}/>;
 
   /* شاشة انتهاء الوقت — الإجابات محفوظة */
@@ -2681,7 +2907,7 @@ function App(){
       <div style={{background:"white",border:"0.5px solid #e5e7eb",borderRadius:16,padding:"2.5rem",maxWidth:480,width:"100%",textAlign:"center",boxShadow:"0 4px 20px rgba(0,0,0,0.06)"}}>
         <div style={{fontSize:56,marginBottom:16}}>✅</div>
         <div style={{fontSize:22,fontWeight:700,marginBottom:8}}>تم إرسال الاختبار بنجاح</div>
-        <div style={{fontSize:14,color:"#6b7280",lineHeight:1.9,marginBottom:"1.5rem"}}>سيراجع المدرب إجاباتك التحليلية ويُعلن النتيجة قريباً.<br/>لن تظهر لك الدرجة مباشرةً — يُرجى انتظار إشعار المدرب.</div>
+        <div style={{fontSize:14,color:"#6b7280",lineHeight:1.9,marginBottom:"1.5rem"}}>{activeSub?.examType==="pdf"?<>تم استلام ملف حلك وتوثيق وقت الإرسال.<br/>يتولى المركز تسليمه للجهة التعليمية المختصة — والنتيجة والشهادة تصدران من الجهة نفسها.</>:<>سيراجع المدرب إجاباتك التحليلية ويُعلن النتيجة قريباً.<br/>لن تظهر لك الدرجة مباشرةً — يُرجى انتظار إشعار المدرب.</>}</div>
         <div style={{background:"#EEF2F8",border:"0.5px solid #C9D5EA",borderRadius:10,padding:"1rem",marginBottom:"1.5rem",textAlign:"right"}}>
           <div style={{fontSize:14,marginBottom:4}}><b>الاسم:</b> {activeSub?.studentName}</div>
           <div style={{fontSize:14,marginBottom:4}}><b>رقم الهوية:</b> {activeSub?.studentId}</div>
@@ -2689,7 +2915,7 @@ function App(){
           <div style={{fontSize:14,marginBottom:4}}><b>رقم الجوال:</b> {activeSub?.studentPhone}</div>
           <div style={{fontSize:14,marginBottom:4}}><b>رقم الطلب:</b> {activeSub?.studentOrderNum}</div>
           <div style={{fontSize:14,marginBottom:4}}><b>الدورة:</b> {activeSub?.courseTitle}</div>
-          <div style={{fontSize:14,marginBottom:4}}><b>السيناريو:</b> {activeSub?.scenarioTitle}</div>
+          <div style={{fontSize:14,marginBottom:4}}>{activeSub?.examType==="pdf"?<><b>ملف الحل:</b> {activeSub?.answerFile?.name||"—"}</>:<><b>السيناريو:</b> {activeSub?.scenarioTitle}</>}</div>
           <div style={{fontSize:12,color:"#9ca3af",marginTop:6}}>رقم الاختبار: {activeSub&&serial(activeSub.id)}</div>
         </div>
         {activeSub?.status==="submitted"&&!activeSub?.editRequest&&(
@@ -2735,6 +2961,41 @@ function App(){
       </div>
     </div>
   );
+
+  /* 📎 v52: خطة دورة اختبار PDF */
+  if(screen==="scenario-select"&&selectedCourse&&selectedCourse.examType==="pdf"){
+    const activePdf=subs.find(s=>s.studentId===sId&&s.courseId===selectedCourse.id&&s.status==="in_progress"&&!isExpired(s));
+    const expiredPdf=subs.find(s=>s.studentId===sId&&s.courseId===selectedCourse.id&&s.status==="in_progress"&&isExpired(s));
+    return(
+      <div style={{...base,padding:"1rem"}}>
+        <div style={{maxWidth:640,margin:"0 auto"}}>
+          <button onClick={()=>{setScreen("courses");setCourseCode("");}} style={{padding:"7px 14px",border:"0.5px solid #e5e7eb",borderRadius:8,background:"white",cursor:"pointer",fontSize:13,marginBottom:12}}>← تغيير الدورة</button>
+          <div style={{background:"white",border:"0.5px solid #e5e7eb",borderRadius:16,padding:"1.75rem",boxShadow:"0 4px 20px rgba(0,0,0,0.05)"}}>
+            <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:6}}>
+              {selectedCourse.iconImg?<img src={selectedCourse.iconImg} alt="" style={{height:40,maxWidth:60,objectFit:"contain"}}/>:<span style={{fontSize:32}}>{selectedCourse.icon}</span>}
+              <div>
+                <div style={{fontSize:17,fontWeight:700}}>{selectedCourse.title}</div>
+                <div style={{fontSize:12,color:"#C94E1D",fontWeight:700}}>📎 اختبار بملف PDF من الجهة التعليمية</div>
+              </div>
+            </div>
+            <div style={{background:"#EEF2F8",border:"0.5px solid #C9D5EA",borderRadius:12,padding:"1rem",margin:"12px 0",fontSize:13,color:"#374151",lineHeight:2.1}}>
+              <b style={{color:"#1B3059"}}>خطوات الاختبار:</b><br/>
+              ١. عند الضغط على «بدء الاختبار» يبدأ عدّ الوقت (<b className="num">{courseHours(selectedCourse)}</b> ساعة).<br/>
+              ٢. حمّل ملف الأسئلة (PDF) من داخل صفحة الاختبار.<br/>
+              ٣. حِلّ الاختبار واحفظ حلك في ملف PDF واحد (حتى {PDF_MAX_MB}MB).<br/>
+              ٤. ارفع ملف حلك في الصفحة نفسها ثم اضغط «إرسال الحل نهائياً».<br/>
+              <span style={{color:"#9ca3af",fontSize:12}}>تُوثّق المنصة استلام ملفك ووقت إرساله، ويتولى المركز تسليمه للجهة التعليمية المختصة.</span>
+            </div>
+            {activePdf
+              ?<button onClick={()=>{setActiveSub(activePdf);setScreen("exam");}} style={{width:"100%",padding:"12px",border:"none",borderRadius:10,background:"#d97706",color:"white",cursor:"pointer",fontSize:15,fontWeight:700}}>▶ استئناف اختبارك الجاري</button>
+              :expiredPdf
+                ?<button onClick={()=>{setActiveSub(expiredPdf);setScreen("expired-wait");}} style={{width:"100%",padding:"12px",border:"none",borderRadius:10,background:"#dc2626",color:"white",cursor:"pointer",fontSize:15,fontWeight:700}}>⏰ انتهى وقت اختبارك — شاشة طلب التمديد</button>
+                :<button onClick={()=>startExam(selectedCourse,null)} style={{width:"100%",padding:"12px",border:"none",borderRadius:10,background:"#1B3059",color:"white",cursor:"pointer",fontSize:15,fontWeight:700}}>بدء الاختبار وتشغيل المؤقت ←</button>}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   /* Scenario select */
   if(screen==="scenario-select"&&selectedCourse) return(
@@ -2818,11 +3079,12 @@ function App(){
                   <div style={{fontWeight:600,fontSize:15}}>{s.courseTitle}</div>
                   <div style={{fontSize:12,color:"#6b7280",marginTop:2}}>{s.scenarioTitle}</div>
                   <div style={{fontSize:11,color:"#9ca3af",marginTop:2}}>{fmtFull(s.submittedAt)}</div>
+                  {s.examType==="pdf"&&s.answerFile&&<div style={{fontSize:11.5,color:"#1B3059",marginTop:3,fontWeight:600}}>📄 {s.answerFile.name}</div>}
                 </div>
                 <div style={{textAlign:"center"}}>
                   {s.status==="pass"&&<div style={{background:"#d1fae5",color:"#065f46",borderRadius:10,padding:"6px 14px",fontWeight:700,fontSize:14}}>ناجح ✓</div>}{/* v40 — الدرجة لا تظهر للمتدرب */}
                   {s.status==="fail"&&<div style={{background:"#fee2e2",color:"#991b1b",borderRadius:10,padding:"6px 14px",fontWeight:700,fontSize:14}}>راسب ✗</div>}
-                  {["submitted","grading"].includes(s.status)&&<div style={{background:"#fef3c7",color:"#92400e",borderRadius:10,padding:"6px 14px",fontWeight:600,fontSize:13}}>⏳ انتظار النتيجة</div>}
+                  {["submitted","grading"].includes(s.status)&&(s.examType==="pdf"?<div style={{background:"#d1fae5",color:"#065f46",borderRadius:10,padding:"6px 14px",fontWeight:600,fontSize:13}}>📎 تم استلام حلك</div>:<div style={{background:"#fef3c7",color:"#92400e",borderRadius:10,padding:"6px 14px",fontWeight:600,fontSize:13}}>⏳ انتظار النتيجة</div>)}
                 </div>
               </div>
               {s.status==="pass"&&s.certId&&<div style={{marginTop:8,fontSize:12,color:"#1B3059",background:"#EEF2F8",borderRadius:6,padding:"6px 10px"}}>🏅 رقم الشهادة: <strong>{s.certId}</strong></div>}
@@ -2862,8 +3124,10 @@ function App(){
               <div style={{fontSize:15,fontWeight:700,marginBottom:8,color:"#111827"}}>{c.title}</div>
               <div style={{display:"flex",flexDirection:"column",gap:4}}>
                 <span style={{fontSize:12,color:"#9ca3af"}}>⏱ {courseHours(c)} ساعة للإنجاز</span>
-                <span style={{fontSize:12,color:"#9ca3af"}}>📝 {c.scenarios.length} سيناريو تحليلي</span>
-                <span style={{fontSize:12,color:"#059669",fontWeight:600}}>🎯 {c.passMark}% للنجاح</span>
+                {c.examType==="pdf"
+                  ?<span style={{fontSize:12,color:"#C94E1D",fontWeight:700}}>📎 اختبار بملف PDF — يُرفع الحل في المنصة</span>
+                  :<><span style={{fontSize:12,color:"#9ca3af"}}>📝 {c.scenarios.length} سيناريو تحليلي</span>
+                <span style={{fontSize:12,color:"#059669",fontWeight:600}}>🎯 {c.passMark}% للنجاح</span></>}
               </div>
               {/* مؤشر السيناريوهات */}
               {(()=>{
