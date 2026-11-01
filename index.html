@@ -31,6 +31,8 @@
 <!-- v47 — اسم المتدرب يُطبع بأحرف كبيرة (UPPERCASE) في الشهادة فقط؛ الاسم المخزَّن وبقية الشاشات بلا تغيير (2026-08-19) -->
 <!-- v48 — وقت اختبار خاص لكل دورة يُحدَّد من «إدارة الدورات» (اتركه فارغاً لاستخدام الوقت الافتراضي)، بدء الاختبار وكل شاشات المتدرب تعرض وقت الدورة نفسها، وحذف عبارة «⏱ ساعة لكل اختبار» من الصفحة الرئيسية (2026-08-28) -->
 <!-- v51 — حل جذري لتخطي السيناريو الثاني: التنقل بين السيناريوهات صار بالموضع (الترتيب) لا بمطابقة المعرفات، والسيناريو لا يُعدّ مكتملاً إلا إذا أُجيبت كل مهامه فعلاً (50+ حرف). الإرسال النهائي مستحيل قبل إكمال كل السيناريوهات بإجاباتها. يشمل أيضاً بديلاً لإيجاد السيناريو الحالي بالعنوان إذا تغيّر معرفه (2026-08-30) -->
+<!-- v54 — (أ) لوحة المدرب تتذكّر الدورة والحالة والبحث والفرز المختارة طوال الجلسة، فالعودة من تصحيح متدرب ترجع إلى نفس العرض (مثلاً دورات أوشا) لا إلى «جميع الدورات». (ب) زر «🗂 تحميل دفعة كمجلد» في لوحة المدرب: اختيار نطاق تاريخ الإرسال (مع اختصارات هذا الشهر/الماضي) والدورة والحالة، فيُنزَّل ZIP يضم ملفاً نصياً لكل متدرب (بياناته، السيناريو، نص كل مهمة، إجابته، درجة المدرب إن وُجدت) في مجلد لكل دورة، مع فهرس CSV وملف اقرأني. قراءة فقط — لا حذف (2026-11-01) -->
+<!-- v53 — إلغاء الحذف نهائياً: زر «أرشفة الشهر» صار «تصدير نسخة Excel كاملة» يصدّر فقط ولا يمسح أي بيانات؛ أُزيلت دالة المسح الشامل ولم يعد في الواجهة أي مسار لمسح الاختبارات دفعةً واحدة (2026-11-01) -->
 <!-- v52 — دورات «اختبار ملف PDF» من جهة خارجية: المدرب يحدد نوع الدورة ويرفع ملف الأسئلة من إدارة الدورات، والطالب يدخل بنفس البيانات والرمز والمؤقت فيحمّل ملف الأسئلة ويرفع ملف حله (PDF واحد حتى 15MB عبر روابط موقّتة من الخزنة إلى Supabase Storage) ثم يرسله؛ المنصة توثّق الاستلام ووقته فقط والمدرب يحمّل الحل من اللوحة — التصحيح والشهادة لدى الجهة التعليمية. يتطلب تحديث دالة exam-api بالإجراءات الأربعة الجديدة (2026-09-17) -->
 <link rel="icon" type="image/webp" href="data:image/webp;base64,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"/>
 <!-- preconnect لتسريع تحميل المكتبات -->
@@ -51,6 +53,12 @@ window.loadXLSX=()=>new Promise(resolve=>{
   if(window.XLSX){resolve();return;}
   const s=document.createElement('script');
   s.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+  s.onload=resolve;document.head.appendChild(s);
+});
+window.loadJSZip=()=>new Promise(resolve=>{
+  if(window.JSZip){resolve();return;}
+  const s=document.createElement('script');
+  s.src='https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
   s.onload=resolve;document.head.appendChild(s);
 });
 window.loadQR=()=>new Promise(resolve=>{
@@ -165,11 +173,6 @@ async function dbUpsert(sub){
 async function dbDelete(ids){
   try{await api("trainer_delete",{ids});}
   catch(e){console.error("dbDelete:",e);}
-}
-
-async function dbClearAll(){
-  try{await api("trainer_clear_all");}
-  catch(e){console.error("dbClearAll:",e);}
 }
 
 /* بيانات الإعدادات — للمدرب المصادَق فقط */
@@ -1452,15 +1455,27 @@ function SecuritySettings(){
 }
 
 function Dashboard({subs,setSubs,courses,onGrade,onCert,onLogout,onRefresh,onManageCourses,onLoad}){
-  const[filter,setFilter]=useState("all");
-  const[selCourse,setSelCourse]=useState("all");
-  const[searchQ,setSearchQ]=useState("");
-  const[sortBy,setSortBy]=useState("startTime"); // startTime = تاريخ الدخول · submittedAt = تاريخ الإرسال
-  const[sortDesc,setSortDesc]=useState(true);     // الأحدث أولاً افتراضياً
+  /* v54 — تذكّر فلاتر اللوحة (الدورة/الحالة/البحث/الفرز) أثناء الجلسة حتى يعود المدرب من التصحيح إلى نفس العرض */
+  const DF_KEY="itqan_dash_filters";
+  const dfLoad=()=>{try{return JSON.parse(sessionStorage.getItem(DF_KEY)||"{}")||{};}catch{return{};}};
+  const df0=dfLoad();
+  const[filter,setFilter]=useState(df0.filter||"all");
+  const[selCourse,setSelCourse]=useState(df0.selCourse||"all");
+  const[searchQ,setSearchQ]=useState(df0.searchQ||"");
+  const[sortBy,setSortBy]=useState(df0.sortBy||"startTime"); // startTime = تاريخ الدخول · submittedAt = تاريخ الإرسال
+  const[sortDesc,setSortDesc]=useState(df0.sortDesc===undefined?true:!!df0.sortDesc);     // الأحدث أولاً افتراضياً
+  useEffect(()=>{try{sessionStorage.setItem(DF_KEY,JSON.stringify({filter,selCourse,searchQ,sortBy,sortDesc}));}catch{}},[filter,selCourse,searchQ,sortBy,sortDesc]);
   const[ext,setExt]=useState({});
   const[extMsg,setExtMsg]=useState({}); // v29: رسالة نجاح/فشل التمديد لكل سجل
   const[expandedGroups,setExpandedGroups]=useState({}); // v33: فتح/طي السجلات الإضافية لكل متدرب/دورة
   const[showConfirm,setShowConfirm]=useState(false);
+  /* v54 — تحميل دفعة اختبارات كمجلد */
+  const[showBatch,setShowBatch]=useState(false);
+  const[batchFrom,setBatchFrom]=useState("");
+  const[batchTo,setBatchTo]=useState("");
+  const[batchCourse,setBatchCourse]=useState("all");
+  const[batchStatus,setBatchStatus]=useState("all");
+  const[batchBusy,setBatchBusy]=useState(false);
   const[archiving,setArchiving]=useState(false);
   const[lastArchive,setLastArchive]=useState(null);
   const[refreshing,setRefreshing]=useState(false);
@@ -1545,16 +1560,119 @@ function Dashboard({subs,setSubs,courses,onGrade,onCert,onLogout,onRefresh,onMan
     XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(stats),"إحصائيات");
     try{
       XLSX.writeFile(wb,`أرشيف_${new Date().getFullYear()}_${String(new Date().getMonth()+1).padStart(2,"0")}_صلة_الإتقان.xlsx`);
-    }catch(e){console.error("exportExcel:",e);alert("⚠️ تعذّر إنشاء ملف Excel — لم يتم مسح أي بيانات");return false;}
+    }catch(e){console.error("exportExcel:",e);alert("⚠️ تعذّر إنشاء ملف Excel — لم يُحذف أي شيء");return false;}
     return true;
+  };
+
+  /* v54 — بناء ملف نصي لكل متدرب وتجميع الدفعة في ZIP */
+  const batchDateOf=s=>s.submittedAt||s.startTime||"";
+  const batchFiltered=subs.filter(s=>{
+    if(HIDDEN_STATUSES.includes(s.status))return false;
+    if(batchCourse!=="all"&&s.courseId!==batchCourse)return false;
+    if(batchStatus==="graded"&&!["pass","fail"].includes(s.status))return false;
+    if(batchStatus==="ungraded"&&!["submitted","grading"].includes(s.status))return false;
+    if(batchStatus==="submitted_any"&&!["submitted","grading","pass","fail"].includes(s.status))return false;
+    const d=batchDateOf(s);
+    if(batchFrom&&(!d||d.slice(0,10)<batchFrom))return false;
+    if(batchTo&&(!d||d.slice(0,10)>batchTo))return false;
+    return true;
+  });
+  const safeName=t=>String(t||"").replace(/[\\/:*?"<>|\n\r]+/g," ").replace(/\s+/g," ").trim().slice(0,60)||"بدون_اسم";
+  const statusAr=st=>st==="pass"?"ناجح":st==="fail"?"راسب":st==="grading"?"قيد التصحيح":st==="submitted"?"بانتظار التصحيح":st==="in_progress"?"لم يُكمل (جارٍ)":st||"—";
+  const buildTraineeTxt=sub=>{
+    const course=courses.find(c=>c.id===sub.courseId);
+    const scs=sub.isMultiScenario&&sub.completedScenarioIds
+      ?sub.completedScenarioIds.map(id=>course?.scenarios.find(x=>x.id===id)).filter(Boolean)
+      :[course?.scenarios.find(x=>x.id===sub.scenarioId)||course?.scenarios.find(x=>x.title&&x.title===sub.scenarioTitle)].filter(Boolean);
+    const L=[];
+    L.push("═".repeat(60));
+    L.push(`${ORG} — ملف إجابات متدرب`);
+    L.push("═".repeat(60));
+    L.push(`الاسم: ${sub.studentName||"—"}`);
+    L.push(`رقم الهوية: ${sub.studentId||"—"}`);
+    if(sub.studentPhone)L.push(`الجوال: ${sub.studentPhone}`);
+    if(sub.studentOrderNum)L.push(`رقم الطلب: ${sub.studentOrderNum}`);
+    L.push(`الدورة: ${sub.courseTitle||course?.title||"—"}`);
+    L.push(`السيناريو: ${sub.scenarioTitle||"—"}`);
+    L.push(`الحالة في النظام: ${statusAr(sub.status)}`);
+    if(sub.totalScore!==undefined&&sub.maxScore)L.push(`الدرجة في النظام: ${sub.totalScore} / ${sub.maxScore}`);
+    L.push(`تاريخ الدخول: ${fmtFull(sub.startTime)}`);
+    L.push(`تاريخ الإرسال: ${fmtFull(sub.submittedAt)}`);
+    if(sub.answerFile)L.push(`ملف حل مرفوع: ${sub.answerFile.name} (غير مضمَّن في هذا المجلد)`);
+    L.push("");
+    const ans=sub.answers||{};
+    if(!scs.length){
+      L.push("⚠️ تعذّر العثور على بنية السيناريو في الدورة الحالية — تُعرض الإجابات الخام:");
+      Object.entries(ans).forEach(([k,v])=>{L.push(`\n[مهمة ${k}]`);L.push(String(v||"(لم يُجب)"));});
+    }
+    scs.forEach((sc,i)=>{
+      L.push("─".repeat(60));
+      L.push(`السيناريو ${i+1}: ${sc.title||""}`);
+      if(sc.role)L.push(`الدور: ${sc.role}`);
+      if(sc.roleDesc)L.push(`${sc.roleDesc}`);
+      if(sc.context){L.push("");L.push("الحالة:");L.push(String(sc.context));}
+      L.push("─".repeat(60));
+      (sc.tasks||[]).forEach(t=>{
+        const a=(ans[t.id]||"").trim();
+        L.push("");
+        L.push(`▶ المهمة ${t.num||""} (${t.marks||0} درجة)`);
+        L.push(`السؤال: ${t.text||""}`);
+        if(sub.scores&&sub.scores[t.id]!==undefined)L.push(`درجة المدرب: ${sub.scores[t.id]} / ${t.marks||0}`);
+        L.push(`عدد الكلمات: ${a?a.split(/\s+/).filter(Boolean).length:0}`);
+        L.push("الإجابة:");
+        L.push(a||"(لم يُجب)");
+      });
+      L.push("");
+    });
+    return L.join("\n");
+  };
+  const doBatchDownload=async()=>{
+    const d=batchFiltered;
+    if(!d.length){alert("لا توجد اختبارات تطابق هذا الاختيار");return;}
+    setBatchBusy(true);
+    try{
+      await window.loadJSZip();
+      const zip=new JSZip();
+      const label=`${batchFrom||"البداية"}_إلى_${batchTo||"اليوم"}`.replace(/-/g,"");
+      const rootName=`اختبارات_${safeName(label)}`;
+      const root=zip.folder(rootName);
+      const index=[["#","الاسم","رقم الهوية","الدورة","السيناريو","الحالة","الدرجة","تاريخ الإرسال","اسم الملف"]];
+      const used=new Set();
+      d.forEach((sub,i)=>{
+        const course=courses.find(c=>c.id===sub.courseId);
+        const folder=root.folder(safeName(sub.courseTitle||course?.title||"دورة"));
+        let fname=`${safeName(sub.studentName)}_${safeName(sub.studentId)}`;
+        let k=fname,n=2;while(used.has(`${sub.courseId}|${k}`)){k=`${fname}_${n++}`;}used.add(`${sub.courseId}|${k}`);
+        folder.file(`${k}.txt`,"\uFEFF"+buildTraineeTxt(sub));
+        index.push([i+1,sub.studentName||"",sub.studentId||"",sub.courseTitle||"",sub.scenarioTitle||"",statusAr(sub.status),sub.maxScore&&sub.totalScore!==undefined?`${sub.totalScore}/${sub.maxScore}`:"—",fmtFull(sub.submittedAt),`${k}.txt`]);
+      });
+      const csv="\uFEFF"+index.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(",")).join("\r\n");
+      root.file("_الفهرس.csv",csv);
+      root.file("_اقرأني.txt","\uFEFF"+[
+        `${ORG} — دفعة اختبارات`,
+        `النطاق: من ${batchFrom||"البداية"} إلى ${batchTo||"اليوم"}`,
+        `الدورة: ${batchCourse==="all"?"جميع الدورات":(courses.find(c=>c.id===batchCourse)?.title||batchCourse)}`,
+        `عدد الملفات: ${d.length}`,
+        `تاريخ التصدير: ${fmtFull(new Date().toISOString())}`,
+        "",
+        "كل ملف .txt = متدرب واحد: بياناته، السيناريو، نص كل مهمة، إجابته، ودرجة المدرب إن وُجدت.",
+        "ملف _الفهرس.csv يفتح في Excel ويلخّص الدفعة.",
+        "هذا التصدير للقراءة فقط — لا يُحذف أي شيء من النظام."
+      ].join("\n"));
+      const blob=await zip.generateAsync({type:"blob"});
+      const url=URL.createObjectURL(blob);
+      const a=document.createElement("a");a.href=url;a.download=`${rootName}.zip`;document.body.appendChild(a);a.click();a.remove();
+      setTimeout(()=>URL.revokeObjectURL(url),4000);
+      setShowBatch(false);
+    }catch(e){console.error("batch:",e);alert("⚠️ تعذّر إنشاء المجلد — لم يُحذف أي شيء");}
+    setBatchBusy(false);
   };
 
   const doArchive=async()=>{
     setArchiving(true);
     const ok=await exportExcel("all",subs);
     if(ok){
-      await dbClearAll();
-      setSubs([]);
+      /* v53: التصدير فقط — لا يُحذف أي شيء من قاعدة البيانات */
       const now=new Date().toISOString();
       await dbSetMeta("last_archive",now);
       setLastArchive(now);
@@ -1604,15 +1722,53 @@ function Dashboard({subs,setSubs,courses,onGrade,onCert,onLogout,onRefresh,onMan
 
   return(
     <div dir="rtl" style={{fontFamily:"inherit",minHeight:"100vh",background:"#F7F4EC",padding:"1rem"}}>
+      {showBatch&&(
+        <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.5)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:100}}>
+          <div style={{background:"white",borderRadius:16,padding:"1.75rem",maxWidth:520,width:"92%",direction:"rtl"}}>
+            <div style={{fontSize:18,fontWeight:700,color:"#1B3059",marginBottom:4}}>🗂 تحميل دفعة اختبارات كمجلد</div>
+            <div style={{fontSize:13,color:"#6b7280",marginBottom:16,lineHeight:1.8}}>اختر النطاق، وسينزل ملف ZIP فيه ملف نصي لكل متدرب (أسئلته وإجاباته كاملة) مرتّبة في مجلد لكل دورة، مع فهرس CSV. <strong style={{color:"#15803d"}}>لا يُحذف شيء من النظام.</strong></div>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:10}}>
+              <label style={{fontSize:12,color:"#374151"}}>من تاريخ (الإرسال)<input type="date" value={batchFrom} onChange={e=>setBatchFrom(e.target.value)} style={{display:"block",width:"100%",marginTop:4,padding:"7px 10px",borderRadius:8,border:"0.5px solid #e5e7eb",fontSize:13}}/></label>
+              <label style={{fontSize:12,color:"#374151"}}>إلى تاريخ<input type="date" value={batchTo} onChange={e=>setBatchTo(e.target.value)} style={{display:"block",width:"100%",marginTop:4,padding:"7px 10px",borderRadius:8,border:"0.5px solid #e5e7eb",fontSize:13}}/></label>
+              <label style={{fontSize:12,color:"#374151"}}>الدورة<select value={batchCourse} onChange={e=>setBatchCourse(e.target.value)} style={{display:"block",width:"100%",marginTop:4,padding:"7px 10px",borderRadius:8,border:"0.5px solid #e5e7eb",fontSize:13,background:"white"}}>
+                <option value="all">جميع الدورات</option>
+                {courses.map(c=><option key={c.id} value={c.id}>{c.icon} {c.title}</option>)}
+              </select></label>
+              <label style={{fontSize:12,color:"#374151"}}>الحالة<select value={batchStatus} onChange={e=>setBatchStatus(e.target.value)} style={{display:"block",width:"100%",marginTop:4,padding:"7px 10px",borderRadius:8,border:"0.5px solid #e5e7eb",fontSize:13,background:"white"}}>
+                <option value="all">الكل (حتى غير المكتمل)</option>
+                <option value="submitted_any">المُرسَلة فقط (بانتظار/تصحيح/ناجح/راسب)</option>
+                <option value="ungraded">غير المصحَّحة فقط</option>
+                <option value="graded">المصحَّحة فقط (ناجح/راسب)</option>
+              </select></label>
+            </div>
+            <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:14}}>
+              {[["هذا الشهر",0],["الشهر الماضي",1],["قبل شهرين",2]].map(([l,back])=>{
+                const now=new Date();const y=now.getFullYear(),m=now.getMonth()-back;
+                const f=new Date(y,m,1),t=new Date(y,m+1,0);
+                const iso=dt=>`${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,"0")}-${String(dt.getDate()).padStart(2,"0")}`;
+                return <button key={l} onClick={()=>{setBatchFrom(iso(f));setBatchTo(iso(t));}} style={{padding:"5px 12px",borderRadius:20,border:"0.5px solid #e5e7eb",background:"#F8F6F0",cursor:"pointer",fontSize:12}}>{l}</button>;
+              })}
+              <button onClick={()=>{setBatchFrom("");setBatchTo("");}} style={{padding:"5px 12px",borderRadius:20,border:"0.5px solid #e5e7eb",background:"white",cursor:"pointer",fontSize:12}}>بلا حدود زمنية</button>
+            </div>
+            <div style={{background:"#F8F6F0",borderRadius:10,padding:"10px 14px",fontSize:13,color:"#1B3059",marginBottom:14}}>سيُضمَّن في المجلد: <strong>{batchFiltered.length}</strong> اختبار
+              {batchFiltered.length>0&&<span style={{color:"#6b7280"}}> — ناجح {batchFiltered.filter(s=>s.status==="pass").length} · راسب {batchFiltered.filter(s=>s.status==="fail").length} · غير مصحَّح {batchFiltered.filter(s=>["submitted","grading"].includes(s.status)).length} · لم يُكمل {batchFiltered.filter(s=>s.status==="in_progress").length}</span>}
+            </div>
+            <div style={{display:"flex",gap:8}}>
+              <button onClick={()=>setShowBatch(false)} style={{flex:1,padding:"11px",border:"0.5px solid #e5e7eb",borderRadius:10,background:"white",cursor:"pointer",fontSize:14}}>إلغاء</button>
+              <button onClick={doBatchDownload} disabled={batchBusy||!batchFiltered.length} style={{flex:2,padding:"11px",border:"none",borderRadius:10,background:batchFiltered.length?"#1B3059":"#9ca3af",color:"white",cursor:batchFiltered.length?"pointer":"not-allowed",fontSize:14,fontWeight:600}}>{batchBusy?"⏳ جارٍ تجهيز المجلد...":"⬇ تحميل المجلد (ZIP)"}</button>
+            </div>
+          </div>
+        </div>
+      )}
       {showConfirm&&(
         <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.5)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:100}}>
           <div style={{background:"white",borderRadius:16,padding:"2rem",maxWidth:440,width:"90%",textAlign:"center",direction:"rtl"}}>
             <div style={{fontSize:44,marginBottom:12}}>📦</div>
-            <div style={{fontSize:18,fontWeight:600,marginBottom:8}}>تأكيد الأرشفة الشهرية</div>
-            <div style={{fontSize:14,color:"#6b7280",lineHeight:1.8,marginBottom:16}}>سيتم تنزيل Excel يحتوي على <strong>{subs.length} متدرب</strong> ثم مسح جميع البيانات من النظام لتحرير المساحة.<br/><span style={{color:"#dc2626",fontWeight:600}}>⚠️ تأكد من حفظ الملف قبل الإغلاق</span></div>
+            <div style={{fontSize:18,fontWeight:600,marginBottom:8}}>تصدير نسخة Excel كاملة</div>
+            <div style={{fontSize:14,color:"#6b7280",lineHeight:1.8,marginBottom:16}}>سيتم تنزيل ملف Excel يحتوي على <strong>{subs.length} متدرب</strong> بجميع النتائج.<br/><span style={{color:"#15803d",fontWeight:600}}>✅ جميع البيانات تبقى محفوظة في النظام — لا يُحذف شيء</span></div>
             <div style={{display:"flex",gap:8}}>
               <button onClick={()=>setShowConfirm(false)} style={{flex:1,padding:"11px",border:"0.5px solid #e5e7eb",borderRadius:10,background:"white",cursor:"pointer",fontSize:14}}>إلغاء</button>
-              <button onClick={doArchive} disabled={archiving} style={{flex:2,padding:"11px",border:"none",borderRadius:10,background:"#1B3059",color:"white",cursor:"pointer",fontSize:14,fontWeight:600}}>{archiving?"⏳ جارٍ التنزيل...":"✓ تنزيل ومسح البيانات"}</button>
+              <button onClick={doArchive} disabled={archiving} style={{flex:2,padding:"11px",border:"none",borderRadius:10,background:"#1B3059",color:"white",cursor:"pointer",fontSize:14,fontWeight:600}}>{archiving?"⏳ جارٍ التنزيل...":"✓ تنزيل الملف"}</button>
             </div>
           </div>
         </div>
@@ -1722,8 +1878,9 @@ function Dashboard({subs,setSubs,courses,onGrade,onCert,onLogout,onRefresh,onMan
             <div style={{fontSize:11,color:"#9ca3af",marginTop:4}}>Supabase مجاني — يكفي لـ آلاف المتدربين ✅</div>
           </div>
           <div style={{display:"flex",flexDirection:"column",gap:6,alignItems:"flex-end"}}>
-            <button onClick={()=>subs.length>0?setShowConfirm(true):alert("لا توجد بيانات للأرشفة")} style={{padding:"8px 18px",border:"none",borderRadius:8,background:pct>=80?"#dc2626":"#1B3059",color:"white",cursor:"pointer",fontSize:13,fontWeight:600,whiteSpace:"nowrap"}}>📦 أرشفة الشهر وتحرير المساحة</button>
-            {lastArchive&&<div style={{fontSize:11,color:"#9ca3af"}}>آخر أرشفة: {fmt(lastArchive)}</div>}
+            <button onClick={()=>subs.length>0?setShowBatch(true):alert("لا توجد اختبارات بعد")} style={{padding:"8px 18px",border:"none",borderRadius:8,background:"#E8622C",color:"white",cursor:"pointer",fontSize:13,fontWeight:600,whiteSpace:"nowrap"}}>🗂 تحميل دفعة كمجلد</button>
+            <button onClick={()=>subs.length>0?setShowConfirm(true):alert("لا توجد بيانات للتصدير")} style={{padding:"8px 18px",border:"none",borderRadius:8,background:pct>=80?"#dc2626":"#1B3059",color:"white",cursor:"pointer",fontSize:13,fontWeight:600,whiteSpace:"nowrap"}}>📦 تصدير نسخة Excel كاملة</button>
+            {lastArchive&&<div style={{fontSize:11,color:"#9ca3af"}}>آخر تصدير كامل: {fmt(lastArchive)}</div>}
           </div>
         </div>
 
