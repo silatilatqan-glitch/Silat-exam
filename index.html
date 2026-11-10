@@ -31,6 +31,7 @@
 <!-- v47 — اسم المتدرب يُطبع بأحرف كبيرة (UPPERCASE) في الشهادة فقط؛ الاسم المخزَّن وبقية الشاشات بلا تغيير (2026-08-19) -->
 <!-- v48 — وقت اختبار خاص لكل دورة يُحدَّد من «إدارة الدورات» (اتركه فارغاً لاستخدام الوقت الافتراضي)، بدء الاختبار وكل شاشات المتدرب تعرض وقت الدورة نفسها، وحذف عبارة «⏱ ساعة لكل اختبار» من الصفحة الرئيسية (2026-08-28) -->
 <!-- v51 — حل جذري لتخطي السيناريو الثاني: التنقل بين السيناريوهات صار بالموضع (الترتيب) لا بمطابقة المعرفات، والسيناريو لا يُعدّ مكتملاً إلا إذا أُجيبت كل مهامه فعلاً (50+ حرف). الإرسال النهائي مستحيل قبل إكمال كل السيناريوهات بإجاباتها. يشمل أيضاً بديلاً لإيجاد السيناريو الحالي بالعنوان إذا تغيّر معرفه (2026-08-30) -->
+<!-- v56 — إصلاح فشل رفع ملفات PDF ذات الأسماء العربية (ملف أسئلة المدرب وملف حل المتدرب): كان Supabase Storage يرفضها بخطأ InvalidKey؛ صار يُرسَل للخادم اسم آمن بأحرف لاتينية ويبقى الاسم الأصلي معروضاً في الواجهة (2026-11-10) -->
 <!-- v55 — رسالة فشل رفع ملف أسئلة الدورة (PDF) صارت تحدد السبب الفعلي: دالة exam-api قديمة، حاوية التخزين مفقودة، رفض التخزين (حجم/صلاحيات)، أو انقطاع الاتصال — مع عرض تفاصيل الخطأ التقنية للمدرب (2026-11-10) -->
 <!-- v54 — (أ) لوحة المدرب تتذكّر الدورة والحالة والبحث والفرز المختارة طوال الجلسة، فالعودة من تصحيح متدرب ترجع إلى نفس العرض (مثلاً دورات أوشا) لا إلى «جميع الدورات». (ب) زر «🗂 تحميل دفعة كمجلد» في لوحة المدرب: اختيار نطاق تاريخ الإرسال (مع اختصارات هذا الشهر/الماضي) والدورة والحالة، فيُنزَّل ZIP يضم ملفاً نصياً لكل متدرب (بياناته، السيناريو، نص كل مهمة، إجابته، درجة المدرب إن وُجدت) في مجلد لكل دورة، مع فهرس CSV وملف اقرأني. قراءة فقط — لا حذف (2026-11-01) -->
 <!-- v53 — إلغاء الحذف نهائياً: زر «أرشفة الشهر» صار «تصدير نسخة Excel كاملة» يصدّر فقط ولا يمسح أي بيانات؛ أُزيلت دالة المسح الشامل ولم يعد في الواجهة أي مسار لمسح الاختبارات دفعةً واحدة (2026-11-01) -->
@@ -205,6 +206,12 @@ async function markNotifsRead(){
 const PDF_MAX_MB=15;
 function isPdfFile(f){return !!f&&(f.type==="application/pdf"||/\.pdf$/i.test(f.name||""));}
 function fmtBytes(n){if(!n&&n!==0)return "";return n>=1048576?(n/1048576).toFixed(1)+" MB":Math.max(1,Math.round(n/1024))+" KB";}
+/* v56: Supabase Storage يرفض مفاتيح الملفات غير اللاتينية (InvalidKey) — يُرسَل للخادم اسم آمن ASCII، ويبقى الاسم الأصلي للعرض فقط */
+function safeStorageName(name){
+  let base=String(name||"").replace(/\.pdf$/i,"");
+  base=base.normalize("NFKD").replace(/[^A-Za-z0-9._-]+/g,"_").replace(/_+/g,"_").replace(/\.{2,}/g,".").replace(/^[._-]+|[._-]+$/g,"").slice(0,60);
+  return (base||"file")+".pdf";
+}
 /* v55: يترجم سبب فشل رفع ملف الأسئلة إلى رسالة محددة بدل عبارة واحدة عامة */
 function explainExamFileUploadError(e){
   const status=e&&e.status, code=String((e&&e.code)||""), m=String((e&&e.message)||"");
@@ -215,6 +222,7 @@ function explainExamFileUploadError(e){
     const st=+up[1];
     if(st===413||/too large|exceeded|maximum allowed size/i.test(m))return "التخزين رفض الملف لأن حجمه يتجاوز الحد المسموح في Supabase Storage — ارفع الحد من إعدادات الحاوية أو صغّر الملف"+detail;
     if(st===401||st===403)return "التخزين رفض الرفع (صلاحيات الحاوية أو انتهاء رابط الرفع) — أعد المحاولة، وإن تكرر فراجع إعدادات الحاوية في Supabase Storage"+detail;
+    if(/InvalidKey/i.test(m))return "التخزين رفض اسم الملف — أعد تسمية الملف بأحرف إنجليزية وأرقام فقط ثم ارفعه"+detail;
     return "وصل طلب الرفع إلى التخزين لكنه رُفض — راجع الحاوية في Supabase Storage"+detail;
   }
   if(/bucket/i.test(code+" "+m))return "حاوية التخزين غير موجودة في Supabase — أنشئها من Storage ثم أعد المحاولة"+detail;
@@ -976,7 +984,7 @@ function CourseBuilder({courses,onSave,onBack}){
     if(f.size>PDF_MAX_MB*1024*1024){setQMsg({ok:false,text:`حجم الملف يتجاوز الحد الأقصى ${PDF_MAX_MB}MB`});return;}
     setQBusy(true);setQMsg(null);
     try{
-      const r=await api("trainer_exam_file_upload_url",{courseId:editing.id,fileName:f.name});
+      const r=await api("trainer_exam_file_upload_url",{courseId:editing.id,fileName:safeStorageName(f.name)});
       if(!r.url||!r.path)throw new Error(r.error||"no_url");
       await uploadFileToSignedUrl(r.url,f);
       updField("examFile",{path:r.path,name:f.name,size:f.size,uploadedAt:new Date().toISOString()});
@@ -2505,7 +2513,7 @@ function PdfExamView({sub,setSubs,courses,setActiveSub,onSubmitted}){
     if(f.size>PDF_MAX_MB*1024*1024){setMsg({ok:false,text:`حجم الملف ${fmtBytes(f.size)} يتجاوز الحد الأقصى ${PDF_MAX_MB}MB — صغّر الملف وحاول مجدداً`});return;}
     setBusyUp(true);setMsg(null);
     try{
-      const r=await api("student_answer_upload_url",{subId:sub.id,studentId:sub.studentId,fileName:f.name});
+      const r=await api("student_answer_upload_url",{subId:sub.id,studentId:sub.studentId,fileName:safeStorageName(f.name)});
       if(!r.url||!r.path)throw new Error(r.error||"no_url");
       await uploadFileToSignedUrl(r.url,f);
       const updated={...sub,answerFile:{path:r.path,name:f.name,size:f.size,uploadedAt:new Date().toISOString()}};
